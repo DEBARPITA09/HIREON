@@ -1,0 +1,62 @@
+.navbar {
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 15px 40px;
+
+  background: #0a192f;
+
+  color: white;
+
+}
+
+
+.nav-left {
+
+  font-size: 22px;
+  font-weight: bold;
+
+}
+
+
+.nav-right {
+
+  display: flex;
+  gap: 15px;
+
+}
+
+
+.nav-btn {
+
+  padding: 8px 18px;
+
+  background: #112240;
+
+  color: white;
+
+  border-radius: 6px;
+
+  text-decoration: none;
+
+  transition: 0.3s;
+
+}
+
+
+.nav-btn:hover {
+
+  background: #64ffda;
+  color: black;
+
+}
+
+
+.active {
+
+  background: #64ffda;
+  color: black;
+
+}

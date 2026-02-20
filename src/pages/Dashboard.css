@@ -1,0 +1,39 @@
+.dashboard{
+
+  padding:40px;
+
+}
+
+.skills{
+
+  display:flex;
+
+  gap:15px;
+
+  margin-bottom:30px;
+
+}
+
+.skill{
+
+  background:#0a66c2;
+
+  color:white;
+
+  padding:10px 20px;
+
+  border-radius:20px;
+
+}
+
+.job-card{
+
+  background:white;
+
+  padding:20px;
+
+  margin-top:20px;
+
+  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+
+}

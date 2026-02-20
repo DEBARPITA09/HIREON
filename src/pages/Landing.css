@@ -1,0 +1,124 @@
+.landing-container {
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  height: 100vh;
+
+  padding: 60px;
+
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+
+  color: white;
+
+  box-sizing: border-box;
+}
+
+.landing-left {
+
+  width: 50%;
+
+}
+
+.landing-title {
+
+  font-size: 72px;
+
+  font-weight: bold;
+
+  color: #3b82f6;
+
+  margin-bottom: 10px;
+}
+
+.landing-subtitle {
+
+  font-size: 28px;
+
+  margin-bottom: 20px;
+
+  color: #e2e8f0;
+}
+
+.landing-description {
+
+  font-size: 18px;
+
+  line-height: 1.6;
+
+  color: #cbd5e1;
+
+  margin-bottom: 30px;
+}
+
+.landing-buttons {
+
+  display: flex;
+
+  gap: 15px;
+}
+
+.signup-btn {
+
+  padding: 14px 28px;
+
+  font-size: 16px;
+
+  background: #3b82f6;
+
+  color: white;
+
+  border: none;
+
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.signup-btn:hover {
+
+  background: #2563eb;
+}
+
+.login-btn {
+
+  padding: 14px 28px;
+
+  font-size: 16px;
+
+  background: white;
+
+  color: black;
+
+  border: none;
+
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.login-btn:hover {
+
+  background: #e5e7eb;
+}
+
+.landing-right {
+
+  width: 50%;
+
+  display: flex;
+
+  justify-content: center;
+}
+
+.landing-image {
+
+  width: 500px;
+
+  max-width: 100%;
+}

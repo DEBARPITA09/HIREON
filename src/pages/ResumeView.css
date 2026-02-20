@@ -1,0 +1,16 @@
+.resume-view {
+
+  background: #0f172a;
+  min-height: 100vh;
+  padding: 40px;
+}
+
+.resume-box {
+
+  background: white;
+  color: black;
+  padding: 40px;
+  width: 600px;
+  margin: auto;
+  border-radius: 10px;
+}
