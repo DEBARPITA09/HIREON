@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./04_ForgotPassword.module.css";
 
-export const ForgotPasswordCandidate = () => {
+export const ForgotPasswordRecruiter = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
@@ -10,12 +10,12 @@ export const ForgotPasswordCandidate = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const loggedUser = JSON.parse(localStorage.getItem("user"));
+    const loggedUser = JSON.parse(localStorage.getItem("recruiter"));
     if (!loggedUser || loggedUser.email !== email) {
       setError("No account found with this email address.");
       return;
     }
-    localStorage.setItem("resetEmail", email);
+    localStorage.setItem("resetEmailRec", email);
     setSent(true);
   };
 
@@ -44,7 +44,7 @@ export const ForgotPasswordCandidate = () => {
                   type="email"
                   value={email}
                   onChange={(e) => { setEmail(e.target.value); setError(""); }}
-                  placeholder="e.g. you@example.com"
+                  placeholder="e.g. you@company.com"
                   className={styles.input}
                   required
                 />
@@ -53,7 +53,7 @@ export const ForgotPasswordCandidate = () => {
               <button type="submit" className={styles.btnPrimary}>Next</button>
             </form>
             <div className={styles.backLink}>
-              <Link to="/Candidate/02_LoginCand" className={styles.hlink}>Back to Sign In</Link>
+              <Link to="/Recruiter/02_LoginRec" className={styles.hlink}>Back to Sign In</Link>
             </div>
           </>
         ) : (
@@ -62,12 +62,12 @@ export const ForgotPasswordCandidate = () => {
               <span className={styles.icon}>📬</span>
             </div>
             <h1 className={styles.title}>Check your inbox</h1>
-            
-            <button className={styles.resetBtn} onClick={() => navigate("/Candidate/ResetPassword")}>
+           
+            <button className={styles.resetBtn} onClick={() => navigate("/Recruiter/ResetPassword")}>
               Reset Password
             </button>
             <div className={styles.backLink}>
-              <Link to="/Candidate/02_LoginCand" className={styles.hlink}>Back to Sign In</Link>
+              <Link to="/Recruiter/02_LoginRec" className={styles.hlink}>Back to Sign In</Link>
             </div>
           </>
         )}
