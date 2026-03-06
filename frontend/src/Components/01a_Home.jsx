@@ -67,20 +67,8 @@ export const Home = () => {
 
         </div>
 
-        {/* ── WHY HIREON STRIP ── */}
-        <div className={styles.strip}>
-          {[
-            { icon: "🤖", text: "AI Resume Analysis" },
-            { icon: "📊", text: "ATS Scoring System" },
-            { icon: "🎯", text: "Smart Job Matching" },
-            { icon: "⚡", text: "Fast Hiring Pipeline" },
-          ].map((item) => (
-            <div className={styles.stripItem} key={item.text}>
-              <span>{item.icon}</span>
-              <p>{item.text}</p>
-            </div>
-          ))}
-        </div>
+
+        
 
       </section>
     </div>
