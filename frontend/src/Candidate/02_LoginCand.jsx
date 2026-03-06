@@ -38,8 +38,6 @@ export const LoginCandidate = () => {
           <span className={styles.logoOn}>ON</span>
         </div>
 
-        <h1 className={styles.title}>Good to see you again</h1>
-
         <form onSubmit={handleLogin} className={styles.form}>
 
           <div className={styles.group}>
@@ -78,7 +76,7 @@ export const LoginCandidate = () => {
 
         <div className={styles.hyperlinks}>
           <Link to="/Candidate/03_SignupCand" className={styles.hlink}>Don&#39;t have an account?</Link>
-          <Link to="/Candidate/03_SignupCand" className={styles.hlink}>Forgot password?</Link>
+          <Link to="/Candidate/ForgotPassword" className={styles.hlink}>Forgot password?</Link>
         </div>
 
       </div>

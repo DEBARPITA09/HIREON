@@ -10,13 +10,15 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CandidateHomePage } from './Candidate/01_Candidate';
 import { LoginCandidate } from './Candidate/02_LoginCand';
 import { SignupCandidate } from './Candidate/03_SignupCand';
-import { CandidateMain } from './Candidate/04_MainCand';
+import { ForgotPasswordCandidate } from './Candidate/04_ForgotPassword';
+import { ResetPasswordCandidate } from './Candidate/05_ResetPassword';
+import { CandidateMain } from './Candidate/06_MainCand';
+import { ResumeAnalysis } from './Candidate/07_ResumeAnalysis';
 import { RecruiterHomePage } from './Recruiter/01_Recruiter';
 import { LoginRecruiter } from './Recruiter/02_LoginRec';
 import { SignupRecruiter } from './Recruiter/03_SignupRec';
 import { RecruiterMain } from './Recruiter/04_MainRec';
-import { CandidatesApplied } from "./Recruiter/05_CandidatesApplied";
-import { ResumeAnalysis } from "./Candidate/05_ResumeAnalysis";
+import { CandidatesApplied } from './Recruiter/05_CandidatesApplied';
 
 function App() {
   return (
@@ -36,6 +38,8 @@ function App() {
             <Route path="/Candidate/01_Candidate" element={<CandidateHomePage />} />
             <Route path="/Candidate/02_LoginCand" element={<LoginCandidate />} />
             <Route path="/Candidate/03_SignupCand" element={<SignupCandidate />} />
+            <Route path="/Candidate/ForgotPassword" element={<ForgotPasswordCandidate />} />
+            <Route path="/Candidate/ResetPassword" element={<ResetPasswordCandidate />} />
             <Route path="/Candidate/04_MainCand" element={<CandidateMain />} />
             <Route path="/Candidate/05_ResumeAnalysis" element={<ResumeAnalysis />} />
 
