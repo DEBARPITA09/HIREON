@@ -31,15 +31,21 @@ export const ResumeAnalysis = () => {
       job_recommendations: [
         {
           title: "Amazon SDE Intern",
-          desc: "Looking for candidates with strong HTML, CSS, and JavaScript knowledge."
+          desc: "Looking for candidates with strong HTML, CSS, and JavaScript knowledge.",
+          salary: 20000,
+          deadline: "20.04.2026",
         },
         {
           title: "Google Frontend Developer",
-          desc: "Experience with React and modern JavaScript frameworks required."
+          desc: "Experience with React and modern JavaScript frameworks required.",
+          salary: 10000,
+          deadline: "20.04.2026",
         },
         {
           title: "Microsoft Data Analyst",
-          desc: "Python and Data Science knowledge preferred."
+          desc: "Python and Data Science knowledge preferred.",
+          salary: 24000,
+          deadline: "20.04.2026",
         }
       ]
     };
@@ -100,6 +106,8 @@ export const ResumeAnalysis = () => {
 
             <h3>{job.title}</h3>
             <p>{job.desc}</p>
+            <p>{job.salary}</p>
+            <p>{job.deadline}</p>
 
             <button>Apply Now</button>
 
