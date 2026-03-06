@@ -1,26 +1,53 @@
-import React from "react";
-import { Link } from "react-router-dom"; //first install it in terminal -> npm install react-router-dom -> then only it'll render on the screen.
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import styles from "./01_Nav.module.css";
 
 export const Nav = () => {
-    return (
-        <div>
-            <ul className="my-nav">
-                <li><Link to="/">Home</Link></li> 
-                <li><Link to="/01b_Services">Services</Link></li>
-                <li><Link to="/01c_About">About</Link></li> 
-                {/* now this means this is added in the navlist. now to make it  so that on clicking it we reach the actual "about" page- we put it in route of the app.jsx */}
-                <li><Link to="/01d_Contact">Contact</Link></li>
-                <li><Link to="/01e_Help">Help</Link></li>
-            </ul>
-        </div>
-    )
-}
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
 
-{/* 
-    <Link to="/">Home</Link> -> means go to home page when clicked on this link . to="" expects a url link not file path. 
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
-    whatever u have put in to="" that exact thing to be put in path="" inside the route at the app.jsx
+  const getLinkClass = (path) =>
+    location.pathname === path ? styles.active : styles.link;
 
-    //at link to="/" - when the pg first renders it sees already the route to be / so immediately renders.
-    if i put the exact address then only on clicking it - when the url has this 01a_home then only it will open
-*/}
+  const close = () => setMenuOpen(false);
+
+  return (
+    <nav className={styles.nav + (scrolled ? " " + styles.scrolled : "")}>
+
+      <Link to="/" className={styles.logo}>
+        HIRE<span>ON</span>
+      </Link>
+
+      <ul className={styles.links + (menuOpen ? " " + styles.open : "")}>
+        <li><Link to="/"         className={getLinkClass("/")}         onClick={close}>Home</Link></li>
+        <li><Link to="/services" className={getLinkClass("/services")} onClick={close}>Services</Link></li>
+        <li><Link to="/about"    className={getLinkClass("/about")}    onClick={close}>About</Link></li>
+        <li><Link to="/contact"  className={getLinkClass("/contact")}  onClick={close}>Contact</Link></li>
+        <li><Link to="/help"     className={getLinkClass("/help")}     onClick={close}>Help</Link></li>
+      </ul>
+
+      <div className={styles.badge}>
+        <span className={styles.dot}></span>
+        AI Hiring Platform
+      </div>
+
+      <button
+        className={styles.hamburger + (menuOpen ? " " + styles.hamburgerOpen : "")}
+        onClick={() => setMenuOpen(!menuOpen)}
+        aria-label="Toggle menu"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+    </nav>
+  );
+};
