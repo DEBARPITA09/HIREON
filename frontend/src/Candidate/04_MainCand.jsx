@@ -18,7 +18,7 @@ export const CandidateMain = () => {
         }
 
         // Navigate to Resume Analysis page
-        navigate("/resume-analysis", { state: { resume } });
+        navigate("/Candidate/05_ResumeAnalysis", { state: { resume } });
     };
 
     return (
@@ -36,6 +36,9 @@ export const CandidateMain = () => {
 
                 <br/><br/>
                 <button type="submit">Analyze Resume</button>
+
+                <br/> <br />
+                {/*resume builder to be put here 06_ResumeBuilder.jsx - from deepseek*/}
             </form>
         </div>
     );
