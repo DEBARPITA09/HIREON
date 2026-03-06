@@ -15,6 +15,8 @@ import { RecruiterHomePage } from './Recruiter/01_Recruiter';
 import { LoginRecruiter } from './Recruiter/02_LoginRec';
 import { SignupRecruiter } from './Recruiter/03_SignupRec';
 import { RecruiterMain } from './Recruiter/04_MainRec';
+import { CandidatesApplied } from "./Recruiter/05_CandidatesApplied";
+import { ResumeAnalysis } from "./Candidate/05_ResumeAnalysis";
 
 function App() {
   return (
@@ -35,12 +37,14 @@ function App() {
             <Route path="/Candidate/02_LoginCand" element={<LoginCandidate />} />
             <Route path="/Candidate/03_SignupCand" element={<SignupCandidate />} />
             <Route path="/Candidate/04_MainCand" element={<CandidateMain />} />
+            <Route path="/Candidate/05_ResumeAnalysis" element={<ResumeAnalysis />} />
 
             {/* Recruiter */}
             <Route path="/Recruiter/01_Recruiter" element={<RecruiterHomePage />} />
             <Route path="/Recruiter/02_LoginRec" element={<LoginRecruiter />} />
             <Route path="/Recruiter/03_SignupRec" element={<SignupRecruiter />} />
             <Route path="/Recruiter/04_MainRec" element={<RecruiterMain />} />
+            <Route path="/job/:jobId" element={<CandidatesApplied />} />
           </Routes>
         </div>
         <Footer />
