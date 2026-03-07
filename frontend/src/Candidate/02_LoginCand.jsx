@@ -20,7 +20,7 @@ export const LoginCandidate = () => {
       return;
     }
     if (input.email === loggedUser.email && input.password === loggedUser.password) {
-      navigate("/Candidate/04_MainCand");
+      navigate("/Candidate/06_MainCand");
     } else {
       setError("Wrong email or password. Please try again.");
     }
@@ -32,11 +32,12 @@ export const LoginCandidate = () => {
       <div className={styles.blob2}></div>
 
       <div className={styles.card}>
-
         <div className={styles.logo}>
           <span className={styles.logoHire}>HIRE</span>
           <span className={styles.logoOn}>ON</span>
         </div>
+
+        <h1 className={styles.title}>Good to see you again</h1>
 
         <form onSubmit={handleLogin} className={styles.form}>
 
@@ -76,7 +77,7 @@ export const LoginCandidate = () => {
 
         <div className={styles.hyperlinks}>
           <Link to="/Candidate/03_SignupCand" className={styles.hlink}>Don&#39;t have an account?</Link>
-          <Link to="/Candidate/ForgotPassword" className={styles.hlink}>Forgot password?</Link>
+          <Link to="/Candidate/04_ForgotPassword" className={styles.hlink}>Forgot password?</Link>
         </div>
 
       </div>

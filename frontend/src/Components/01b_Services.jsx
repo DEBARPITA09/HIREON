@@ -2,12 +2,12 @@ import React from "react";
 import styles from "./01b_Services.module.css";
 
 const cData = [
+  { icon: "📝", title: "Resume Builder", desc: "Build a clean, professional and ATS-friendly resume from scratch using our guided step-by-step builder.", tag: "Easy Build", tc: "blue" },
   { icon: "🧠", title: "AI Resume Analysis", desc: "Upload your resume and get a detailed AI breakdown of strengths, gaps, keyword matches and improvement tips.", tag: "AI Powered", tc: "blue" },
   { icon: "📊", title: "ATS Score and Insights", desc: "See how Applicant Tracking Systems score your resume and get suggestions to increase your shortlisting chances.", tag: "Smart Score", tc: "blue" },
-  { icon: "🎯", title: "Job Recommendations", desc: "Our algorithm matches your profile against live listings and surfaces the most relevant roles for your skills.", tag: null, tc: "blue" },
-  { icon: "📬", title: "Application Tracking", desc: "Track every job from submitted to shortlisted to rejected, all in one clean real-time dashboard view.", tag: null, tc: "blue" },
+  { icon: "🎯", title: "Job Recommendations", desc: "Our algorithm matches your profile against live listings and surfaces the most relevant roles for your skills.", tag: "Recommended", tc: "blue" },
+  { icon: "📬", title: "Application Status", desc: "Track every job from submitted to shortlisted to rejected, all in one clean real-time dashboard view.", tag: "Stay Updated", tc: "blue" },
   { icon: "👤", title: "Profile Management", desc: "Build a compelling professional profile. Recruiters discover you directly based on your skills and experience.", tag: null, tc: "blue" },
-  { icon: "🔔", title: "Job Alerts", desc: "Get notified instantly when new jobs matching your profile are posted so you never miss the right opportunity.", tag: null, tc: "blue" },
 ];
 
 const rData = [
