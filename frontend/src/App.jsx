@@ -28,6 +28,7 @@ import { SignupRecruiter } from './Recruiter/03_SignupRec';
 import { ForgotPasswordRecruiter } from './Recruiter/04_ForgotPassword';
 import { ResetPasswordRecruiter } from './Recruiter/05_ResetPassword';
 import { RecruiterMain } from './Recruiter/06_MainRec';
+import { CandidatesApplied } from "./Recruiter/07_CandidatesApplied";
 
 function AppLayout() {
   const location = useLocation();
@@ -67,7 +68,8 @@ function AppLayout() {
           <Route path="/Recruiter/04_ForgotPassword" element={<ForgotPasswordRecruiter />} />
           <Route path="/Recruiter/05_ResetPassword" element={<ResetPasswordRecruiter />} />
           <Route path="/Recruiter/06_MainRec" element={<RecruiterMain />} />
-
+          <Route path="/job/:jobId" element={<CandidatesApplied />} />
+          
         </Routes>
       </div>
       {!hideNavFooter && <Footer />}

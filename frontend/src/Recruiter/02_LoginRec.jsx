@@ -20,7 +20,7 @@ export const LoginRecruiter = () => {
       return;
     }
     if (input.email === loggedUser.email && input.password === loggedUser.password) {
-      navigate("/Recruiter/04_MainRec");
+      navigate("/Recruiter/06_MainRec");
     } else {
       setError("Wrong email or password. Please try again.");
     }
