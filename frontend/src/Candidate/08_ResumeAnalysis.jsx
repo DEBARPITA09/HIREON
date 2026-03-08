@@ -152,46 +152,88 @@ function Particles() {
 }
 
 function LandingScreen({onNext}) {
+  const navigate = useNavigate();
   return (
-    <div style={{minHeight:"100vh",background:C.bg,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:32,fontFamily:"'Outfit','Segoe UI',sans-serif",position:"relative",overflow:"hidden"}}>
-      <Particles/>
-      <div style={{position:"absolute",top:"40%",left:"50%",transform:"translate(-50%,-50%)",width:500,height:400,borderRadius:"50%",background:"radial-gradient(ellipse,rgba(0,212,170,0.05) 0%,transparent 70%)",pointerEvents:"none"}}/>
-      <div style={{position:"relative",zIndex:2,display:"flex",flexDirection:"column",alignItems:"center",maxWidth:640,textAlign:"center"}}>
-        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:40}}>
-          <div style={{width:40,height:40,borderRadius:12,background:`linear-gradient(135deg,${C.teal},${C.purple})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,boxShadow:`0 4px 16px rgba(14,165,233,0.4)`}}>🧠</div>
-          <span style={{color:C.white,fontWeight:800,fontSize:20,letterSpacing:"0.05em"}}>HIRE<span style={{color:C.blue}}>ON</span></span>
-          <div style={{background:`${C.teal2}18`,border:`1px solid ${C.teal2}40`,borderRadius:20,padding:"4px 14px",color:C.teal2,fontSize:11,fontWeight:600}}>AI ANALYSIS</div>
+    <div style={{minHeight:"100vh",background:"#05080f",display:"flex",flexDirection:"column",fontFamily:"'Outfit','Segoe UI',sans-serif",position:"relative",overflow:"hidden"}}>
+
+      {/* Grid background */}
+      <canvas ref={(() => {
+        const ref = {current:null};
+        return el => {
+          if (!el || ref.current) return;
+          ref.current = el;
+          const ctx = el.getContext("2d");
+          el.width = el.offsetWidth; el.height = el.offsetHeight;
+          let W = el.width, H = el.height, t = 0, raf;
+          const draw = () => {
+            ctx.clearRect(0,0,W,H);
+            ctx.strokeStyle="rgba(255,255,255,0.028)"; ctx.lineWidth=1;
+            for(let x=0;x<W;x+=60){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+            for(let y=0;y<H;y+=60){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+            const cx=W/2,cy=H/2,r=300+Math.sin(t)*30;
+            const g=ctx.createRadialGradient(cx,cy,0,cx,cy,r);
+            g.addColorStop(0,"rgba(79,142,247,0.055)"); g.addColorStop(1,"transparent");
+            ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+            t+=0.012; raf=requestAnimationFrame(draw);
+          };
+          draw();
+        };
+      })()} style={{position:"absolute",inset:0,width:"100%",height:"100%",pointerEvents:"none"}} />
+
+      {/* Top bar */}
+      <div style={{display:"flex",alignItems:"center",gap:16,padding:"16px 48px",background:"rgba(5,8,15,0.85)",borderBottom:"1px solid rgba(255,255,255,0.055)",position:"sticky",top:0,zIndex:100,backdropFilter:"blur(18px)"}}>
+        <button onClick={()=>navigate("/Candidate/06_MainCand")} style={{background:"transparent",color:"#64748b",border:"1px solid rgba(255,255,255,0.08)",padding:"7px 16px",borderRadius:8,fontFamily:"inherit",fontSize:13,fontWeight:600,cursor:"pointer"}}
+          onMouseEnter={e=>{e.currentTarget.style.color="#4f8ef7";e.currentTarget.style.borderColor="rgba(79,142,247,0.3)";}}
+          onMouseLeave={e=>{e.currentTarget.style.color="#64748b";e.currentTarget.style.borderColor="rgba(255,255,255,0.08)";}}>
+          ← Back to Dashboard
+        </button>
+        <div style={{fontWeight:800,fontSize:18,letterSpacing:"-0.4px"}}>
+          <span style={{color:"#f0f4ff"}}>HIRE</span><span style={{color:"#4f8ef7"}}>ON</span>
         </div>
-        <div style={{display:"inline-flex",alignItems:"center",gap:7,background:"rgba(79,142,247,0.1)",color:C.blue,border:"1px solid rgba(79,142,247,0.25)",borderRadius:20,padding:"4px 16px",fontSize:12,fontWeight:600,marginBottom:20}}>
-          <span style={{width:6,height:6,borderRadius:"50%",background:C.teal2,boxShadow:`0 0 7px ${C.teal2}`,display:"inline-block",animation:"pulse 2s infinite"}}/>
+        <div style={{background:"rgba(0,212,170,0.07)",border:"1px solid rgba(0,212,170,0.18)",borderRadius:20,padding:"4px 14px",color:"#00d4aa",fontSize:11,fontWeight:600,letterSpacing:"0.08em",textTransform:"uppercase"}}>
+          AI Analysis
+        </div>
+      </div>
+
+      {/* Hero */}
+      <div style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"64px 24px",textAlign:"center",position:"relative",zIndex:1}}>
+
+        <div style={{display:"inline-flex",alignItems:"center",gap:8,background:"rgba(79,142,247,0.07)",color:"#4f8ef7",border:"1px solid rgba(79,142,247,0.18)",padding:"5px 16px",borderRadius:20,fontSize:11,fontWeight:600,letterSpacing:"0.08em",textTransform:"uppercase",marginBottom:28}}>
+          <span style={{width:6,height:6,borderRadius:"50%",background:"#00d4aa",boxShadow:"0 0 8px #00d4aa",display:"inline-block",animation:"pulse 2s infinite"}} />
           AI Powered · Instant Results · 100% Free
         </div>
-        <h1 style={{fontSize:"clamp(26px,5vw,50px)",fontWeight:900,lineHeight:1.12,margin:"0 0 14px",color:C.white}}>
-          IS YOUR RESUME{" "}
-          <span style={{background:`linear-gradient(135deg,${C.teal},${C.teal2})`,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>STRONG ENOUGH</span>
-          <br/>FOR YOUR <span style={{color:C.gold}}>DREAM ROLE?</span>
+
+        <h1 style={{fontSize:"clamp(34px,5vw,64px)",fontWeight:800,lineHeight:1.06,letterSpacing:"-2px",margin:"0 0 16px",color:"#f0f4ff",fontFamily:"'Syne',Georgia,serif"}}>
+          Analyse Your Resume.<br />
+          <span style={{fontStyle:"italic",fontWeight:300,color:"rgba(240,244,255,0.4)",fontFamily:"Georgia,'Times New Roman',serif",letterSpacing:"-1px"}}>Know Your Strengths.</span>
         </h1>
-        <p style={{fontSize:17,color:C.muted2,margin:"0 0 10px",fontWeight:500}}>Don't worry — <span style={{color:C.teal,fontWeight:700}}>we are here for you!</span></p>
-        <p style={{fontSize:14,color:C.muted,maxWidth:480,margin:"0 auto 44px",lineHeight:1.8}}>Paste your resume text, choose your target domain, and get a detailed AI-powered strength report with actionable feedback — in seconds!</p>
-        <div style={{display:"flex",gap:14,marginBottom:44,flexWrap:"wrap",justifyContent:"center"}}>
-          {[{val:"Domain",label:"Specific Analysis",icon:"🎯",color:C.teal2},{val:"Instant",label:"AI Feedback",icon:"⚡",color:C.blue},{val:"Free",label:"No Cost Ever",icon:"🆓",color:C.gold}].map(({val,label,icon,color})=>(
-            <div key={val} style={{display:"flex",alignItems:"center",gap:10,background:`${color}12`,border:`1px solid ${color}30`,borderRadius:40,padding:"10px 20px"}}>
-              <span style={{fontSize:17}}>{icon}</span>
-              <div><div style={{fontSize:14,fontWeight:800,color,lineHeight:1}}>{val}</div><div style={{fontSize:10,color:"rgba(255,255,255,0.4)",marginTop:1}}>{label}</div></div>
+
+        <p style={{fontSize:15,color:"#334155",maxWidth:420,lineHeight:1.8,margin:"0 0 44px"}}>
+          Paste your resume, choose your target domain, and get a detailed AI-powered strength report with actionable feedback — in seconds.
+        </p>
+
+        {/* Stats row */}
+        <div style={{display:"flex",background:"rgba(255,255,255,0.025)",border:"1px solid rgba(255,255,255,0.06)",borderRadius:14,overflow:"hidden",marginBottom:48}}>
+          {[{val:"Domain",label:"Specific"},{val:"Instant",label:"Feedback"},{val:"Free",label:"No Cost"}].map(({val,label},i,arr)=>(
+            <div key={label} style={{display:"flex",flexDirection:"column",alignItems:"center",padding:"16px 36px",gap:4,borderRight:i<arr.length-1?"1px solid rgba(255,255,255,0.06)":"none"}}>
+              <span style={{fontSize:20,fontWeight:800,color:"#f0f4ff",letterSpacing:"-0.5px"}}>{val}</span>
+              <span style={{fontSize:11,fontWeight:500,color:"#475569",letterSpacing:"0.04em",textTransform:"uppercase"}}>{label}</span>
             </div>
           ))}
         </div>
-        <button onClick={onNext} style={{background:`linear-gradient(135deg,${C.teal},#0284c7)`,color:"#fff",border:"none",borderRadius:12,padding:"16px 48px",fontSize:17,fontWeight:800,cursor:"pointer",fontFamily:"inherit",letterSpacing:"0.08em",textTransform:"uppercase",boxShadow:`0 4px 24px rgba(14,165,233,0.4)`,transition:"box-shadow 0.2s"}}
-          onMouseEnter={e=>e.currentTarget.style.boxShadow=`0 8px 32px rgba(14,165,233,0.65)`}
-          onMouseLeave={e=>e.currentTarget.style.boxShadow=`0 4px 24px rgba(14,165,233,0.4)`}>
-          🚀 ANALYSE MY RESUME
+
+        <button onClick={onNext}
+          style={{background:"#f0f4ff",color:"#05080f",border:"none",borderRadius:12,padding:"15px 48px",fontSize:14,fontWeight:800,cursor:"pointer",fontFamily:"'Syne',Georgia,serif",letterSpacing:"0.14em",textTransform:"uppercase",transition:"all 0.2s"}}
+          onMouseEnter={e=>{e.currentTarget.style.background="#ffffff";e.currentTarget.style.boxShadow="0 8px 32px rgba(240,244,255,0.15)";}}
+          onMouseLeave={e=>{e.currentTarget.style.background="#f0f4ff";e.currentTarget.style.boxShadow="none";}}>
+          ANALYSE MY RESUME →
         </button>
+
       </div>
-      <style>{`@keyframes pulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.5);opacity:0.5;}}`}</style>
+      <style>{`@keyframes pulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.6);opacity:0.4;}}`}</style>
     </div>
   );
 }
-
 function InputScreen({onAnalyze}) {
   const navigate=useNavigate();
   const [text,setText]=useState("");

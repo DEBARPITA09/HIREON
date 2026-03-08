@@ -27,33 +27,36 @@ const C = {
    GLOBAL STYLES
 ═══════════════════════════════════════════════════════════ */
 const GlobalStyle = () => (
-  <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Syne:wght@700;800&display=swap');
-    *{box-sizing:border-box;margin:0;padding:0;}
-    body{font-family:'Inter',sans-serif;}
-    input,textarea{font-family:'Inter',sans-serif;}
-    input::placeholder,textarea::placeholder{color:#253550;}
-    input:focus,textarea:focus{
-      border-color:#0ea5e9!important;
-      box-shadow:0 0 0 3px rgba(14,165,233,0.1)!important;
-      outline:none;
-    }
-    ::-webkit-scrollbar{width:5px;}
-    ::-webkit-scrollbar-track{background:#060d1a;}
-    ::-webkit-scrollbar-thumb{background:#1a3350;border-radius:3px;}
-    @keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
-    @keyframes pulseRing{0%{box-shadow:0 0 0 0 rgba(14,165,233,0.4);}70%{box-shadow:0 0 0 10px rgba(14,165,233,0);}100%{box-shadow:0 0 0 0 rgba(14,165,233,0);}}
-    .fade-up{animation:fadeUp 0.45s ease both;}
-    .skill-chip{
-      display:inline-flex;align-items:center;
-      background:rgba(14,165,233,0.08);
-      border:1px solid rgba(14,165,233,0.22);
-      color:#7dd3fc;border-radius:20px;
-      padding:3px 11px;font-size:11px;font-weight:500;
-      margin:2px;transition:background 0.2s;
-    }
-    .pulse-photo{animation:pulseRing 2.5s infinite;}
-  `}</style>
+  <>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>{`
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Syne:wght@700;800&display=swap');
+      *{box-sizing:border-box;margin:0;padding:0;}
+      body{font-family:'Inter',sans-serif;}
+      input,textarea{font-family:'Outfit','Segoe UI',sans-serif;}
+      input::placeholder,textarea::placeholder{color:#1e3050;}
+      input:focus,textarea:focus{
+        border-color:#4f8ef7!important;
+        box-shadow:0 0 0 3px rgba(79,142,247,0.08)!important;
+        outline:none;
+      }
+      ::-webkit-scrollbar{width:5px;}
+      ::-webkit-scrollbar-track{background:#05080f;}
+      ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:3px;}
+      @keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+      @keyframes pulseRing{0%{box-shadow:0 0 0 0 rgba(79,142,247,0.4);}70%{box-shadow:0 0 0 10px rgba(79,142,247,0);}100%{box-shadow:0 0 0 0 rgba(79,142,247,0);}}
+      .fade-up{animation:fadeUp 0.45s ease both;}
+      .skill-chip{
+        display:inline-flex;align-items:center;
+        background:rgba(79,142,247,0.08);
+        border:1px solid rgba(79,142,247,0.2);
+        color:#93c5fd;border-radius:20px;
+        padding:3px 11px;font-size:11px;font-weight:500;
+        margin:2px;
+      }
+      .pulse-photo{animation:pulseRing 2.5s infinite;}
+    `}</style>
+  </>
 );
 
 /* ═══════════════════════════════════════════════════════════
@@ -68,13 +71,29 @@ const Tag = ({ children, color = C.teal }) => (
   }}>{children}</span>
 );
 
+const ICONS = {
+  "✍️": <i className="fa-solid fa-pen" style={{fontSize:11,color:"#4f8ef7"}} />,
+  "📧": <i className="fa-solid fa-envelope" style={{fontSize:11,color:"#4f8ef7"}} />,
+  "📞": <i className="fa-solid fa-phone" style={{fontSize:11,color:"#4f8ef7"}} />,
+  "🔗": <i className="fa-brands fa-linkedin" style={{fontSize:12,color:"#0a66c2"}} />,
+  "🐙": <i className="fa-brands fa-github" style={{fontSize:12,color:"#e2e8f0"}} />,
+  "📝": <i className="fa-solid fa-file-lines" style={{fontSize:11,color:"#4f8ef7"}} />,
+  "🎓": <i className="fa-solid fa-graduation-cap" style={{fontSize:11,color:"#f59e0b"}} />,
+  "🏢": <i className="fa-solid fa-building" style={{fontSize:11,color:"#4f8ef7"}} />,
+  "🪪": <i className="fa-solid fa-id-badge" style={{fontSize:11,color:"#4f8ef7"}} />,
+  "📅": <i className="fa-solid fa-calendar" style={{fontSize:11,color:"#4f8ef7"}} />,
+  "📋": <i className="fa-solid fa-list-check" style={{fontSize:11,color:"#4f8ef7"}} />,
+  "📌": <i className="fa-solid fa-thumbtack" style={{fontSize:11,color:"#f59e0b"}} />,
+  "⚙️": <i className="fa-solid fa-gear" style={{fontSize:11,color:"#4f8ef7"}} />,
+};
+
 const Label = ({ children, icon }) => (
   <label style={{
-    display:"flex",alignItems:"center",gap:5,
-    fontSize:11,fontWeight:600,color:C.muted2,
+    display:"flex",alignItems:"center",gap:6,
+    fontSize:11,fontWeight:600,color:"#e2e8f0",
     textTransform:"uppercase",letterSpacing:"0.1em",marginBottom:6,
   }}>
-    {icon && <span style={{fontSize:13}}>{icon}</span>}
+    {icon && <span style={{width:16,display:"flex",alignItems:"center",justifyContent:"center"}}>{ICONS[icon] || <span style={{fontSize:11}}>{icon}</span>}</span>}
     {children}
   </label>
 );
@@ -82,10 +101,11 @@ const Label = ({ children, icon }) => (
 const Input = ({ value, onChange, placeholder, type="text", style={} }) => (
   <input type={type} value={value} onChange={onChange} placeholder={placeholder}
     style={{
-      width:"100%",background:"#07101e",
-      border:`1px solid ${C.border}`,borderRadius:10,
-      color:C.text,padding:"11px 14px",fontSize:14,
+      width:"100%",background:"#020508",
+      border:"1px solid rgba(255,255,255,0.07)",borderRadius:10,
+      color:"#e2e8f0",padding:"11px 14px",fontSize:14,
       outline:"none",transition:"border-color 0.2s,box-shadow 0.2s",
+      fontFamily:"'Outfit','Segoe UI',sans-serif",
       ...style,
     }}
   />
@@ -94,10 +114,11 @@ const Input = ({ value, onChange, placeholder, type="text", style={} }) => (
 const Textarea = ({ value, onChange, placeholder, rows=3 }) => (
   <textarea value={value} onChange={onChange} placeholder={placeholder} rows={rows}
     style={{
-      width:"100%",background:"#07101e",
-      border:`1px solid ${C.border}`,borderRadius:10,
-      color:C.text,padding:"11px 14px",fontSize:14,
+      width:"100%",background:"#020508",
+      border:"1px solid rgba(255,255,255,0.07)",borderRadius:10,
+      color:"#e2e8f0",padding:"11px 14px",fontSize:14,
       outline:"none",resize:"vertical",transition:"border-color 0.2s",
+      fontFamily:"'Outfit','Segoe UI',sans-serif",
     }}
   />
 );
@@ -122,14 +143,14 @@ const Btn = ({ children, onClick, variant="primary", style={} }) => {
 /* ── Section card ── */
 const Section = ({ title, icon, children, accent=C.teal }) => (
   <div style={{
-    background:"linear-gradient(160deg,#0f1e35 0%,#0b1528 100%)",
-    border:`1px solid ${C.border}`,borderRadius:16,padding:24,marginBottom:18,
-    boxShadow:"0 4px 24px rgba(0,0,0,0.3)",position:"relative",overflow:"hidden",
+    background:"#03060c",
+    border:"1px solid rgba(255,255,255,0.06)",
+    borderRadius:16,padding:24,marginBottom:18,
+    position:"relative",overflow:"hidden",
   }}>
     <div style={{position:"absolute",top:0,left:0,right:0,height:2,background:`linear-gradient(90deg,${accent},transparent)`}} />
-    <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:18,paddingBottom:12,borderBottom:`1px solid ${C.border}`}}>
-      {icon && <span style={{fontSize:17}}>{icon}</span>}
-      <h3 style={{color:C.white,fontSize:13,fontWeight:700,textTransform:"uppercase",letterSpacing:"0.12em"}}>{title}</h3>
+    <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:18,paddingBottom:12,borderBottom:"1px solid rgba(255,255,255,0.06)"}}>
+      <h3 style={{color:"#e2e8f0",fontSize:12,fontWeight:800,textTransform:"uppercase",letterSpacing:"0.18em",fontFamily:"'Syne',Georgia,serif"}}>{title}</h3>
     </div>
     {children}
   </div>
@@ -138,10 +159,10 @@ const Section = ({ title, icon, children, accent=C.teal }) => (
 /* ── Sub-card ── */
 const SubCard = ({ children }) => (
   <div style={{
-    background:"#07101e",borderRadius:12,padding:16,marginBottom:14,
-    border:`1px solid ${C.border}`,position:"relative",
+    background:"#020508",borderRadius:12,padding:16,marginBottom:14,
+    border:"1px solid rgba(255,255,255,0.05)",position:"relative",
   }}>
-    <div style={{position:"absolute",top:12,left:-1,width:3,height:26,background:`linear-gradient(180deg,${C.teal},transparent)`,borderRadius:"0 2px 2px 0"}} />
+    <div style={{position:"absolute",top:12,left:-1,width:3,height:26,background:"linear-gradient(180deg,#4f8ef7,transparent)",borderRadius:"0 2px 2px 0"}} />
     {children}
   </div>
 );
@@ -740,105 +761,85 @@ function ParticleCanvas() {
    LANDING
 ═══════════════════════════════════════════════════════════ */
 function Landing({ onStart }) {
-    const navigate= useNavigate();
-    return (
-    <div style={{minHeight:"100vh",background:C.bg,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:32,fontFamily:"'Inter',sans-serif",position:"relative",overflow:"hidden"}}>
+  const navigate = useNavigate();
+  return (
+    <div style={{minHeight:"100vh",background:"#05080f",display:"flex",flexDirection:"column",fontFamily:"'Outfit','Segoe UI',sans-serif",position:"relative",overflow:"hidden"}}>
 
-      <ParticleCanvas />
+      {/* Grid background */}
+      <canvas ref={(() => {
+        const ref = {current:null};
+        return el => {
+          if (!el || ref.current) return;
+          ref.current = el;
+          const ctx = el.getContext("2d");
+          el.width = el.offsetWidth; el.height = el.offsetHeight;
+          let W = el.width, H = el.height, t = 0, raf;
+          const draw = () => {
+            ctx.clearRect(0,0,W,H);
+            ctx.strokeStyle="rgba(255,255,255,0.028)"; ctx.lineWidth=1;
+            for(let x=0;x<W;x+=60){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+            for(let y=0;y<H;y+=60){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+            const cx=W/2,cy=H/2,r=300+Math.sin(t)*30;
+            const g=ctx.createRadialGradient(cx,cy,0,cx,cy,r);
+            g.addColorStop(0,"rgba(79,142,247,0.055)"); g.addColorStop(1,"transparent");
+            ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+            t+=0.012; raf=requestAnimationFrame(draw);
+          };
+          draw();
+        };
+      })()} style={{position:"absolute",inset:0,width:"100%",height:"100%",pointerEvents:"none"}} />
 
-      {/* Soft radial glow behind content */}
-      <div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:600,height:500,borderRadius:"50%",background:"radial-gradient(ellipse,rgba(14,165,233,0.05) 0%,transparent 70%)",pointerEvents:"none",zIndex:1}} />
-
-      {/* All content sits above canvas */}
-      <div style={{position:"relative",zIndex:2,display:"flex",flexDirection:"column",alignItems:"center"}}>
-        {/* Back to Dashboard */}
-        <button
-          onClick={() => navigate("/Candidate/06_MainCand")}
-          style={{
-            position:"absolute", top:-10, left:0,
-            background:"rgba(14,165,233,0.08)",
-            color:"#0ea5e9",
-            border:"1px solid rgba(14,165,233,0.2)",
-            padding:"7px 16px", borderRadius:8,
-            fontSize:13, fontWeight:600, cursor:"pointer",
-            fontFamily:"inherit",
-          }}
-        >
+      {/* Top bar */}
+      <div style={{display:"flex",alignItems:"center",gap:16,padding:"16px 48px",background:"rgba(5,8,15,0.85)",borderBottom:"1px solid rgba(255,255,255,0.055)",position:"sticky",top:0,zIndex:100,backdropFilter:"blur(18px)"}}>
+        <button onClick={()=>navigate("/Candidate/06_MainCand")} style={{background:"transparent",color:"#64748b",border:"1px solid rgba(255,255,255,0.08)",padding:"7px 16px",borderRadius:8,fontFamily:"inherit",fontSize:13,fontWeight:600,cursor:"pointer",transition:"all 0.2s"}}
+          onMouseEnter={e=>{e.currentTarget.style.color="#4f8ef7";e.currentTarget.style.borderColor="rgba(79,142,247,0.3)";}}
+          onMouseLeave={e=>{e.currentTarget.style.color="#64748b";e.currentTarget.style.borderColor="rgba(255,255,255,0.08)";}}>
           ← Back to Dashboard
         </button>
+        <div style={{fontWeight:800,fontSize:18,letterSpacing:"-0.4px"}}>
+          <span style={{color:"#f0f4ff"}}>HIRE</span><span style={{color:"#4f8ef7"}}>ON</span>
+        </div>
+        <div style={{background:"rgba(79,142,247,0.07)",border:"1px solid rgba(79,142,247,0.18)",borderRadius:20,padding:"4px 14px",color:"#4f8ef7",fontSize:11,fontWeight:600,letterSpacing:"0.08em",textTransform:"uppercase"}}>
+          Resume Builder
+        </div>
+      </div>
 
-        {/* Logo */}
-        <div className="fade-up" style={{display:"flex",alignItems:"center",gap:10,marginBottom:36}}>
-          <div style={{width:40,height:40,borderRadius:12,background:`linear-gradient(135deg,${C.teal},${C.purple})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,boxShadow:`0 4px 16px rgba(14,165,233,0.4)`}}>📄</div>
-          <span style={{color:C.white,fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:20,letterSpacing:"0.05em"}}>HIRE<span style={{color:C.teal}}>ON</span></span>
-          <div style={{background:`${C.teal}15`,border:`1px solid ${C.teal}40`,borderRadius:20,padding:"4px 14px",color:C.teal,fontSize:11,fontWeight:600,letterSpacing:"0.06em"}}>RESUME BUILDER</div>
+      {/* Hero */}
+      <div style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"64px 24px",textAlign:"center",position:"relative",zIndex:1}}>
+
+        <div style={{display:"inline-flex",alignItems:"center",gap:8,background:"rgba(79,142,247,0.07)",color:"#4f8ef7",border:"1px solid rgba(79,142,247,0.18)",padding:"5px 16px",borderRadius:20,fontSize:11,fontWeight:600,letterSpacing:"0.08em",textTransform:"uppercase",marginBottom:28}}>
+          <span style={{width:6,height:6,borderRadius:"50%",background:"#00d4aa",boxShadow:"0 0 8px #00d4aa",display:"inline-block",animation:"pulse 2s infinite"}} />
+          AI Powered · Free Forever
         </div>
 
-        <div className="fade-up" style={{animationDelay:"0.1s",textAlign:"center",marginBottom:12}}>
-          <h1 style={{fontSize:"clamp(26px,5vw,52px)",fontWeight:900,lineHeight:1.12,fontFamily:"'Syne',sans-serif",margin:0}}>
-            <span style={{color:C.white}}>NEED A PROFESSIONAL </span>
-            <span style={{background:`linear-gradient(135deg,${C.teal},${C.purple})`,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>RESUME</span>
-            <br />
-            <span style={{color:C.white}}>TO GET INTO </span>
-            <span style={{color:C.gold}}>TOP COMPANIES?</span>
-          </h1>
-        </div>
+        <h1 style={{fontSize:"clamp(34px,5vw,64px)",fontWeight:800,lineHeight:1.06,letterSpacing:"-2px",margin:"0 0 16px",color:"#f0f4ff",fontFamily:"'Syne',Georgia,serif"}}>
+          Build Your Resume.<br />
+          <span style={{fontStyle:"italic",fontWeight:300,color:"rgba(240,244,255,0.4)",fontFamily:"Georgia,'Times New Roman',serif",letterSpacing:"-1px"}}>Land Your Dream Job.</span>
+        </h1>
 
-        <div className="fade-up" style={{animationDelay:"0.18s",textAlign:"center",marginBottom:36}}>
-          <p style={{fontSize:20,color:C.muted2,margin:"0 0 10px",fontWeight:500}}>
-            Don't worry — <span style={{color:C.tealLight,fontWeight:600}}>we are here for you!</span>
-          </p>
-          <p style={{fontSize:14,color:C.muted,maxWidth:460,margin:"0 auto",lineHeight:1.75}}>
-            Build a standout, recruiter-ready resume in minutes. Choose from modern or classic templates and land roles at FAANG, MNCs &amp; leading startups.
-          </p>
-        </div>
+        <p style={{fontSize:15,color:"#334155",maxWidth:420,lineHeight:1.8,margin:"0 0 44px"}}>
+          Create a standout, recruiter-ready resume in minutes. Choose from modern or classic templates and get hired at top companies.
+        </p>
 
-        {/* Floating pills */}
-        <div className="fade-up" style={{display:"flex",gap:16,marginBottom:44,animationDelay:"0.26s",flexWrap:"wrap",justifyContent:"center",alignItems:"center"}}>
-          {[
-            {val:"100%",label:"Free Forever",icon:"🆓",glow:"rgba(16,185,129,0.18)",color:"#34d399"},
-            {val:"ATS", label:"Optimized",   icon:"✅",glow:"rgba(14,165,233,0.18)",color:C.tealLight},
-            {val:"PDF", label:"Download",    icon:"⬇️",glow:"rgba(139,92,246,0.18)",color:"#c4b5fd"},
-          ].map(({val,label,icon,glow,color})=>(
-            <div key={label} style={{
-              display:"flex",alignItems:"center",gap:10,
-              background:`linear-gradient(135deg,${glow},rgba(15,30,53,0.7))`,
-              border:`1px solid ${color}30`,
-              borderRadius:40,padding:"10px 22px",
-              backdropFilter:"blur(16px)",
-              boxShadow:`0 4px 20px ${glow}, inset 0 1px 0 rgba(255,255,255,0.04)`,
-            }}>
-              <span style={{fontSize:17}}>{icon}</span>
-              <div>
-                <div style={{fontSize:15,fontWeight:800,color,fontFamily:"'Syne',sans-serif",lineHeight:1}}>{val}</div>
-                <div style={{fontSize:10,color:"rgba(255,255,255,0.4)",marginTop:1,letterSpacing:"0.06em"}}>{label}</div>
-              </div>
+        {/* Stats row */}
+        <div style={{display:"flex",background:"rgba(255,255,255,0.025)",border:"1px solid rgba(255,255,255,0.06)",borderRadius:14,overflow:"hidden",marginBottom:48}}>
+          {[{val:"100%",label:"Free Forever"},{val:"ATS",label:"Optimised"},{val:"PDF",label:"Download"}].map(({val,label},i,arr)=>(
+            <div key={label} style={{display:"flex",flexDirection:"column",alignItems:"center",padding:"16px 36px",gap:4,borderRight:i<arr.length-1?"1px solid rgba(255,255,255,0.06)":"none"}}>
+              <span style={{fontSize:20,fontWeight:800,color:"#f0f4ff",letterSpacing:"-0.5px"}}>{val}</span>
+              <span style={{fontSize:11,fontWeight:500,color:"#475569",letterSpacing:"0.04em",textTransform:"uppercase"}}>{label}</span>
             </div>
           ))}
         </div>
 
-        {/* CTA — clean, bold, no zoom */}
-        <div className="fade-up" style={{animationDelay:"0.34s"}}>
-          <button
-            onClick={onStart}
-            style={{
-              background:`linear-gradient(135deg,${C.gold},#d97706)`,
-              color:"#060d1a",border:"none",borderRadius:12,
-              padding:"15px 40px",cursor:"pointer",
-              fontFamily:"'Syne',sans-serif",
-              fontSize:17,fontWeight:800,
-              letterSpacing:"0.1em",textTransform:"uppercase",
-              boxShadow:`0 4px 24px rgba(245,158,11,0.4)`,
-              transition:"box-shadow 0.2s, background 0.2s",
-            }}
-            onMouseEnter={e=>{e.currentTarget.style.boxShadow=`0 6px 32px rgba(245,158,11,0.6)`;e.currentTarget.style.background=`linear-gradient(135deg,#fbbf24,#d97706)`;}}
-            onMouseLeave={e=>{e.currentTarget.style.boxShadow=`0 4px 24px rgba(245,158,11,0.4)`;e.currentTarget.style.background=`linear-gradient(135deg,${C.gold},#d97706)`;}}
-          >
-            🚀 BUILD MY RESUME
-          </button>
-        </div>
+        <button onClick={onStart}
+          style={{background:"#f0f4ff",color:"#05080f",border:"none",borderRadius:12,padding:"15px 48px",fontSize:14,fontWeight:800,cursor:"pointer",fontFamily:"'Syne',Georgia,serif",letterSpacing:"0.14em",textTransform:"uppercase",transition:"all 0.2s"}}
+          onMouseEnter={e=>{e.currentTarget.style.background="#ffffff";e.currentTarget.style.boxShadow="0 8px 32px rgba(240,244,255,0.15)";}}
+          onMouseLeave={e=>{e.currentTarget.style.background="#f0f4ff";e.currentTarget.style.boxShadow="none";}}>
+          BUILD MY RESUME →
+        </button>
 
       </div>
+      <style>{`@keyframes pulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.6);opacity:0.4;}}`}</style>
     </div>
   );
 }
@@ -847,77 +848,122 @@ function Landing({ onStart }) {
    TEMPLATE CHOOSER
 ═══════════════════════════════════════════════════════════ */
 function TemplateChooser({ selected, onSelect, onBack, onContinue }) {
-  const navigate = useNavigate();  
+  const navigate = useNavigate();
   const templates = [
-    { id:"modern", label:"Modern Photo Resume", sub:"2-column layout with profile photo", badge:"✦ Recommended", badgeColor:C.teal, tags:["📸 Photo","2-Column","Colorful","Modern"], desc:"Best for product companies, startups, and dev roles. Visually distinctive and recruiter-memorable.", Preview:Tmpl1 },
-    { id:"classic", label:"Classic ATS Resume", sub:"Single column, universally accepted", badge:"✓ ATS-Safe", badgeColor:C.success, tags:["No Photo","1-Column","Clean","University-Safe"], desc:"Best for campus placements, MNC applications, and ATS-scanned portals. Clean and professional.", Preview:Tmpl2 },
+    { id:"modern", label:"Modern Photo Resume", sub:"2-column layout with profile photo", badge:"✦ Recommended", badgeColor:"#00d4aa", tags:["📸 Photo","2-Column","Colorful","Modern"], desc:"Best for product companies, startups, and dev roles. Visually distinctive and recruiter-memorable.", Preview:Tmpl1 },
+    { id:"classic", label:"Classic ATS Resume", sub:"Single column, universally accepted", badge:"✓ ATS-Safe", badgeColor:"#4f8ef7", tags:["No Photo","1-Column","Clean","University-Safe"], desc:"Best for campus placements, MNC applications, and ATS-scanned portals. Clean and professional.", Preview:Tmpl2 },
   ];
 
   return (
-    <div style={{minHeight:"100vh",background:C.bg,padding:32,fontFamily:"'Inter',sans-serif"}}>
-      <div style={{maxWidth:980,margin:"0 auto"}}>
-        <div style={{display:"flex",gap:12,marginBottom:28}}>
-  <button
-    onClick={() => navigate("/Candidate/06_MainCand")}
-    style={{background:"rgba(14,165,233,0.08)",color:"#0ea5e9",border:"1px solid rgba(14,165,233,0.2)",padding:"7px 16px",borderRadius:8,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}
-  >
-    ← Dashboard
-  </button>
-  <button onClick={onBack}
-    style={{background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",gap:5}}
-  >
-    ← Back to Templates
-  </button>
-</div>
-        <div style={{marginBottom:36}}>
-          <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:6}}>
-            <div style={{width:4,height:30,background:`linear-gradient(180deg,${C.teal},${C.purple})`,borderRadius:2}} />
-            <h2 style={{color:C.white,fontSize:28,fontWeight:900,fontFamily:"'Syne',sans-serif"}}>Choose Your Template</h2>
-          </div>
-          <p style={{color:C.muted,fontSize:14,marginLeft:14}}>Pick the style that best fits your industry and target company.</p>
+    <div style={{minHeight:"100vh",background:"#05080f",fontFamily:"'Outfit','Segoe UI',sans-serif",position:"relative",overflow:"hidden"}}>
+
+      {/* Grid bg */}
+      <canvas ref={(() => {
+        const r={current:null};
+        return el=>{
+          if(!el||r.current)return; r.current=el;
+          const ctx=el.getContext("2d");
+          el.width=el.offsetWidth; el.height=el.offsetHeight;
+          let W=el.width,H=el.height,t=0,raf;
+          const draw=()=>{
+            ctx.clearRect(0,0,W,H);
+            ctx.strokeStyle="rgba(255,255,255,0.028)";ctx.lineWidth=1;
+            for(let x=0;x<W;x+=60){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+            for(let y=0;y<H;y+=60){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+            const cx=W/2,cy=300,rr=320+Math.sin(t)*30;
+            const g=ctx.createRadialGradient(cx,cy,0,cx,cy,rr);
+            g.addColorStop(0,"rgba(79,142,247,0.05)");g.addColorStop(1,"transparent");
+            ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+            t+=0.012;raf=requestAnimationFrame(draw);
+          };
+          draw();
+        };
+      })()} style={{position:"fixed",inset:0,width:"100%",height:"100%",pointerEvents:"none",zIndex:0}}/>
+
+      {/* Top bar */}
+      <div style={{display:"flex",alignItems:"center",gap:16,padding:"16px 48px",background:"rgba(5,8,15,0.85)",borderBottom:"1px solid rgba(255,255,255,0.055)",position:"sticky",top:0,zIndex:100,backdropFilter:"blur(18px)"}}>
+        <button onClick={()=>navigate("/Candidate/06_MainCand")}
+          style={{background:"transparent",color:"#64748b",border:"1px solid rgba(255,255,255,0.08)",padding:"7px 16px",borderRadius:8,fontFamily:"inherit",fontSize:13,fontWeight:600,cursor:"pointer",transition:"all 0.2s"}}
+          onMouseEnter={e=>{e.currentTarget.style.color="#4f8ef7";e.currentTarget.style.borderColor="rgba(79,142,247,0.3)";}}
+          onMouseLeave={e=>{e.currentTarget.style.color="#64748b";e.currentTarget.style.borderColor="rgba(255,255,255,0.08)";}}>
+          ← Dashboard
+        </button>
+        <button onClick={onBack}
+          style={{background:"transparent",color:"#64748b",border:"1px solid rgba(255,255,255,0.08)",padding:"7px 16px",borderRadius:8,fontFamily:"inherit",fontSize:13,fontWeight:600,cursor:"pointer",transition:"all 0.2s"}}
+          onMouseEnter={e=>{e.currentTarget.style.color="#4f8ef7";e.currentTarget.style.borderColor="rgba(79,142,247,0.3)";}}
+          onMouseLeave={e=>{e.currentTarget.style.color="#64748b";e.currentTarget.style.borderColor="rgba(255,255,255,0.08)";}}>
+          ← Back
+        </button>
+        <div style={{fontWeight:800,fontSize:18,letterSpacing:"-0.4px"}}>
+          <span style={{color:"#f0f4ff"}}>HIRE</span><span style={{color:"#4f8ef7"}}>ON</span>
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(340px,1fr))",gap:24}}>
+        <div style={{background:"rgba(79,142,247,0.07)",border:"1px solid rgba(79,142,247,0.18)",borderRadius:20,padding:"4px 14px",color:"#4f8ef7",fontSize:11,fontWeight:600,letterSpacing:"0.08em",textTransform:"uppercase"}}>
+          Resume Builder
+        </div>
+      </div>
+
+      <div style={{maxWidth:1000,margin:"0 auto",padding:"52px 40px",position:"relative",zIndex:1}}>
+
+        {/* Heading */}
+        <div style={{textAlign:"center",marginBottom:48}}>
+          <div style={{display:"inline-flex",alignItems:"center",gap:8,background:"rgba(79,142,247,0.07)",color:"#4f8ef7",border:"1px solid rgba(79,142,247,0.18)",padding:"5px 16px",borderRadius:20,fontSize:11,fontWeight:600,letterSpacing:"0.08em",textTransform:"uppercase",marginBottom:20}}>
+            <span style={{width:6,height:6,borderRadius:"50%",background:"#00d4aa",boxShadow:"0 0 8px #00d4aa",display:"inline-block"}}/>
+            Step 1 of 2
+          </div>
+          <h2 style={{color:"#f0f4ff",fontSize:"clamp(28px,4vw,48px)",fontWeight:800,letterSpacing:"-1.5px",lineHeight:1.08,fontFamily:"'Syne',Georgia,serif",margin:"0 0 12px"}}>
+            Choose Your Template.
+          </h2>
+          <p style={{color:"#334155",fontSize:14,lineHeight:1.75}}>Pick the style that best fits your industry and target company.</p>
+        </div>
+
+        {/* Cards */}
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(340px,1fr))",gap:1,background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.05)",borderRadius:20,overflow:"hidden",marginBottom:40}}>
           {templates.map(t=>(
-            <div key={t.id} onClick={()=>onSelect(t.id)} style={{
-              background:selected===t.id ? `linear-gradient(160deg,rgba(14,165,233,0.07),${C.card})` : C.card,
-              border:`2px solid ${selected===t.id ? C.teal : C.border}`,
-              borderRadius:20,overflow:"hidden",cursor:"pointer",
-              transition:"all 0.25s",
-              boxShadow:selected===t.id ? `0 0 0 1px ${C.teal}33,0 8px 32px rgba(14,165,233,0.12)` : "0 4px 20px rgba(0,0,0,0.3)",
-              transform:selected===t.id ? "scale(1.015)" : "scale(1)",
-            }}>
-              <div style={{background:"#0a1628",padding:"16px 20px",borderBottom:`1px solid ${C.border}`}}>
-                <t.Preview />
+            <div key={t.id}
+  onClick={()=>onSelect(t.id)}
+  onMouseEnter={e=>{ if(selected!==t.id) e.currentTarget.style.background="rgba(255,255,255,0.022)"; }}
+  onMouseLeave={e=>{ if(selected!==t.id) e.currentTarget.style.background="#05080f"; }}
+  style={{background:selected===t.id?"rgba(255,255,255,0.03)":"#05080f",cursor:"pointer",transition:"background 0.25s",position:"relative",overflow:"hidden"}}>
+              {selected===t.id && <div style={{position:"absolute",top:0,left:0,right:0,height:2,background:`linear-gradient(90deg,${t.badgeColor},transparent)`}}/>}
+
+              {/* Preview */}
+              <div style={{background:"#0a0f1e",padding:"24px 20px",borderBottom:"1px solid rgba(255,255,255,0.05)"}}>
+                <t.Preview/>
               </div>
-              <div style={{padding:18}}>
-                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8,gap:8}}>
+
+              {/* Info */}
+              <div style={{padding:"24px 24px 28px"}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10,gap:8}}>
                   <div>
-                    <div style={{color:C.white,fontWeight:800,fontSize:16,marginBottom:3}}>{t.label}</div>
-                    <div style={{color:C.muted,fontSize:12}}>{t.sub}</div>
+                    <div style={{color:"#e2e8f0",fontWeight:800,fontSize:15,letterSpacing:"0.06em",textTransform:"uppercase",fontFamily:"'Syne',Georgia,serif",marginBottom:4}}>{t.label}</div>
+                    <div style={{color:"#334155",fontSize:12}}>{t.sub}</div>
                   </div>
-                  <Tag color={t.badgeColor}>{t.badge}</Tag>
+                  <span style={{background:`${t.badgeColor}12`,color:t.badgeColor,border:`1px solid ${t.badgeColor}30`,borderRadius:20,padding:"3px 11px",fontSize:10,fontWeight:700,whiteSpace:"nowrap",letterSpacing:"0.04em"}}>{t.badge}</span>
                 </div>
-                <p style={{color:C.muted2,fontSize:12,lineHeight:1.6,marginBottom:12}}>{t.desc}</p>
+                <p style={{color:"#334155",fontSize:13,lineHeight:1.7,marginBottom:16}}>{t.desc}</p>
                 <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
                   {t.tags.map(tag=>(
-                    <span key={tag} style={{background:"#0d1e33",border:`1px solid ${C.border}`,color:C.muted2,borderRadius:20,padding:"3px 10px",fontSize:11}}>{tag}</span>
+                    <span key={tag} style={{background:"rgba(255,255,255,0.025)",border:"1px solid rgba(255,255,255,0.07)",color:"#475569",borderRadius:20,padding:"3px 10px",fontSize:11}}>{tag}</span>
                   ))}
                 </div>
               </div>
             </div>
           ))}
         </div>
+
+        {/* CTA */}
         {selected && (
-          <div style={{marginTop:36,textAlign:"center"}} className="fade-up">
-            <button
-              onClick={onContinue}
-              style={{background:`linear-gradient(135deg,${C.gold},#d97706)`,color:"#060d1a",border:"none",borderRadius:14,padding:"15px 48px",fontSize:16,fontWeight:800,cursor:"pointer",fontFamily:"'Inter',sans-serif",boxShadow:`0 6px 28px rgba(245,158,11,0.4)`}}
-            >
-              Continue with {selected==="modern" ? "Modern Photo" : "Classic ATS"} Template →
+          <div style={{textAlign:"center"}}>
+            <button onClick={onContinue}
+              style={{background:"#f0f4ff",color:"#05080f",border:"none",borderRadius:12,padding:"15px 48px",fontSize:14,fontWeight:800,cursor:"pointer",fontFamily:"'Syne',Georgia,serif",letterSpacing:"0.14em",textTransform:"uppercase",transition:"all 0.2s"}}
+              onMouseEnter={e=>{e.currentTarget.style.background="#ffffff";e.currentTarget.style.boxShadow="0 8px 32px rgba(240,244,255,0.15)";}}
+              onMouseLeave={e=>{e.currentTarget.style.background="#f0f4ff";e.currentTarget.style.boxShadow="none";}}>
+              CONTINUE WITH {selected==="modern"?"MODERN PHOTO":"CLASSIC ATS"} →
             </button>
           </div>
         )}
       </div>
+      <style>{`@keyframes pulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.6);opacity:0.4;}}`}</style>
     </div>
   );
 }
@@ -948,19 +994,37 @@ export default function ResumeBuilder() {
   return (
     <>
       <GlobalStyle/>
-      <div style={{minHeight:"100vh",background:C.bg,fontFamily:"'Inter',sans-serif"}}>
+      <div style={{minHeight:"100vh",background:"#05080f",fontFamily:"'Outfit','Segoe UI',sans-serif"}}>
         {/* Top bar */}
-        <div style={{background:"rgba(6,13,26,0.9)",backdropFilter:"blur(16px)",borderBottom:`1px solid ${C.border}`,padding:"12px 24px",display:"flex",alignItems:"center",justifyContent:"space-between",position:"sticky",top:0,zIndex:200}}>
+        <div style={{background:"rgba(5,8,15,0.9)",backdropFilter:"blur(18px)",borderBottom:"1px solid rgba(255,255,255,0.055)",padding:"14px 32px",display:"flex",alignItems:"center",justifyContent:"space-between",position:"sticky",top:0,zIndex:200}}>
           <div style={{display:"flex",alignItems:"center",gap:12}}>
-            <button onClick={()=>setScreen("choose")} style={{background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",gap:4}}>← Templates</button>
-            <div style={{width:1,height:20,background:C.border}} />
-            <div style={{width:30,height:30,borderRadius:9,background:`linear-gradient(135deg,${C.teal},${C.purple})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:15}}>📄</div>
-            <span style={{color:C.white,fontWeight:700,fontSize:14}}>{template==="modern" ? "Modern Photo Resume" : "Classic ATS Resume"}</span>
-            <Tag color={template==="modern" ? C.teal : C.success}>{template==="modern" ? "Modern" : "Classic"}</Tag>
+            <button onClick={()=>setScreen("choose")}
+              style={{background:"transparent",color:"#64748b",border:"1px solid rgba(255,255,255,0.08)",padding:"7px 16px",borderRadius:8,fontFamily:"inherit",fontSize:13,fontWeight:600,cursor:"pointer",transition:"all 0.2s"}}
+              onMouseEnter={e=>{e.currentTarget.style.color="#4f8ef7";e.currentTarget.style.borderColor="rgba(79,142,247,0.3)";}}
+              onMouseLeave={e=>{e.currentTarget.style.color="#64748b";e.currentTarget.style.borderColor="rgba(255,255,255,0.08)";}}>
+              ← Templates
+            </button>
+            <div style={{width:1,height:20,background:"rgba(255,255,255,0.07)"}}/>
+            <span style={{color:"#f0f4ff",fontWeight:800,fontSize:15,fontFamily:"'Syne',Georgia,serif",letterSpacing:"0.06em",textTransform:"uppercase"}}>
+              {template==="modern" ? "Modern Photo Resume" : "Classic ATS Resume"}
+            </span>
+            <span style={{background:"rgba(79,142,247,0.07)",color:"#4f8ef7",border:"1px solid rgba(79,142,247,0.18)",borderRadius:20,padding:"3px 12px",fontSize:10,fontWeight:700,letterSpacing:"0.06em",textTransform:"uppercase"}}>
+              {template==="modern" ? "Modern" : "Classic"}
+            </span>
           </div>
-          <div style={{display:"flex",gap:8}}>
-            <Btn variant="subtle" onClick={()=>setTab(tab==="form"?"preview":"form")} style={{fontSize:12}}>{tab==="form" ? "👁  Preview" : "✏️  Edit"}</Btn>
-            <Btn variant="gold" onClick={handlePrint} style={{fontSize:12}}>⬇  Download PDF</Btn>
+          <div style={{display:"flex",gap:10}}>
+            <button onClick={()=>setTab(tab==="form"?"preview":"form")}
+              style={{background:"transparent",color:"#64748b",border:"1px solid rgba(255,255,255,0.08)",padding:"8px 18px",borderRadius:8,fontFamily:"inherit",fontSize:13,fontWeight:600,cursor:"pointer",transition:"all 0.2s"}}
+              onMouseEnter={e=>{e.currentTarget.style.color="#4f8ef7";e.currentTarget.style.borderColor="rgba(79,142,247,0.3)";}}
+              onMouseLeave={e=>{e.currentTarget.style.color="#64748b";e.currentTarget.style.borderColor="rgba(255,255,255,0.08)";}}>
+              {tab==="form" ? "👁 Preview" : "✏️ Edit"}
+            </button>
+            <button onClick={handlePrint}
+              style={{background:"#f0f4ff",color:"#05080f",border:"none",borderRadius:8,padding:"8px 20px",fontFamily:"'Syne',Georgia,serif",fontSize:13,fontWeight:800,cursor:"pointer",letterSpacing:"0.08em",textTransform:"uppercase",transition:"all 0.2s"}}
+              onMouseEnter={e=>{e.currentTarget.style.background="#ffffff";e.currentTarget.style.boxShadow="0 4px 20px rgba(240,244,255,0.15)";}}
+              onMouseLeave={e=>{e.currentTarget.style.background="#f0f4ff";e.currentTarget.style.boxShadow="none";}}>
+              ⬇ Download PDF
+            </button>
           </div>
         </div>
 

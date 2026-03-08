@@ -1,8 +1,13 @@
+/* ═══════════════════════════════════════════
+   CandService.module.css — Premium Dark Theme
+   Shared by all 6 candidate service pages
+═══════════════════════════════════════════ */
+
 .page {
     min-height: 100vh;
-    background: #080C14;
+    background: #05080f;
     font-family: 'Outfit', 'Segoe UI', sans-serif;
-    padding-bottom: 72px;
+    padding-bottom: 80px;
 }
 
 /* ── TOP BAR ── */
@@ -10,40 +15,50 @@
     display: flex;
     align-items: center;
     gap: 16px;
-    padding: 18px 40px;
-    background: #0D1220;
-    border-bottom: 1px solid rgba(79, 142, 247, 0.12);
+    padding: 16px 48px;
+    background: rgba(5, 8, 15, 0.85);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.055);
     position: sticky;
     top: 0;
     z-index: 100;
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
 }
 
 .backBtn {
-    background: rgba(79, 142, 247, 0.08);
-    color: #4F8EF7;
-    border: 1px solid rgba(79, 142, 247, 0.2);
+    background: transparent;
+    color: #64748b;
+    border: 1px solid rgba(255, 255, 255, 0.08);
     padding: 7px 16px;
     border-radius: 8px;
-    font-family: 'Outfit', 'Segoe UI', sans-serif;
+    font-family: inherit;
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s, transform 0.15s;
+    transition: all 0.2s;
+    letter-spacing: 0.01em;
 }
 
 .backBtn:hover {
-    background: rgba(79, 142, 247, 0.16);
+    background: rgba(79, 142, 247, 0.08);
+    color: #4f8ef7;
+    border-color: rgba(79, 142, 247, 0.2);
     transform: translateX(-2px);
 }
 
-.topLogo { font-size: 18px; font-weight: 800; }
-.logoHire { color: #F0F4FF; }
-.logoOn   { color: #4F8EF7; }
+.topLogo {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.4px;
+}
+
+.logoHire { color: #f0f4ff; }
+.logoOn   { color: #4f8ef7; }
 
 /* ── HERO ── */
 .hero {
     text-align: center;
-    padding: 52px 24px 40px;
+    padding: 64px 24px 48px;
     position: relative;
     overflow: hidden;
 }
@@ -51,29 +66,29 @@
 .hero::before {
     content: '';
     position: absolute;
-    top: -60px;
+    top: -80px;
     left: 50%;
     transform: translateX(-50%);
     width: 600px;
     height: 300px;
-    background: radial-gradient(ellipse at center, rgba(79, 142, 247, 0.1) 0%, rgba(0, 212, 170, 0.04) 50%, transparent 75%);
+    background: radial-gradient(ellipse at center, rgba(79,142,247,0.07) 0%, transparent 70%);
     pointer-events: none;
-    z-index: 0;
 }
 
 .heroBadge {
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    background: rgba(79, 142, 247, 0.1);
-    color: #4F8EF7;
-    border: 1px solid rgba(79, 142, 247, 0.25);
+    background: rgba(79, 142, 247, 0.07);
+    color: #4f8ef7;
+    border: 1px solid rgba(79, 142, 247, 0.18);
     padding: 4px 14px;
     border-radius: 20px;
     font-size: 11px;
     font-weight: 600;
-    letter-spacing: 0.4px;
-    margin-bottom: 16px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
     position: relative;
     z-index: 1;
 }
@@ -82,40 +97,41 @@
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: #00D4AA;
-    box-shadow: 0 0 7px #00D4AA;
-    animation: pulse 2s infinite;
+    background: #00d4aa;
+    box-shadow: 0 0 8px #00d4aa;
     flex-shrink: 0;
+    animation: pulse 2s infinite;
 }
 
 @keyframes pulse {
     0%, 100% { transform: scale(1); opacity: 1; }
-    50%       { transform: scale(1.5); opacity: 0.5; }
+    50%       { transform: scale(1.6); opacity: 0.4; }
 }
 
 .heroTitle {
-    font-size: clamp(26px, 4vw, 44px);
+    font-size: clamp(28px, 4vw, 48px);
     font-weight: 800;
-    color: #F0F4FF;
-    letter-spacing: -1.2px;
-    margin-bottom: 12px;
+    color: #f0f4ff;
+    letter-spacing: -1.8px;
+    line-height: 1.08;
+    margin-bottom: 14px;
     position: relative;
     z-index: 1;
 }
 
 .grad {
-    background: linear-gradient(135deg, #4F8EF7 0%, #00D4AA 100%);
+    background: linear-gradient(135deg, #4f8ef7 0%, #00d4aa 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
 .heroSub {
-    max-width: 500px;
+    max-width: 480px;
     margin: 0 auto;
-    color: #7A8BA8;
+    color: #334155;
     font-size: 14.5px;
-    line-height: 1.7;
+    line-height: 1.75;
     position: relative;
     z-index: 1;
 }
@@ -127,132 +143,139 @@
     padding: 0 40px;
     display: flex;
     flex-direction: column;
-    gap: 22px;
+    gap: 20px;
 }
 
 /* ── UPLOAD / ACTION BOX ── */
 .uploadBox {
-    background: linear-gradient(145deg, #0D1A2E 0%, #0A1220 100%);
-    border: 2px dashed rgba(79, 142, 247, 0.28);
+    background: rgba(255, 255, 255, 0.018);
+    border: 1.5px dashed rgba(255, 255, 255, 0.1);
     border-radius: 16px;
-    padding: 48px 24px;
+    padding: 52px 24px;
     text-align: center;
     cursor: pointer;
     transition: border-color 0.2s, background 0.2s;
 }
 
 .uploadBox:hover {
-    border-color: rgba(79, 142, 247, 0.55);
-    background: rgba(79, 142, 247, 0.03);
+    border-color: rgba(79, 142, 247, 0.35);
+    background: rgba(79, 142, 247, 0.025);
 }
 
 .uploadIcon {
-    font-size: 52px;
+    font-size: 48px;
     display: block;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
+    filter: grayscale(0.2);
 }
 
 .uploadBox h3 {
     font-size: 18px;
     font-weight: 700;
-    color: #F0F4FF;
+    color: #e2e8f0;
     margin-bottom: 8px;
+    letter-spacing: -0.3px;
 }
 
 .uploadBox p {
     font-size: 13.5px;
-    color: #5A7090;
-    margin-bottom: 22px;
-    line-height: 1.6;
+    color: #334155;
+    margin-bottom: 24px;
+    line-height: 1.7;
 }
 
 .uploadBtn {
-    background: #4F8EF7;
+    background: #4f8ef7;
     color: #fff;
     border: none;
     padding: 12px 32px;
     border-radius: 10px;
-    font-family: 'Outfit', 'Segoe UI', sans-serif;
+    font-family: inherit;
     font-size: 14px;
     font-weight: 700;
     cursor: pointer;
-    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    transition: all 0.2s;
+    letter-spacing: 0.01em;
 }
 
 .uploadBtn:hover {
     background: #2d6de0;
     transform: translateY(-2px);
-    box-shadow: 0 10px 26px rgba(79, 142, 247, 0.3);
+    box-shadow: 0 8px 24px rgba(79, 142, 247, 0.28);
 }
 
 /* ── INFO GRID ── */
 .infoGrid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
+    gap: 1px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    overflow: hidden;
 }
 
 .infoCard {
-    background: linear-gradient(145deg, #0D1220 0%, #0A1020 100%);
-    border: 1px solid rgba(79, 142, 247, 0.12);
-    border-radius: 14px;
-    padding: 24px 22px;
-    transition: border-color 0.22s, transform 0.22s;
+    background: #05080f;
+    padding: 26px 24px;
+    transition: background 0.22s;
 }
 
 .infoCard:hover {
-    border-color: rgba(79, 142, 247, 0.38);
-    transform: translateY(-4px);
+    background: rgba(255, 255, 255, 0.022);
 }
 
 .infoCard span {
-    font-size: 28px;
+    font-size: 26px;
     display: block;
     margin-bottom: 12px;
 }
 
 .infoCard h4 {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
-    color: #F0F4FF;
-    margin-bottom: 7px;
+    color: #e2e8f0;
+    margin-bottom: 8px;
     letter-spacing: -0.2px;
 }
 
 .infoCard p {
     font-size: 13px;
-    color: #5A7090;
-    line-height: 1.65;
+    color: #334155;
+    line-height: 1.7;
 }
 
-/* ── COMING SOON / EMPTY STATE ── */
+.infoCard:hover p { color: #475569; }
+
+/* ── COMING SOON ── */
 .comingSoon {
-    background: linear-gradient(145deg, #0D1A2E 0%, #0A1220 100%);
-    border: 1px solid rgba(0, 212, 170, 0.2);
+    background: rgba(255, 255, 255, 0.018);
+    border: 1px solid rgba(255, 255, 255, 0.07);
     border-radius: 16px;
-    padding: 52px 24px;
+    padding: 60px 24px;
     text-align: center;
 }
 
 .comingSoon span {
-    font-size: 52px;
+    font-size: 48px;
     display: block;
-    margin-bottom: 16px;
+    margin-bottom: 18px;
 }
 
 .comingSoon h3 {
-    font-size: 19px;
+    font-size: 18px;
     font-weight: 700;
-    color: #F0F4FF;
+    color: #e2e8f0;
     margin-bottom: 10px;
+    letter-spacing: -0.3px;
 }
 
 .comingSoon p {
-    font-size: 14px;
-    color: #5A7090;
-    max-width: 420px;
+    font-size: 13.5px;
+    color: #334155;
+    max-width: 400px;
     margin: 0 auto;
-    line-height: 1.7;
+    line-height: 1.75;
 }
 
 /* ── RESPONSIVE ── */
@@ -260,4 +283,11 @@
     .body { padding: 0 16px; }
     .infoGrid { grid-template-columns: 1fr; }
     .topBar { padding: 14px 16px; }
+    .hero { padding: 48px 16px 36px; }
 }
+
+
+
+
+
+
