@@ -7,7 +7,7 @@ export const JobMatching = () => {
   return (
     <div className={styles.page}>
       <div className={styles.topBar}>
-        <button className={styles.backBtn} onClick={() => navigate("/Candidate/04_MainCand")}>← Back to Dashboard</button>
+        <button className={styles.backBtn} onClick={() => navigate("/Candidate/06_MainCand")}>← Back to Dashboard</button>
         <div className={styles.topLogo}><span className={styles.logoHire}>HIRE</span><span className={styles.logoOn}>ON</span></div>
       </div>
       <div className={styles.hero}>
