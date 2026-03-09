@@ -1,69 +1,46 @@
 import React, { useState, useEffect } from "react";
 import styles from "./AtsScreening.module.css";
 
-/* ── Claude API ATS scorer ──
-   Uses candidate profile data (skills, domain, bio) instead of PDF parsing
-   to avoid CORS and beta-header issues with direct browser → Anthropic calls.
-   The resume filename is shown for reference; scoring uses structured profile data.
+/* ── Local ATS scorer — NO API, NO KEY, NO QUOTA ──
+   Pure JS skill-matching. Instant, free, always works.
 */
-async function scoreResume(app, jobRole, requiredSkills) {
-  const profileSummary = [
-    `Name: ${app.candidateName}`,
-    `Email: ${app.candidateEmail}`,
-    `Domain: ${app.candidateDomain || "Not specified"}`,
-    `Skills: ${(app.candidateSkills || []).join(", ") || "Not specified"}`,
-    `Resume file: ${app.resumeName || "Uploaded"}`,
-    app.coverNote ? `Cover Note: ${app.coverNote}` : "",
-  ].filter(Boolean).join("\n");
+function scoreResume(app, jobRole, requiredSkills) {
+  const candSkills = (app.candidateSkills || []).map(s => s.toLowerCase().trim());
+  const reqList = (requiredSkills || "").split(/[,;]+/).map(s => s.trim().toLowerCase()).filter(Boolean);
 
-  try {
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "anthropic-dangerous-direct-browser-access": "true",
-      },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 1000,
-        messages: [{
-          role: "user",
-          content: `You are an ATS (Applicant Tracking System) evaluator. Analyse this candidate profile for the job below and respond ONLY with a valid JSON object — no markdown, no backticks, no explanation.
+  const matchedSkills = reqList.filter(req =>
+    candSkills.some(cs => cs.includes(req) || req.includes(cs))
+  );
+  const missingSkills = reqList.filter(req =>
+    !candSkills.some(cs => cs.includes(req) || req.includes(cs))
+  );
 
-JOB ROLE: ${jobRole}
-REQUIRED SKILLS: ${requiredSkills}
+  const matchRatio  = reqList.length > 0 ? matchedSkills.length / reqList.length : 0;
+  const domainBonus = app.candidateDomain ? 5 : 0;
+  const coverBonus  = app.coverNote ? 3 : 0;
+  const atsScore    = Math.min(100, Math.round(matchRatio * 82 + domainBonus + coverBonus + 10));
 
-CANDIDATE PROFILE:
-${profileSummary}
+  const experienceLevel =
+    atsScore >= 80 ? "Mid-level" :
+    atsScore >= 60 ? "Junior" : "Fresher";
 
-Return exactly this JSON:
-{
-  "atsScore": <number 0-100 based on skill match>,
-  "matchedSkills": [<skills from required list found in candidate profile>],
-  "missingSkills": [<skills from required list NOT found in candidate profile>],
-  "experienceLevel": "<Fresher | Junior | Mid-level | Senior>",
-  "topStrengths": ["<strength 1>", "<strength 2>", "<strength 3>"],
-  "recommendation": "<Strongly Recommend | Recommend | Maybe | Not Recommended>",
-  "summary": "<2 sentence summary of candidate fit for this role>"
-}`,
-        }],
-      }),
-    });
+  const recommendation =
+    atsScore >= 75 ? "Strongly Recommend" :
+    atsScore >= 55 ? "Recommend" :
+    atsScore >= 35 ? "Maybe" : "Not Recommended";
 
-    if (!response.ok) {
-      const errBody = await response.text();
-      console.error("API response:", response.status, errBody);
-      throw new Error(`API ${response.status}`);
-    }
+  const topStrengths = [];
+  if (matchedSkills.length > 0) topStrengths.push(`Matches required skills: ${matchedSkills.slice(0,2).join(", ")}`);
+  if (app.candidateDomain)      topStrengths.push(`Domain focus: ${app.candidateDomain}`);
+  if (app.coverNote)            topStrengths.push("Provided a personalised cover note");
+  if (topStrengths.length === 0) topStrengths.push("Profile submitted for review");
 
-    const data = await response.json();
-    const text = data.content?.map(b => b.text || "").join("") || "";
-    const clean = text.replace(/```json|```/g, "").trim();
-    return JSON.parse(clean);
-  } catch (err) {
-    console.error("ATS API error:", err);
-    return null;
-  }
+  const summary = matchedSkills.length > 0
+    ? `Candidate matches ${matchedSkills.length} of ${reqList.length} required skills including ${matchedSkills.slice(0,2).join(" and ")}. ${missingSkills.length > 0 ? "Missing: " + missingSkills.slice(0,2).join(", ") + "." : "All required skills covered."}`
+    : `Candidate has ${candSkills.length} skills on profile but none directly match the required skills for this role.`;
+
+  // Return as resolved promise so existing await logic still works
+  return Promise.resolve({ atsScore, matchedSkills, missingSkills, experienceLevel, recommendation, topStrengths, summary });
 }
 
 const RECOMMENDATION_CONFIG = {
