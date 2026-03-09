@@ -8,28 +8,39 @@ import { PostJob }                   from "./components/PostJob/PostJob";
 import { CompanyProfile }            from "./components/CompanyProfile/CompanyProfile";
 import { RecruiterProfile }          from "./components/RecruiterProfile/RecruiterProfile";
 import { HiringStats }               from "./components/HiringStats/HiringStats";
+import { AtsScreening }              from "./components/AtsScreening/AtsScreening";
+
+const DEFAULT_JOBS = [
+  {
+    id: 1, company: "Microsoft", role: "Project Manager",
+    applicants: 8, accepted: 2, rejected: 3,
+    deadline: "2025-08-01", salary: "$120,000",
+    location: "Bangalore, India", mode: "Hybrid",
+    type: "Full-time", experience: "3-5 years",
+    skills: "Leadership, Agile, JIRA",
+  },
+  {
+    id: 2, company: "Amazon", role: "SDE II",
+    applicants: 12, accepted: 4, rejected: 5,
+    deadline: "2025-07-15", salary: "$140,000",
+    location: "Hyderabad, India", mode: "Remote",
+    type: "Full-time", experience: "2-4 years",
+    skills: "Java, AWS, DSA",
+  },
+];
 
 export const RecruiterMain = () => {
   const [modal, setModal] = useState(null);
 
-  const [jobs, setJobs] = useState([
-    {
-      id: 1, company: "Microsoft", role: "Project Manager",
-      applicants: 8,  accepted: 2, rejected: 3,
-      deadline: "2025-08-01", salary: "$120,000",
-      location: "Bangalore, India", mode: "Hybrid",
-      type: "Full-time", experience: "3-5 years",
-      skills: "Leadership, Agile, JIRA",
-    },
-    {
-      id: 2, company: "Amazon", role: "SDE II",
-      applicants: 12, accepted: 4, rejected: 5,
-      deadline: "2025-07-15", salary: "$140,000",
-      location: "Hyderabad, India", mode: "Remote",
-      type: "Full-time", experience: "2-4 years",
-      skills: "Java, AWS, DSA",
-    },
-  ]);
+  const [jobs, setJobs] = useState(() => {
+    const stored = JSON.parse(localStorage.getItem("hireon_jobs"));
+    return stored?.length ? stored : DEFAULT_JOBS;
+  });
+
+  // keep hireon_jobs in sync so candidates can see posted jobs
+  useEffect(() => {
+    localStorage.setItem("hireon_jobs", JSON.stringify(jobs));
+  }, [jobs]);
 
   const [recruiterName, setRecruiterName] = useState("");
   useEffect(() => {
@@ -38,7 +49,10 @@ export const RecruiterMain = () => {
   }, [modal]);
 
   const handleAddJob = (newJob) => {
-    setJobs(prev => [...prev, { id: prev.length + 1, ...newJob }]);
+    setJobs(prev => {
+      const updated = [...prev, { id: Date.now(), applicants: 0, accepted: 0, rejected: 0, ...newJob }];
+      return updated;
+    });
   };
 
   return (
@@ -50,7 +64,7 @@ export const RecruiterMain = () => {
         onProfileClick={() => setModal("recruiterProfile")}
       />
 
-      {/* ── HERO ── */}
+      {/* HERO */}
       <div className={styles.hero}>
         <div className={styles.heroBadge}>
           <span className={styles.dot} />
@@ -66,7 +80,7 @@ export const RecruiterMain = () => {
         <div className={styles.statsRow}>
           {[
             { val: String(jobs.length),                                label: "Active Jobs"      },
-            { val: String(jobs.reduce((a,j) => a + j.applicants, 0)), label: "Total Applicants" },
+            { val: String(jobs.reduce((a,j) => a + (j.applicants||0), 0)), label: "Total Applicants" },
             { val: "AI",                                               label: "Powered"          },
           ].map(({ val, label }) => (
             <div key={label} className={styles.statItem}>
@@ -77,15 +91,16 @@ export const RecruiterMain = () => {
         </div>
       </div>
 
-      {/* ── SERVICES + JOB LISTINGS ── */}
+      {/* SERVICES + JOB LISTINGS */}
       <ServiceCards jobs={jobs} onOpen={setModal} />
       <JobListings  jobs={jobs} />
 
-      {/* ── MODALS ── */}
+      {/* MODALS */}
       {modal === "postJob"          && <PostJob          onClose={() => setModal(null)} onAdd={handleAddJob} />}
       {modal === "companyProfile"   && <CompanyProfile   onClose={() => setModal(null)} />}
       {modal === "recruiterProfile" && <RecruiterProfile onClose={() => setModal(null)} />}
       {modal === "hiringStats"      && <HiringStats      jobs={jobs} onClose={() => setModal(null)} />}
+      {modal === "ats"              && <AtsScreening     jobs={jobs} onClose={() => setModal(null)} />}
     </div>
   );
 };

@@ -1,69 +1,32 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { HireonJobsTab } from "./HireonJobsTab";
 
 const ADZUNA_APP_ID  = import.meta.env.VITE_ADZUNA_APP_ID;
 const ADZUNA_API_KEY = import.meta.env.VITE_ADZUNA_API_KEY;
 
-/* ─── known company → domain map for accurate logos ─── */
 const KNOWN_DOMAINS = {
-  "google": "google.com",
-  "amazon": "amazon.com",
-  "microsoft": "microsoft.com",
-  "meta": "meta.com",
-  "apple": "apple.com",
-  "flipkart": "flipkart.com",
-  "infosys": "infosys.com",
-  "tcs": "tcs.com",
-  "wipro": "wipro.com",
-  "accenture": "accenture.com",
-  "ibm": "ibm.com",
-  "oracle": "oracle.com",
-  "adobe": "adobe.com",
-  "samsung": "samsung.com",
-  "intel": "intel.com",
-  "cisco": "cisco.com",
-  "capgemini": "capgemini.com",
-  "cognizant": "cognizant.com",
-  "hcl": "hcltech.com",
-  "hcltech": "hcltech.com",
-  "tech mahindra": "techmahindra.com",
-  "techmahindra": "techmahindra.com",
-  "mphasis": "mphasis.com",
-  "mindtree": "mindtree.com",
-  "swiggy": "swiggy.com",
-  "zomato": "zomato.com",
-  "paytm": "paytm.com",
-  "ola": "olacabs.com",
-  "razorpay": "razorpay.com",
-  "freshworks": "freshworks.com",
-  "zoho": "zoho.com",
-  "byju": "byjus.com",
-  "byjus": "byjus.com",
-  "unacademy": "unacademy.com",
-  "meesho": "meesho.com",
-  "phonepe": "phonepe.com",
-  "cred": "cred.club",
-  "zerodha": "zerodha.com",
-  "nykaa": "nykaa.com",
-  "myntra": "myntra.com",
-  "uber": "uber.com",
-  "netflix": "netflix.com",
-  "spotify": "spotify.com",
-  "twitter": "twitter.com",
-  "linkedin": "linkedin.com",
-  "salesforce": "salesforce.com",
-  "atlassian": "atlassian.com",
-  "slack": "slack.com",
-  "shopify": "shopify.com",
-  "stripe": "stripe.com",
-  "airbnb": "airbnb.com",
-  "goldman sachs": "goldmansachs.com",
-  "goldman": "goldmansachs.com",
-  "jp morgan": "jpmorgan.com",
-  "jpmorgan": "jpmorgan.com",
-  "deloitte": "deloitte.com",
-  "pwc": "pwc.com",
-  "kpmg": "kpmg.com",
+  "google": "google.com", "amazon": "amazon.com", "microsoft": "microsoft.com",
+  "meta": "meta.com", "apple": "apple.com", "flipkart": "flipkart.com",
+  "infosys": "infosys.com", "tcs": "tcs.com", "wipro": "wipro.com",
+  "accenture": "accenture.com", "ibm": "ibm.com", "oracle": "oracle.com",
+  "adobe": "adobe.com", "samsung": "samsung.com", "intel": "intel.com",
+  "cisco": "cisco.com", "capgemini": "capgemini.com", "cognizant": "cognizant.com",
+  "hcl": "hcltech.com", "hcltech": "hcltech.com",
+  "tech mahindra": "techmahindra.com", "techmahindra": "techmahindra.com",
+  "mphasis": "mphasis.com", "mindtree": "mindtree.com", "swiggy": "swiggy.com",
+  "zomato": "zomato.com", "paytm": "paytm.com", "ola": "olacabs.com",
+  "razorpay": "razorpay.com", "freshworks": "freshworks.com", "zoho": "zoho.com",
+  "byju": "byjus.com", "byjus": "byjus.com", "unacademy": "unacademy.com",
+  "meesho": "meesho.com", "phonepe": "phonepe.com", "cred": "cred.club",
+  "zerodha": "zerodha.com", "nykaa": "nykaa.com", "myntra": "myntra.com",
+  "uber": "uber.com", "netflix": "netflix.com", "spotify": "spotify.com",
+  "twitter": "twitter.com", "linkedin": "linkedin.com", "salesforce": "salesforce.com",
+  "atlassian": "atlassian.com", "slack": "slack.com", "shopify": "shopify.com",
+  "stripe": "stripe.com", "airbnb": "airbnb.com",
+  "goldman sachs": "goldmansachs.com", "goldman": "goldmansachs.com",
+  "jp morgan": "jpmorgan.com", "jpmorgan": "jpmorgan.com",
+  "deloitte": "deloitte.com", "pwc": "pwc.com", "kpmg": "kpmg.com",
 };
 
 const getDomain = (companyName) => {
@@ -72,17 +35,12 @@ const getDomain = (companyName) => {
   for (const [key, domain] of Object.entries(KNOWN_DOMAINS)) {
     if (lower.includes(key)) return domain;
   }
-  // fallback: strip common suffixes and try .com
   const cleaned = lower
     .replace(/\s+(private|pvt|ltd|limited|inc|llc|llp|technologies|tech|solutions|services|group|india|infotech|software|systems|global|consulting|corporation|corp|co)\.?\s*$/gi, "")
-    .trim()
-    .replace(/\s+/g, "");
+    .trim().replace(/\s+/g, "");
   return cleaned.length > 1 ? `${cleaned}.com` : null;
 };
 
-/* ═══════════════════════════════════════
-   GRID CANVAS
-═══════════════════════════════════════ */
 function GridCanvas() {
   const ref = useRef();
   useEffect(() => {
@@ -114,9 +72,6 @@ function GridCanvas() {
   return <canvas ref={ref} style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0 }} />;
 }
 
-/* ═══════════════════════════════════════
-   PARTICLES
-═══════════════════════════════════════ */
 function Particles() {
   const ps = Array.from({ length: 16 }, (_, i) => ({
     id: i, left: `${(i * 19 + 7) % 100}%`, top: `${(i * 27 + 11) % 100}%`,
@@ -133,74 +88,44 @@ function Particles() {
   );
 }
 
-/* ═══════════════════════════════════════
-   COMPANY LOGO — tries Clearbit then Google favicon
-═══════════════════════════════════════ */
 function CompanyLogo({ company, size = 48, isIndia }) {
   const [srcIndex, setSrcIndex] = useState(0);
   const domain = getDomain(company);
   const initial = company?.[0]?.toUpperCase() || "?";
-
   const sources = domain ? [
     `https://logo.clearbit.com/${domain}`,
     `https://www.google.com/s2/favicons?domain=${domain}&sz=64`,
     `https://icon.horse/icon/${domain}`,
   ] : [];
-
   const bgColor   = isIndia ? "rgba(255,153,0,0.07)"  : "rgba(79,142,247,0.07)";
   const bdColor   = isIndia ? "rgba(255,153,0,0.15)"  : "rgba(79,142,247,0.15)";
   const textColor = isIndia ? "#ff9900" : "#4f8ef7";
   const showLogo  = sources.length > 0 && srcIndex < sources.length;
-
   return (
     <div style={{ width: size, height: size, borderRadius: 13, flexShrink: 0, background: bgColor, border: `1px solid ${bdColor}`, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
       {showLogo ? (
-        <img
-          src={sources[srcIndex]}
-          alt={company}
-          onError={() => setSrcIndex(i => i + 1)}
-          style={{ width: size - 12, height: size - 12, objectFit: "contain", display: "block" }}
-        />
+        <img src={sources[srcIndex]} alt={company} onError={() => setSrcIndex(i => i + 1)}
+          style={{ width: size - 12, height: size - 12, objectFit: "contain", display: "block" }} />
       ) : (
-        <span style={{ color: textColor, fontSize: Math.round(size * 0.38), fontWeight: 900, fontFamily: "'Syne',Georgia,serif" }}>
-          {initial}
-        </span>
+        <span style={{ color: textColor, fontSize: Math.round(size * 0.38), fontWeight: 900, fontFamily: "'Syne',Georgia,serif" }}>{initial}</span>
       )}
     </div>
   );
 }
 
-/* ═══════════════════════════════════════
-   JOB CARD
-═══════════════════════════════════════ */
 function JobCard({ job, index }) {
   const [hovered, setHovered] = useState(false);
   const isIndia = job.source === "adzuna";
   const salary  = job.salary_min && job.salary_max
     ? `₹${Math.round(job.salary_min / 100000)}L – ₹${Math.round(job.salary_max / 100000)}L`
     : job.salary || null;
-
   return (
-    <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        background: hovered ? "#040912" : "#03060c",
-        border: `1px solid ${hovered ? "rgba(79,142,247,0.22)" : "rgba(255,255,255,0.06)"}`,
-        borderRadius: 18, padding: "22px 26px",
-        transition: "all 0.32s cubic-bezier(0.16,1,0.3,1)",
-        transform: hovered ? "translateX(5px)" : "translateX(0)",
-        boxShadow: hovered ? "0 8px 32px rgba(0,0,0,0.3)" : "none",
-        animation: `cardIn 0.5s ${Math.min(index, 10) * 0.06}s both cubic-bezier(0.16,1,0.3,1)`,
-        position: "relative", overflow: "hidden",
-      }}>
-
+    <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
+      style={{ background: hovered ? "#040912" : "#03060c", border: `1px solid ${hovered ? "rgba(79,142,247,0.22)" : "rgba(255,255,255,0.06)"}`, borderRadius: 18, padding: "22px 26px", transition: "all 0.32s cubic-bezier(0.16,1,0.3,1)", transform: hovered ? "translateX(5px)" : "translateX(0)", boxShadow: hovered ? "0 8px 32px rgba(0,0,0,0.3)" : "none", animation: `cardIn 0.5s ${Math.min(index, 10) * 0.06}s both cubic-bezier(0.16,1,0.3,1)`, position: "relative", overflow: "hidden" }}>
       <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 3, background: hovered ? "linear-gradient(180deg,#4f8ef7,#00d4aa)" : "transparent", borderRadius: "3px 0 0 3px", transition: "all 0.3s ease" }} />
       <div style={{ position: "absolute", top: 0, left: 26, right: 26, height: 1, background: `linear-gradient(90deg,transparent,${isIndia ? "rgba(255,153,0,0.18)" : "rgba(79,142,247,0.14)"},transparent)` }} />
-
       <div style={{ display: "flex", alignItems: "flex-start", gap: 18, flexWrap: "wrap" }}>
         <CompanyLogo company={job.company} size={48} isIndia={isIndia} />
-
         <div style={{ flex: 1, minWidth: 220 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 7 }}>
             <h3 style={{ color: "#f0f4ff", fontSize: 15, fontWeight: 700, fontFamily: "'Syne',Georgia,serif", letterSpacing: "-0.2px", margin: 0 }}>{job.title}</h3>
@@ -222,7 +147,6 @@ function JobCard({ job, index }) {
             </div>
           )}
         </div>
-
         <div style={{ flexShrink: 0 }}>
           <a href={job.url} target="_blank" rel="noopener noreferrer"
             style={{ background: hovered ? "#ffffff" : "#f0f4ff", color: "#05080f", border: "none", borderRadius: 11, padding: "11px 26px", fontSize: 12, fontWeight: 800, cursor: "pointer", fontFamily: "'Syne',Georgia,serif", letterSpacing: "0.1em", textTransform: "uppercase", textDecoration: "none", display: "block", whiteSpace: "nowrap", transition: "all 0.25s", boxShadow: hovered ? "0 4px 20px rgba(240,244,255,0.15)" : "none" }}>
@@ -234,9 +158,6 @@ function JobCard({ job, index }) {
   );
 }
 
-/* ═══════════════════════════════════════
-   MAIN
-═══════════════════════════════════════ */
 export const JobMatching = () => {
   const navigate = useNavigate();
   const [screen, setScreen]             = useState("landing");
@@ -317,6 +238,7 @@ export const JobMatching = () => {
 
   const indiaCount  = jobs.filter(j => j.source === "adzuna").length;
   const globalCount = jobs.filter(j => j.source === "remotive").length;
+  const hireonCount = JSON.parse(localStorage.getItem("hireon_jobs"))?.length || 0;
   const paginated   = filtered.slice(0, page * JOBS_PER_PAGE);
   const hasActive   = filters.location || filters.company || filters.type !== "all";
 
@@ -335,17 +257,21 @@ export const JobMatching = () => {
       <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "64px 24px", textAlign: "center", position: "relative", zIndex: 1 }}>
         <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(79,142,247,0.07)", color: "#4f8ef7", border: "1px solid rgba(79,142,247,0.18)", padding: "5px 16px", borderRadius: 20, fontSize: 11, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 28 }}>
           <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#00d4aa", boxShadow: "0 0 8px #00d4aa", display: "inline-block", animation: "pulse 2s infinite" }} />
-          India + Global · Live Job Listings
+          India + Global + HIREON · Live Job Listings
         </div>
         <h1 style={{ fontSize: "clamp(34px,5vw,66px)", fontWeight: 800, lineHeight: 1.06, letterSpacing: "-2px", margin: "0 0 18px", color: "#f0f4ff", fontFamily: "'Syne',Georgia,serif" }}>
           Find Your Dream Job.<br />
           <span style={{ fontStyle: "italic", fontWeight: 300, color: "rgba(240,244,255,0.35)", fontFamily: "Georgia,'Times New Roman',serif", letterSpacing: "-1px" }}>Right Here, Right Now.</span>
         </h1>
         <p style={{ fontSize: 15, color: "#475569", maxWidth: 500, lineHeight: 1.85, margin: "0 0 48px" }}>
-          Real job listings from <span style={{ color: "#ff9900", fontWeight: 700 }}>India</span> via Adzuna and <span style={{ color: "#4f8ef7", fontWeight: 700 }}>global remote</span> opportunities — filtered for software, data, and engineering roles.
+          Real job listings from <span style={{ color: "#ff9900", fontWeight: 700 }}>India</span> via Adzuna, <span style={{ color: "#4f8ef7", fontWeight: 700 }}>global remote</span> opportunities, and <span style={{ color: "#00d4aa", fontWeight: 700 }}>HIREON recruiter jobs</span> matched to your skills.
         </p>
         <div style={{ display: "flex", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.055)", borderRadius: 14, overflow: "hidden", marginBottom: 52 }}>
-          {[{ val: "India", label: "Adzuna Jobs", color: "#ff9900" }, { val: "Global", label: "Remote Jobs", color: "#4f8ef7" }, { val: "Live", label: "Real-time Data", color: "#00d4aa" }].map(({ val, label, color }, i, arr) => (
+          {[
+            { val: "India",  label: "Adzuna Jobs",    color: "#ff9900" },
+            { val: "Global", label: "Remote Jobs",    color: "#4f8ef7" },
+            { val: "HIREON", label: "Matched to You", color: "#00d4aa" },
+          ].map(({ val, label, color }, i, arr) => (
             <div key={label} style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "18px 38px", gap: 5, borderRight: i < arr.length - 1 ? "1px solid rgba(255,255,255,0.055)" : "none" }}>
               <span style={{ fontSize: 18, fontWeight: 800, color, fontFamily: "'Syne',Georgia,serif" }}>{val}</span>
               <span style={{ fontSize: 11, color: "#334155", textTransform: "uppercase", letterSpacing: "0.07em" }}>{label}</span>
@@ -388,7 +314,7 @@ export const JobMatching = () => {
           onMouseEnter={e => { e.currentTarget.style.background = "#ffffff"; }}
           onMouseLeave={e => { e.currentTarget.style.background = "#f0f4ff"; }}>Search</button>
         <div style={{ marginLeft: "auto", color: "#64748b", fontSize: 12, fontWeight: 600 }}>
-          <span style={{ color: "#f0f4ff", fontWeight: 800 }}>{filtered.length}</span> results
+          {activeSource !== "hireon" && <><span style={{ color: "#f0f4ff", fontWeight: 800 }}>{filtered.length}</span> results</>}
         </div>
       </div>
 
@@ -398,6 +324,7 @@ export const JobMatching = () => {
           { val: "all",    label: "All Jobs",     count: jobs.length,  color: "#e2e8f0" },
           { val: "india",  label: "India",         count: indiaCount,   color: "#ff9900" },
           { val: "global", label: "Global Remote", count: globalCount,  color: "#4f8ef7" },
+          { val: "hireon", label: "HIREON Jobs",   count: hireonCount,  color: "#00d4aa" },
         ].map(({ val, label, count, color }) => (
           <button key={val} onClick={() => { setActiveSource(val); setPage(1); }}
             style={{ background: "transparent", color: activeSource === val ? color : "#475569", border: "none", borderBottom: `2px solid ${activeSource === val ? color : "transparent"}`, padding: "13px 22px", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "'Syne',Georgia,serif", letterSpacing: "0.04em", transition: "all 0.25s", display: "flex", alignItems: "center", gap: 8 }}>
@@ -412,144 +339,105 @@ export const JobMatching = () => {
       {/* Layout */}
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "28px 24px", display: "flex", gap: 24, position: "relative", zIndex: 1, alignItems: "flex-start" }}>
 
-        {/* ═══════════════════════
-            SIDEBAR
-        ═══════════════════════ */}
-        <div style={{ width: 248, flexShrink: 0, position: "sticky", top: 110, display: "flex", flexDirection: "column", gap: 14 }}>
+        {/* SIDEBAR — hidden on HIREON tab */}
+        {activeSource !== "hireon" && (
+          <div style={{ width: 248, flexShrink: 0, position: "sticky", top: 110, display: "flex", flexDirection: "column", gap: 14 }}>
 
-          {/* FILTER CARD */}
-          <div style={{ background: "linear-gradient(160deg,#060b14 0%,#03060c 100%)", border: "1px solid rgba(79,142,247,0.12)", borderRadius: 20, overflow: "hidden", boxShadow: "0 4px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04)" }}>
-
-            {/* Header — no icon, plain bold white */}
-            <div style={{ padding: "16px 20px 14px", background: "linear-gradient(135deg,rgba(79,142,247,0.07) 0%,rgba(0,212,170,0.03) 100%)", borderBottom: "1px solid rgba(255,255,255,0.055)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <span style={{ color: "#ffffff", fontSize: 13, fontWeight: 900, fontFamily: "'Syne',Georgia,serif", letterSpacing: "0.18em", textTransform: "uppercase" }}>
-                FILTERS
-              </span>
-              {hasActive && (
-                <button onClick={() => setFilters({ location: "", type: "all", company: "" })}
-                  style={{ background: "rgba(239,68,68,0.09)", border: "1px solid rgba(239,68,68,0.2)", color: "#f87171", fontSize: 10, fontWeight: 700, cursor: "pointer", fontFamily: "'Syne',Georgia,serif", letterSpacing: "0.08em", padding: "3px 11px", borderRadius: 6, transition: "all 0.2s", textTransform: "uppercase" }}
-                  onMouseEnter={e => { e.currentTarget.style.background = "rgba(239,68,68,0.16)"; }}
-                  onMouseLeave={e => { e.currentTarget.style.background = "rgba(239,68,68,0.09)"; }}>
-                  Clear
-                </button>
-              )}
-            </div>
-
-            <div style={{ padding: "18px 20px", display: "flex", flexDirection: "column", gap: 20 }}>
-
-              {/* Company */}
-              <div>
-                <label style={{ color: "#cbd5e1", fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.14em", display: "block", marginBottom: 9 }}>
-                  Company
-                </label>
-                <input placeholder="e.g. Google, TCS, Infosys..."
-                  value={filters.company}
-                  onChange={e => setFilters(f => ({ ...f, company: e.target.value }))}
-                  style={{ width: "100%", background: "rgba(2,5,8,0.8)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, padding: "9px 14px", color: "#f0f4ff", fontFamily: "'Outfit',sans-serif", fontSize: 12, outline: "none", boxSizing: "border-box", transition: "all 0.25s" }}
-                  onFocus={e => { e.currentTarget.style.borderColor = "rgba(79,142,247,0.5)"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(79,142,247,0.08)"; }}
-                  onBlur={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; e.currentTarget.style.boxShadow = "none"; }} />
+            <div style={{ background: "linear-gradient(160deg,#060b14 0%,#03060c 100%)", border: "1px solid rgba(79,142,247,0.12)", borderRadius: 20, overflow: "hidden", boxShadow: "0 4px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04)" }}>
+              <div style={{ padding: "16px 20px 14px", background: "linear-gradient(135deg,rgba(79,142,247,0.07) 0%,rgba(0,212,170,0.03) 100%)", borderBottom: "1px solid rgba(255,255,255,0.055)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <span style={{ color: "#ffffff", fontSize: 13, fontWeight: 900, fontFamily: "'Syne',Georgia,serif", letterSpacing: "0.18em", textTransform: "uppercase" }}>FILTERS</span>
+                {hasActive && (
+                  <button onClick={() => setFilters({ location: "", type: "all", company: "" })}
+                    style={{ background: "rgba(239,68,68,0.09)", border: "1px solid rgba(239,68,68,0.2)", color: "#f87171", fontSize: 10, fontWeight: 700, cursor: "pointer", fontFamily: "'Syne',Georgia,serif", letterSpacing: "0.08em", padding: "3px 11px", borderRadius: 6, transition: "all 0.2s", textTransform: "uppercase" }}
+                    onMouseEnter={e => { e.currentTarget.style.background = "rgba(239,68,68,0.16)"; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = "rgba(239,68,68,0.09)"; }}>Clear</button>
+                )}
               </div>
-
-              {/* Location */}
-              <div>
-                <label style={{ color: "#cbd5e1", fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.14em", display: "block", marginBottom: 9 }}>
-                  Location
-                </label>
-                <input placeholder="e.g. Bangalore, Mumbai, Delhi..."
-                  value={filters.location}
-                  onChange={e => setFilters(f => ({ ...f, location: e.target.value }))}
-                  style={{ width: "100%", background: "rgba(2,5,8,0.8)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, padding: "9px 14px", color: "#f0f4ff", fontFamily: "'Outfit',sans-serif", fontSize: 12, outline: "none", boxSizing: "border-box", transition: "all 0.25s" }}
-                  onFocus={e => { e.currentTarget.style.borderColor = "rgba(239,68,68,0.45)"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(239,68,68,0.07)"; }}
-                  onBlur={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; e.currentTarget.style.boxShadow = "none"; }} />
-              </div>
-
-              {/* Divider */}
-              <div style={{ height: 1, background: "rgba(255,255,255,0.04)", margin: "-4px 0" }} />
-
-              {/* Work Type */}
-              <div>
-                <label style={{ color: "#cbd5e1", fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.14em", display: "block", marginBottom: 10 }}>
-                  Work Type
-                </label>
-                <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-                  {[
-                    { val: "all",    label: "All Types",    dot: "#64748b" },
-                    { val: "remote", label: "Remote Only",  dot: "#00d4aa" },
-                    { val: "onsite", label: "On-site Only", dot: "#f59e0b" },
-                  ].map(({ val, label, dot }) => {
-                    const active = filters.type === val;
-                    return (
-                      <button key={val} onClick={() => setFilters(f => ({ ...f, type: val }))}
-                        style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", background: active ? `${dot}10` : "rgba(255,255,255,0.02)", color: active ? "#ffffff" : "#64748b", border: `1px solid ${active ? `${dot}38` : "rgba(255,255,255,0.06)"}`, borderRadius: 10, padding: "9px 13px", fontSize: 12, fontWeight: active ? 700 : 500, cursor: "pointer", fontFamily: "'Outfit',sans-serif", textAlign: "left", transition: "all 0.22s", boxShadow: active ? `0 2px 14px ${dot}20` : "none" }}>
-                        <div style={{ width: 8, height: 8, borderRadius: "50%", background: active ? dot : "rgba(255,255,255,0.12)", flexShrink: 0, transition: "all 0.22s", boxShadow: active ? `0 0 8px ${dot}` : "none" }} />
-                        {label}
-                        {active && <span style={{ marginLeft: "auto", color: dot, fontSize: 12, fontWeight: 900 }}>✓</span>}
+              <div style={{ padding: "18px 20px", display: "flex", flexDirection: "column", gap: 20 }}>
+                <div>
+                  <label style={{ color: "#cbd5e1", fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.14em", display: "block", marginBottom: 9 }}>Company</label>
+                  <input placeholder="e.g. Google, TCS, Infosys..." value={filters.company}
+                    onChange={e => setFilters(f => ({ ...f, company: e.target.value }))}
+                    style={{ width: "100%", background: "rgba(2,5,8,0.8)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, padding: "9px 14px", color: "#f0f4ff", fontFamily: "'Outfit',sans-serif", fontSize: 12, outline: "none", boxSizing: "border-box", transition: "all 0.25s" }}
+                    onFocus={e => { e.currentTarget.style.borderColor = "rgba(79,142,247,0.5)"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(79,142,247,0.08)"; }}
+                    onBlur={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; e.currentTarget.style.boxShadow = "none"; }} />
+                </div>
+                <div>
+                  <label style={{ color: "#cbd5e1", fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.14em", display: "block", marginBottom: 9 }}>Location</label>
+                  <input placeholder="e.g. Bangalore, Mumbai..." value={filters.location}
+                    onChange={e => setFilters(f => ({ ...f, location: e.target.value }))}
+                    style={{ width: "100%", background: "rgba(2,5,8,0.8)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, padding: "9px 14px", color: "#f0f4ff", fontFamily: "'Outfit',sans-serif", fontSize: 12, outline: "none", boxSizing: "border-box", transition: "all 0.25s" }}
+                    onFocus={e => { e.currentTarget.style.borderColor = "rgba(239,68,68,0.45)"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(239,68,68,0.07)"; }}
+                    onBlur={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; e.currentTarget.style.boxShadow = "none"; }} />
+                </div>
+                <div style={{ height: 1, background: "rgba(255,255,255,0.04)", margin: "-4px 0" }} />
+                <div>
+                  <label style={{ color: "#cbd5e1", fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.14em", display: "block", marginBottom: 10 }}>Work Type</label>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+                    {[{ val: "all", label: "All Types", dot: "#64748b" }, { val: "remote", label: "Remote Only", dot: "#00d4aa" }, { val: "onsite", label: "On-site Only", dot: "#f59e0b" }].map(({ val, label, dot }) => {
+                      const active = filters.type === val;
+                      return (
+                        <button key={val} onClick={() => setFilters(f => ({ ...f, type: val }))}
+                          style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", background: active ? `${dot}10` : "rgba(255,255,255,0.02)", color: active ? "#ffffff" : "#64748b", border: `1px solid ${active ? `${dot}38` : "rgba(255,255,255,0.06)"}`, borderRadius: 10, padding: "9px 13px", fontSize: 12, fontWeight: active ? 700 : 500, cursor: "pointer", fontFamily: "'Outfit',sans-serif", textAlign: "left", transition: "all 0.22s", boxShadow: active ? `0 2px 14px ${dot}20` : "none" }}>
+                          <div style={{ width: 8, height: 8, borderRadius: "50%", background: active ? dot : "rgba(255,255,255,0.12)", flexShrink: 0, transition: "all 0.22s", boxShadow: active ? `0 0 8px ${dot}` : "none" }} />
+                          {label}
+                          {active && <span style={{ marginLeft: "auto", color: dot, fontSize: 12, fontWeight: 900 }}>✓</span>}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+                <div style={{ height: 1, background: "rgba(255,255,255,0.04)", margin: "-4px 0" }} />
+                <div>
+                  <label style={{ color: "#cbd5e1", fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.14em", display: "block", marginBottom: 10 }}>Quick Search</label>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                    {["React", "Python", "Java", "Node.js", "AWS", "ML", "DevOps", "Flutter", "Go", "SQL"].map(chip => (
+                      <button key={chip} onClick={() => { setSearchInput(chip); fetchJobs(chip); }}
+                        style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 8, padding: "5px 11px", color: "#94a3b8", fontSize: 11, fontWeight: 600, cursor: "pointer", fontFamily: "'Outfit',sans-serif", transition: "all 0.2s" }}
+                        onMouseEnter={e => { e.currentTarget.style.color = "#4f8ef7"; e.currentTarget.style.borderColor = "rgba(79,142,247,0.32)"; e.currentTarget.style.background = "rgba(79,142,247,0.07)"; e.currentTarget.style.transform = "scale(1.06)"; }}
+                        onMouseLeave={e => { e.currentTarget.style.color = "#94a3b8"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; e.currentTarget.style.background = "rgba(255,255,255,0.03)"; e.currentTarget.style.transform = "scale(1)"; }}>
+                        {chip}
                       </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Divider */}
-              <div style={{ height: 1, background: "rgba(255,255,255,0.04)", margin: "-4px 0" }} />
-
-              {/* Quick Search */}
-              <div>
-                <label style={{ color: "#cbd5e1", fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.14em", display: "block", marginBottom: 10 }}>
-                  Quick Search
-                </label>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                  {["React", "Python", "Java", "Node.js", "AWS", "ML", "DevOps", "Flutter", "Go", "SQL"].map(chip => (
-                    <button key={chip} onClick={() => { setSearchInput(chip); fetchJobs(chip); }}
-                      style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 8, padding: "5px 11px", color: "#94a3b8", fontSize: 11, fontWeight: 600, cursor: "pointer", fontFamily: "'Outfit',sans-serif", transition: "all 0.2s" }}
-                      onMouseEnter={e => { e.currentTarget.style.color = "#4f8ef7"; e.currentTarget.style.borderColor = "rgba(79,142,247,0.32)"; e.currentTarget.style.background = "rgba(79,142,247,0.07)"; e.currentTarget.style.transform = "scale(1.06)"; }}
-                      onMouseLeave={e => { e.currentTarget.style.color = "#94a3b8"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; e.currentTarget.style.background = "rgba(255,255,255,0.03)"; e.currentTarget.style.transform = "scale(1)"; }}>
-                      {chip}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-          {/* OVERVIEW CARD */}
-          <div style={{ background: "linear-gradient(160deg,#060b14 0%,#03060c 100%)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 20, overflow: "hidden", boxShadow: "0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03)" }}>
-
-            {/* Header — no icon, plain bold white */}
-            <div style={{ padding: "16px 20px 14px", borderBottom: "1px solid rgba(255,255,255,0.045)" }}>
-              <span style={{ color: "#ffffff", fontSize: 13, fontWeight: 900, fontFamily: "'Syne',Georgia,serif", letterSpacing: "0.18em", textTransform: "uppercase" }}>
-                OVERVIEW
-              </span>
-            </div>
-
-            <div style={{ padding: "16px 20px" }}>
-              {[
-                { label: "India Jobs",    val: indiaCount,      color: "#ff9900", bar: indiaCount },
-                { label: "Global Remote", val: globalCount,     color: "#4f8ef7", bar: globalCount },
-                { label: "Showing Now",   val: filtered.length, color: "#00d4aa", bar: filtered.length },
-              ].map(({ label, val, color, bar }) => (
-                <div key={label} style={{ marginBottom: 16 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 7 }}>
-                    <span style={{ color: "#94a3b8", fontSize: 12 }}>{label}</span>
-                    <span style={{ color, fontSize: 14, fontWeight: 900, fontFamily: "'Syne',Georgia,serif" }}>{val}</span>
-                  </div>
-                  <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 99, height: 3, overflow: "hidden" }}>
-                    <div style={{ width: jobs.length > 0 ? `${Math.min((bar / Math.max(jobs.length, 1)) * 100, 100)}%` : "0%", height: "100%", background: `linear-gradient(90deg,${color},${color}88)`, borderRadius: 99, transition: "width 1s cubic-bezier(0.16,1,0.3,1)", boxShadow: `0 0 6px ${color}60` }} />
+                    ))}
                   </div>
                 </div>
-              ))}
+              </div>
             </div>
+
+            <div style={{ background: "linear-gradient(160deg,#060b14 0%,#03060c 100%)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 20, overflow: "hidden", boxShadow: "0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03)" }}>
+              <div style={{ padding: "16px 20px 14px", borderBottom: "1px solid rgba(255,255,255,0.045)" }}>
+                <span style={{ color: "#ffffff", fontSize: 13, fontWeight: 900, fontFamily: "'Syne',Georgia,serif", letterSpacing: "0.18em", textTransform: "uppercase" }}>OVERVIEW</span>
+              </div>
+              <div style={{ padding: "16px 20px" }}>
+                {[
+                  { label: "India Jobs",    val: indiaCount,      color: "#ff9900", bar: indiaCount },
+                  { label: "Global Remote", val: globalCount,     color: "#4f8ef7", bar: globalCount },
+                  { label: "Showing Now",   val: filtered.length, color: "#00d4aa", bar: filtered.length },
+                ].map(({ label, val, color, bar }) => (
+                  <div key={label} style={{ marginBottom: 16 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 7 }}>
+                      <span style={{ color: "#94a3b8", fontSize: 12 }}>{label}</span>
+                      <span style={{ color, fontSize: 14, fontWeight: 900, fontFamily: "'Syne',Georgia,serif" }}>{val}</span>
+                    </div>
+                    <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 99, height: 3, overflow: "hidden" }}>
+                      <div style={{ width: jobs.length > 0 ? `${Math.min((bar / Math.max(jobs.length, 1)) * 100, 100)}%` : "0%", height: "100%", background: `linear-gradient(90deg,${color},${color}88)`, borderRadius: 99, transition: "width 1s cubic-bezier(0.16,1,0.3,1)", boxShadow: `0 0 6px ${color}60` }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
           </div>
+        )}
 
-        </div>
-
-        {/* ═══════════════════════
-            JOBS LIST
-        ═══════════════════════ */}
+        {/* JOBS LIST */}
         <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 10 }}>
 
-          {loading && (
+          {/* HIREON JOBS TAB */}
+          {activeSource === "hireon" && <HireonJobsTab />}
+
+          {/* EXTERNAL JOBS TABS */}
+          {activeSource !== "hireon" && loading && (
             <div style={{ textAlign: "center", padding: "80px 0" }}>
               <div style={{ color: "#f0f4ff", fontWeight: 700, fontSize: 14, fontFamily: "'Syne',Georgia,serif", letterSpacing: "0.06em", marginBottom: 6 }}>Fetching live jobs...</div>
               <div style={{ color: "#475569", fontSize: 12, marginBottom: 20 }}>Connecting to Adzuna India &amp; Remotive</div>
@@ -559,15 +447,15 @@ export const JobMatching = () => {
             </div>
           )}
 
-          {error && !loading && (
+          {activeSource !== "hireon" && error && !loading && (
             <div style={{ background: "rgba(239,68,68,0.05)", border: "1px solid rgba(239,68,68,0.14)", borderRadius: 14, padding: "18px 22px", color: "#f87171", fontSize: 13 }}>{error}</div>
           )}
 
-          {!loading && !error && paginated.map((job, i) => (
+          {activeSource !== "hireon" && !loading && !error && paginated.map((job, i) => (
             <JobCard key={job.id} job={job} index={i} />
           ))}
 
-          {!loading && paginated.length < filtered.length && (
+          {activeSource !== "hireon" && !loading && paginated.length < filtered.length && (
             <button onClick={() => setPage(p => p + 1)}
               style={{ background: "transparent", color: "#4f8ef7", border: "1px solid rgba(79,142,247,0.2)", borderRadius: 14, padding: "14px", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "'Syne',Georgia,serif", letterSpacing: "0.1em", textTransform: "uppercase", transition: "all 0.25s", marginTop: 4 }}
               onMouseEnter={e => { e.currentTarget.style.background = "rgba(79,142,247,0.05)"; e.currentTarget.style.borderColor = "rgba(79,142,247,0.35)"; }}
@@ -576,7 +464,7 @@ export const JobMatching = () => {
             </button>
           )}
 
-          {!loading && !error && filtered.length === 0 && (
+          {activeSource !== "hireon" && !loading && !error && filtered.length === 0 && (
             <div style={{ textAlign: "center", padding: "80px 0" }}>
               <div style={{ fontFamily: "'Syne',Georgia,serif", fontWeight: 800, fontSize: 15, letterSpacing: "0.04em", color: "#475569", marginBottom: 10 }}>No jobs match your filters</div>
               <div style={{ fontSize: 12, color: "#334155", marginBottom: 22 }}>Try clearing filters or a different search</div>
