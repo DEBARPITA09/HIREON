@@ -1,0 +1,143 @@
+/* HiringStats.module.css */
+
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.82);
+  backdrop-filter: blur(10px); z-index: 200;
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: 32px 24px; overflow-y: auto;
+  animation: fadeIn 0.2s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal {
+  background: #0b0f1a;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px; padding: 36px;
+  width: 100%; max-width: 900px;
+  animation: slideUp 0.25s ease;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.7);
+  font-family: 'Outfit', 'Segoe UI', sans-serif;
+  display: flex; flex-direction: column; gap: 28px;
+}
+@keyframes slideUp { from { opacity:0; transform: translateY(24px); } to { opacity:1; transform: translateY(0); } }
+
+/* header */
+.modalHeader {
+  display: flex; align-items: flex-start; justify-content: space-between;
+}
+.modalTitle { font-size: 20px; font-weight: 800; color: #f0f4ff; margin: 0 0 4px; letter-spacing: -0.5px; }
+.modalSub   { font-size: 12px; color: #475569; margin: 0; }
+
+.closeBtn {
+  background: rgba(255,255,255,0.05); border: none; color: #475569;
+  width: 32px; height: 32px; border-radius: 9px; cursor: pointer;
+  font-size: 14px; display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s; font-family: inherit; flex-shrink: 0;
+}
+.closeBtn:hover { background: rgba(255,255,255,0.1); color: #f0f4ff; }
+
+/* overview strip */
+.overviewGrid {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 1px; background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 12px; overflow: hidden;
+}
+
+.overviewCard {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 20px 12px; gap: 5px;
+  border: 1px solid transparent; transition: filter 0.2s;
+}
+.overviewCard:hover { filter: brightness(1.2); }
+.overviewVal   { font-size: 26px; font-weight: 800; letter-spacing: -1px; line-height: 1; }
+.overviewLabel { font-size: 9px; font-weight: 600; color: #475569; letter-spacing: 0.08em; text-transform: uppercase; text-align: center; }
+
+/* chart rows */
+.row2 {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+}
+
+/* shared chart wrapper */
+.chartWrap {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px; padding: 20px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+
+.chartLabel {
+  font-size: 11px; font-weight: 700; color: #94a3b8;
+  letter-spacing: 0.08em; text-transform: uppercase; margin: 0;
+}
+
+/* donut */
+.donutSection {
+  display: flex; align-items: center; gap: 20px;
+}
+
+.donut {
+  width: 140px; height: 140px; flex-shrink: 0;
+}
+
+.donutLegend { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+
+.legendRow {
+  display: flex; align-items: center; gap: 8px;
+}
+.legendDot   { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.legendLabel { font-size: 11px; color: #64748b; flex: 1; }
+.legendVal   { font-size: 13px; font-weight: 700; }
+.legendPct   { font-size: 10px; color: #334155; }
+
+/* line chart canvas */
+.lineCanvas {
+  width: 100%; height: 140px; display: block;
+}
+
+/* bar chart canvas */
+.barCanvas {
+  width: 100%; display: block;
+  height: 200px;
+}
+
+/* funnel */
+.funnel { display: flex; flex-direction: column; gap: 6px; }
+
+.funnelRow { display: flex; flex-direction: column; gap: 3px; }
+
+.funnelLabel {
+  font-size: 10px; font-weight: 600; color: #475569;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+
+.funnelTrack {
+  height: 28px; background: rgba(255,255,255,0.04);
+  border-radius: 6px; overflow: hidden; position: relative;
+  display: flex; align-items: center;
+}
+
+.funnelFill {
+  height: 100%; border-radius: 6px;
+  transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+}
+
+.funnelVal {
+  position: absolute; right: 10px;
+  font-size: 12px; font-weight: 700;
+}
+
+.funnelDrop {
+  font-size: 9px; color: #334155;
+  letter-spacing: 0.04em; padding-left: 2px;
+}
+
+/* responsive */
+@media (max-width: 700px) {
+  .row2         { grid-template-columns: 1fr; }
+  .overviewGrid { grid-template-columns: repeat(3, 1fr); }
+  .modal        { padding: 24px; }
+  .donutSection { flex-direction: column; align-items: flex-start; }
+  .donut        { width: 120px; height: 120px; }
+}

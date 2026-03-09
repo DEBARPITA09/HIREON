@@ -1,0 +1,46 @@
+.topBar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 48px;
+  background: rgba(5,8,15,0.85);
+  border-bottom: 1px solid rgba(255,255,255,0.055);
+  position: sticky; top: 0; z-index: 100;
+  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+}
+
+.topLogo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+.logoHire { color: #f0f4ff; }
+.logoOn   { color: #4f8ef7; }
+
+.topRight { display: flex; align-items: center; gap: 16px; }
+
+.userPill {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 40px; padding: 6px 14px 6px 6px;
+  cursor: pointer; transition: background 0.2s, border-color 0.2s;
+}
+.userPill:hover { background: rgba(255,255,255,0.07); border-color: rgba(0,212,170,0.25); }
+
+.avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: linear-gradient(135deg, #4f8ef7, #00d4aa);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 800; color: #fff; flex-shrink: 0;
+}
+
+.welcomeText { font-size: 13px; font-weight: 600; color: #94a3b8; }
+
+.logoutBtn {
+  background: transparent; color: #64748b;
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 7px 18px; border-radius: 8px;
+  font-family: inherit; font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+}
+.logoutBtn:hover { background: rgba(239,68,68,0.08); color: #f87171; border-color: rgba(239,68,68,0.2); }
+
+@media (max-width: 560px) {
+  .topBar      { padding: 14px 20px; }
+  .welcomeText { display: none; }
+}

@@ -1,0 +1,84 @@
+.gridCanvas {
+  position: fixed; inset: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 0;
+}
+
+.sectionLabel {
+  text-align: center; font-size: 11px; font-weight: 600;
+  color: rgba(255,255,255,0.12); letter-spacing: 0.15em;
+  text-transform: uppercase; margin-bottom: 32px;
+  position: relative; z-index: 1;
+}
+
+.grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; max-width: 1080px; margin: 0 auto;
+  background: rgba(255,255,255,0.05);
+  border-top: 1px solid rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  overflow: hidden; position: relative; z-index: 1;
+}
+
+/* 5 cards: row 2 has 2 cards — center them */
+.grid > :nth-child(4) { grid-column: 1; }
+.grid > :nth-child(5) { grid-column: 2; }
+
+.card {
+  background: #05080f; padding: 32px 28px; cursor: pointer;
+  transition: background 0.25s; display: flex; flex-direction: column;
+  gap: 14px; animation: fadeUp 0.5s ease both;
+  position: relative; overflow: hidden;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.card::before {
+  content: ''; position: absolute; inset: 0;
+  opacity: 0; transition: opacity 0.3s; pointer-events: none;
+}
+.cardBlue::before { background: radial-gradient(circle at 30% 30%, rgba(79,142,247,0.07) 0%, transparent 70%); }
+.cardTeal::before { background: radial-gradient(circle at 30% 30%, rgba(0,212,170,0.07) 0%, transparent 70%); }
+.card:hover::before { opacity: 1; }
+.card:hover { background: rgba(255,255,255,0.022); }
+
+.cardTop { display: flex; justify-content: space-between; align-items: flex-start; }
+
+.tag {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.05em;
+  text-transform: uppercase; padding: 3px 10px; border-radius: 20px;
+}
+.tagBlue { background: rgba(79,142,247,0.1);  color: #4f8ef7; border: 1px solid rgba(79,142,247,0.2);  }
+.tagTeal { background: rgba(0,212,170,0.08);  color: #00d4aa; border: 1px solid rgba(0,212,170,0.18); }
+
+.cardTitle {
+  font-size: 15px; font-weight: 800; color: #e2e8f0;
+  letter-spacing: 0.18em; line-height: 1.25; text-transform: uppercase;
+  font-family: 'Syne', Georgia, serif; margin-top: 8px;
+}
+
+.cardDesc { font-size: 13px; color: #334155; line-height: 1.75; flex: 1; }
+.card:hover .cardDesc { color: #475569; }
+
+.cardAction {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase;
+  margin-top: 4px; opacity: 0; transform: translateY(4px);
+  transition: opacity 0.25s, transform 0.25s;
+}
+.card:hover .cardAction { opacity: 1; transform: translateY(0); }
+.cardBlue .cardAction { color: #4f8ef7; }
+.cardTeal .cardAction { color: #00d4aa; }
+
+.arrow { display: inline-block; transition: transform 0.2s; }
+.card:hover .arrow { transform: translateX(5px); }
+
+@media (max-width: 900px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+  .grid > :nth-child(4), .grid > :nth-child(5) { grid-column: auto; }
+}
+@media (max-width: 560px) {
+  .grid { grid-template-columns: 1fr; }
+}

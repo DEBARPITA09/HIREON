@@ -1,0 +1,100 @@
+/* shared by PostJob, CompanyProfile, RecruiterProfile */
+
+.overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(8px); z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px; animation: fadeIn 0.2s ease; overflow-y: auto;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal {
+  background: #0b0f1a; border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px; padding: 36px;
+  width: 100%; max-width: 580px;
+  animation: slideUp 0.25s ease; box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+  max-height: 90vh; overflow-y: auto;
+  scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent;
+  font-family: 'Outfit', 'Segoe UI', sans-serif;
+}
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+.modalHeader {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;
+}
+.modalTitle { font-size: 17px; font-weight: 800; color: #f0f4ff; margin: 0; letter-spacing: -0.3px; }
+
+.closeBtn {
+  background: rgba(255,255,255,0.05); border: none; color: #475569;
+  width: 30px; height: 30px; border-radius: 8px; cursor: pointer; font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s; font-family: inherit;
+}
+.closeBtn:hover { background: rgba(255,255,255,0.1); color: #f0f4ff; }
+
+/* profile preview strip (RecruiterProfile only) */
+.profileTop {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 16px; margin-bottom: 20px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06); border-radius: 12px;
+}
+.profileAvatarLg {
+  width: 48px; height: 48px; border-radius: 13px;
+  background: linear-gradient(135deg, #4f8ef7, #00d4aa);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 800; color: #fff; flex-shrink: 0;
+}
+.profileName { font-size: 14px; font-weight: 700; color: #f0f4ff; margin: 0 0 3px; }
+.profileSub  { font-size: 12px; color: #475569; margin: 0; }
+
+/* form layout */
+.form { display: flex; flex-direction: column; gap: 14px; }
+
+.formSection {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: #4f8ef7;
+  margin: 8px 0 0; padding-bottom: 8px;
+  border-bottom: 1px solid rgba(79,142,247,0.15);
+}
+
+.formRow  { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.formRow3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.formGroup { display: flex; flex-direction: column; gap: 5px; }
+
+.label {
+  font-size: 10px; font-weight: 600; color: #475569;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+
+.input, .textarea {
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+  color: #f0f4ff; padding: 9px 12px; border-radius: 9px;
+  font-size: 13px; font-family: inherit; outline: none;
+  transition: border 0.2s; width: 100%; box-sizing: border-box;
+}
+.input:focus, .textarea:focus { border-color: rgba(79,142,247,0.5); background: rgba(79,142,247,0.04); }
+.input::placeholder, .textarea::placeholder { color: #334155; }
+.textarea { resize: vertical; }
+.input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.4); cursor: pointer; }
+.input option { background: #0b0f1a; color: #f0f4ff; }
+
+.formActions { display: flex; gap: 10px; justify-content: flex-end; padding-top: 6px; }
+
+.btnCancel {
+  background: transparent; border: 1px solid rgba(255,255,255,0.08); color: #475569;
+  padding: 9px 20px; border-radius: 8px; font-size: 13px; font-weight: 600;
+  font-family: inherit; cursor: pointer; transition: all 0.2s;
+}
+.btnCancel:hover { border-color: rgba(255,255,255,0.18); color: #94a3b8; }
+
+.btnSubmit {
+  background: linear-gradient(135deg, #4f8ef7, #00d4aa); border: none; color: #fff;
+  padding: 9px 24px; border-radius: 8px; font-size: 13px; font-weight: 700;
+  font-family: inherit; cursor: pointer; transition: all 0.2s;
+}
+.btnSubmit:hover { opacity: 0.88; transform: translateY(-1px); }
+
+@media (max-width: 560px) {
+  .formRow, .formRow3 { grid-template-columns: 1fr; }
+}
