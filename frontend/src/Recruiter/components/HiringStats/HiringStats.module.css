@@ -2,8 +2,9 @@
 
 .overlay {
   position: fixed; inset: 0;
-  background: rgba(0,0,0,0.82);
-  backdrop-filter: blur(10px); z-index: 200;
+  background: rgba(0,0,0,0.84);
+  backdrop-filter: blur(10px);
+  z-index: 200;
   display: flex; align-items: flex-start; justify-content: center;
   padding: 32px 24px; overflow-y: auto;
   animation: fadeIn 0.2s ease;
@@ -13,131 +14,227 @@
 .modal {
   background: #0b0f1a;
   border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 20px; padding: 36px;
-  width: 100%; max-width: 900px;
+  border-radius: 20px; padding: 40px;
+  width: 100%; max-width: 840px;
   animation: slideUp 0.25s ease;
   box-shadow: 0 40px 100px rgba(0,0,0,0.7);
-  font-family: 'Outfit', 'Segoe UI', sans-serif;
-  display: flex; flex-direction: column; gap: 28px;
+  font-family: 'Outfit','Segoe UI',sans-serif;
+  display: flex; flex-direction: column; gap: 32px;
 }
-@keyframes slideUp { from { opacity:0; transform: translateY(24px); } to { opacity:1; transform: translateY(0); } }
+@keyframes slideUp {
+  from { opacity:0; transform:translateY(20px); }
+  to   { opacity:1; transform:translateY(0); }
+}
 
-/* header */
-.modalHeader {
-  display: flex; align-items: flex-start; justify-content: space-between;
-}
-.modalTitle { font-size: 20px; font-weight: 800; color: #f0f4ff; margin: 0 0 4px; letter-spacing: -0.5px; }
-.modalSub   { font-size: 12px; color: #475569; margin: 0; }
+/* ── HEADER ── */
+.modalHeader { display: flex; align-items: flex-start; justify-content: space-between; }
+.modalTitle  { font-size: 20px; font-weight: 800; color: #f0f4ff; margin: 0 0 4px; letter-spacing: -0.5px; }
+.modalSub    { font-size: 12px; color: #475569; margin: 0; }
 
 .closeBtn {
   background: rgba(255,255,255,0.05); border: none; color: #475569;
   width: 32px; height: 32px; border-radius: 9px; cursor: pointer;
-  font-size: 14px; display: flex; align-items: center; justify-content: center;
+  font-size: 13px; display: flex; align-items: center; justify-content: center;
   transition: all 0.2s; font-family: inherit; flex-shrink: 0;
 }
 .closeBtn:hover { background: rgba(255,255,255,0.1); color: #f0f4ff; }
 
-/* overview strip */
+/* ── OVERVIEW NUMBERS ── */
 .overviewGrid {
-  display: grid; grid-template-columns: repeat(5, 1fr);
-  gap: 1px; background: rgba(255,255,255,0.05);
+  display: grid; grid-template-columns: repeat(5,1fr);
+  gap: 1px;
+  background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.05);
-  border-radius: 12px; overflow: hidden;
+  border-radius: 14px; overflow: hidden;
 }
 
 .overviewCard {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding: 20px 12px; gap: 5px;
+  padding: 22px 12px; gap: 6px;
   border: 1px solid transparent; transition: filter 0.2s;
 }
-.overviewCard:hover { filter: brightness(1.2); }
-.overviewVal   { font-size: 26px; font-weight: 800; letter-spacing: -1px; line-height: 1; }
-.overviewLabel { font-size: 9px; font-weight: 600; color: #475569; letter-spacing: 0.08em; text-transform: uppercase; text-align: center; }
+.overviewCard:hover { filter: brightness(1.2); cursor: default; }
+.overviewVal   { font-size: 30px; font-weight: 800; letter-spacing: -1px; line-height: 1; }
+.overviewLabel { font-size: 9px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; text-align: center; }
 
-/* chart rows */
-.row2 {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+/* ── FUNNEL SECTION ── */
+.funnelSection { display: flex; flex-direction: column; gap: 18px; }
+
+.sectionTitle {
+  text-align: center; font-size: 11px; font-weight: 600;
+  color: rgba(255,255,255,0.12); letter-spacing: 0.18em;
+  text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 10px;
 }
+.sectionDash { color: rgba(255,255,255,0.08); }
 
-/* shared chart wrapper */
-.chartWrap {
-  background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 14px; padding: 20px;
-  display: flex; flex-direction: column; gap: 14px;
+.funnelWrap { display: flex; flex-direction: column; gap: 0; }
+
+.funnelRow { display: flex; flex-direction: column; gap: 8px; }
+
+.funnelMeta {
+  display: flex; justify-content: space-between; align-items: center;
 }
-
-.chartLabel {
-  font-size: 11px; font-weight: 700; color: #94a3b8;
-  letter-spacing: 0.08em; text-transform: uppercase; margin: 0;
-}
-
-/* donut */
-.donutSection {
-  display: flex; align-items: center; gap: 20px;
-}
-
-.donut {
-  width: 140px; height: 140px; flex-shrink: 0;
-}
-
-.donutLegend { display: flex; flex-direction: column; gap: 10px; flex: 1; }
-
-.legendRow {
-  display: flex; align-items: center; gap: 8px;
-}
-.legendDot   { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.legendLabel { font-size: 11px; color: #64748b; flex: 1; }
-.legendVal   { font-size: 13px; font-weight: 700; }
-.legendPct   { font-size: 10px; color: #334155; }
-
-/* line chart canvas */
-.lineCanvas {
-  width: 100%; height: 140px; display: block;
-}
-
-/* bar chart canvas */
-.barCanvas {
-  width: 100%; display: block;
-  height: 200px;
-}
-
-/* funnel */
-.funnel { display: flex; flex-direction: column; gap: 6px; }
-
-.funnelRow { display: flex; flex-direction: column; gap: 3px; }
-
 .funnelLabel {
-  font-size: 10px; font-weight: 600; color: #475569;
-  letter-spacing: 0.06em; text-transform: uppercase;
+  font-size: 11px; font-weight: 600; color: #64748b;
+  letter-spacing: 0.07em; text-transform: uppercase;
 }
+.funnelCount { font-size: 12px; font-weight: 700; }
 
 .funnelTrack {
-  height: 28px; background: rgba(255,255,255,0.04);
-  border-radius: 6px; overflow: hidden; position: relative;
+  width: 100%; height: 44px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 10px; overflow: hidden; position: relative;
   display: flex; align-items: center;
 }
-
 .funnelFill {
-  height: 100%; border-radius: 6px;
-  transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+  height: 100%; border-radius: 10px;
+  transition: width 1s cubic-bezier(0.4,0,0.2,1);
+  opacity: 0.75;
+}
+.funnelPct {
+  position: absolute; right: 16px;
+  font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.2);
 }
 
-.funnelVal {
-  position: absolute; right: 10px;
-  font-size: 12px; font-weight: 700;
+/* drop-off connector between funnel rows */
+.funnelConnector {
+  display: flex; align-items: center; gap: 12px;
+  padding: 6px 12px;
+}
+.connectorLine {
+  flex: 1; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+}
+.connectorDrop {
+  font-size: 10px; color: #334155; font-weight: 500; white-space: nowrap;
+  letter-spacing: 0.04em;
 }
 
-.funnelDrop {
-  font-size: 9px; color: #334155;
-  letter-spacing: 0.04em; padding-left: 2px;
+/* ── TOGGLE BUTTONS ── */
+.tableToggles {
+  display: flex; flex-direction: column; gap: 10px;
 }
 
-/* responsive */
-@media (max-width: 700px) {
-  .row2         { grid-template-columns: 1fr; }
-  .overviewGrid { grid-template-columns: repeat(3, 1fr); }
-  .modal        { padding: 24px; }
-  .donutSection { flex-direction: column; align-items: flex-start; }
-  .donut        { width: 120px; height: 120px; }
+.toggleBtn {
+  width: 100%;
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.07);
+  color: #64748b;
+  padding: 16px 22px; border-radius: 12px;
+  font-size: 14px; font-weight: 600; font-family: inherit;
+  cursor: pointer; transition: all 0.2s;
+  text-align: left;
+}
+.toggleBtn:hover {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.12);
+  color: #94a3b8;
+}
+
+.toggleTeal {
+  background: rgba(0,212,170,0.06) !important;
+  border-color: rgba(0,212,170,0.25) !important;
+  color: #00d4aa !important;
+}
+.toggleRed {
+  background: rgba(248,113,113,0.06) !important;
+  border-color: rgba(248,113,113,0.25) !important;
+  color: #f87171 !important;
+}
+
+.toggleDot {
+  width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0;
+}
+
+.toggleBadge {
+  font-size: 11px; font-weight: 800;
+  padding: 2px 10px; border-radius: 20px;
+  border: 1px solid transparent;
+}
+.badgeTeal { background: rgba(0,212,170,0.1);   color: #00d4aa; border-color: rgba(0,212,170,0.2);   }
+.badgeRed  { background: rgba(248,113,113,0.08); color: #f87171; border-color: rgba(248,113,113,0.2); }
+
+.toggleCaret {
+  margin-left: auto;
+  font-size: 9px; opacity: 0.4;
+}
+
+/* ── TABLE SECTION ── */
+.tableSection {
+  animation: fadeDown 0.22s ease;
+}
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.tableWrap {
+  border: 1px solid;
+  border-radius: 12px; overflow: auto;
+  scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.08) transparent;
+}
+
+.table { width: 100%; border-collapse: collapse; min-width: 540px; }
+
+.th {
+  padding: 12px 16px;
+  font-size: 9px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: #334155;
+  background: rgba(255,255,255,0.025);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  text-align: left; white-space: nowrap;
+}
+
+.tr {
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: background 0.15s;
+}
+.tr:last-child { border-bottom: none; }
+.tr:hover { background: rgba(255,255,255,0.02); }
+
+.td { padding: 14px 16px; color: #94a3b8; vertical-align: middle; }
+
+/* name cell */
+.nameCell { display: flex; align-items: center; gap: 10px; }
+.tableAvatar {
+  width: 34px; height: 34px; border-radius: 9px;
+  border: 1px solid; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800;
+}
+.candidateName { font-size: 13px; font-weight: 700; color: #e2e8f0; }
+
+/* mini score bar */
+.scoreCell { display: flex; align-items: center; gap: 8px; }
+.scoreMiniTrack {
+  width: 56px; height: 4px;
+  background: rgba(255,255,255,0.06); border-radius: 4px; overflow: hidden;
+}
+.scoreMiniBar { height: 100%; border-radius: 4px; }
+
+.resumeLink {
+  font-size: 11px; font-weight: 700; text-decoration: none;
+  padding: 5px 11px; border-radius: 7px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid; transition: all 0.18s;
+}
+.resumeLink:hover { background: rgba(255,255,255,0.07); }
+
+.tableEmpty {
+  padding: 36px 24px; text-align: center;
+  font-size: 13px; color: #334155;
+  background: rgba(255,255,255,0.015);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 12px; line-height: 1.7;
+}
+.tableEmpty strong { color: #475569; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 640px) {
+  .overviewGrid { grid-template-columns: repeat(3,1fr); }
+  .modal { padding: 24px; gap: 24px; }
+}
+@media (max-width: 400px) {
+  .overviewGrid { grid-template-columns: repeat(2,1fr); }
 }
