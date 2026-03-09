@@ -1,206 +1,91 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import styles from "./06_MainRec.module.css";
+
+import { Navbar }                    from "./components/Navbar/Navbar";
+import { ServiceCards, GridCanvas }  from "./components/ServiceCards/ServiceCards";
+import { JobListings }               from "./components/JobListings/JobListings";
+import { PostJob }                   from "./components/PostJob/PostJob";
+import { CompanyProfile }            from "./components/CompanyProfile/CompanyProfile";
+import { RecruiterProfile }          from "./components/RecruiterProfile/RecruiterProfile";
+import { HiringStats }               from "./components/HiringStats/HiringStats";
 
 export const RecruiterMain = () => {
-
-  const navigate = useNavigate();
-
-  const [showForm, setShowForm] = useState(false);
+  const [modal, setModal] = useState(null);
 
   const [jobs, setJobs] = useState([
     {
-      id: 1,
-      company: "Microsoft",
-      role: "Project Manager",
-      applicants: 2
+      id: 1, company: "Microsoft", role: "Project Manager",
+      applicants: 8,  accepted: 2, rejected: 3,
+      deadline: "2025-08-01", salary: "$120,000",
+      location: "Bangalore, India", mode: "Hybrid",
+      type: "Full-time", experience: "3-5 years",
+      skills: "Leadership, Agile, JIRA",
     },
     {
-      id: 2,
-      company: "Amazon",
-      role: "SDE Role",
-      applicants: 3
-    }
+      id: 2, company: "Amazon", role: "SDE II",
+      applicants: 12, accepted: 4, rejected: 5,
+      deadline: "2025-07-15", salary: "$140,000",
+      location: "Hyderabad, India", mode: "Remote",
+      type: "Full-time", experience: "2-4 years",
+      skills: "Java, AWS, DSA",
+    },
   ]);
 
-  const [jobData, setJobData] = useState({
-    company: "",
-    role: "",
-    description: "",
-    salary: "",
-    deadline: ""
-  });
+  const [recruiterName, setRecruiterName] = useState("");
+  useEffect(() => {
+    const r = JSON.parse(localStorage.getItem("recruiter")) || {};
+    setRecruiterName(r.name || "");
+  }, [modal]);
 
-  const handleChange = (e) => {
-    setJobData({
-      ...jobData,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  const handleSubmit = (e) => {
-
-    e.preventDefault();
-
-    const newJob = {
-      id: jobs.length + 1,
-      company: jobData.company,
-      role: jobData.role,
-      applicants: 0
-    };
-
-    setJobs([...jobs, newJob]);
-
-    setJobData({
-      company: "",
-      role: "",
-      description: "",
-      salary: "",
-      deadline: ""
-    });
-
-    setShowForm(false);
+  const handleAddJob = (newJob) => {
+    setJobs(prev => [...prev, { id: prev.length + 1, ...newJob }]);
   };
 
   return (
+    <div className={styles.page}>
+      <GridCanvas />
 
-    <div>
+      <Navbar
+        recruiterName={recruiterName}
+        onProfileClick={() => setModal("recruiterProfile")}
+      />
 
-      <h1>Recruiter Dashboard</h1>
-
-      <button onClick={() => setShowForm(true)}>
-        Create Job Role
-      </button>
-
-      {/* Popup Form */}
-
-      {showForm && (
-
-        <div className="dialog">
-
-          <h2>Create Job Role</h2>
-
-          <form onSubmit={handleSubmit}>
-
-            <label>Company Name</label>
-            <br/>
-            <input
-              type="text"
-              name="company"
-              value={jobData.company}
-              onChange={handleChange}
-              required
-            />
-
-            <br/><br/>
-
-            <label>Job Role</label>
-            <br/>
-            <input
-              type="text"
-              name="role"
-              value={jobData.role}
-              onChange={handleChange}
-              required
-            />
-
-            <br/><br/>
-
-            <label>Job Description</label>
-            <br/>
-            <textarea
-              name="description"
-              value={jobData.description}
-              onChange={handleChange}
-            />
-
-            <br/><br/>
-
-            <label>Salary</label>
-            <br/>
-            <input
-              type="text"
-              name="salary"
-              value={jobData.salary}
-              onChange={handleChange}
-            />
-
-            <br/><br/>
-
-            <label>Application Deadline</label>
-            <br/>
-            <input
-              type="date"
-              name="deadline"
-              value={jobData.deadline}
-              onChange={handleChange}
-            />
-
-            <br/><br/>
-
-            <button type="submit">
-              Create Job
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setShowForm(false)}
-            >
-              Cancel
-            </button>
-
-          </form>
-
+      {/* ── HERO ── */}
+      <div className={styles.hero}>
+        <div className={styles.heroBadge}>
+          <span className={styles.dot} />
+          Recruiter Dashboard
         </div>
-
-      )}
-
-      <h2>Your Created Job Roles</h2>
-
-      <table border="1">
-
-        <thead>
-
-          <tr>
-            <th>Company</th>
-            <th>Job Role</th>
-            <th>Candidates Applied</th>
-            <th>View Applications</th>
-          </tr>
-
-        </thead>
-
-        <tbody>
-
-          {jobs.map((job) => (
-
-            <tr key={job.id}>
-
-              <td>{job.company}</td>
-
-              <td>{job.role}</td>
-
-              <td>{job.applicants}</td>
-
-              <td>
-
-                <button
-                  onClick={() => navigate(`/job/${job.id}`)}
-                >
-                  Click
-                </button>
-
-              </td>
-
-            </tr>
-
+        <h1 className={styles.heroTitle}>
+          Hire the Best.<br />
+          <span className={styles.heroItalic}>Build Great Teams.</span>
+        </h1>
+        <p className={styles.heroSub}>
+          Every tool below is powered by AI to help you find the right talent, screen smarter, and close roles faster.
+        </p>
+        <div className={styles.statsRow}>
+          {[
+            { val: String(jobs.length),                                label: "Active Jobs"      },
+            { val: String(jobs.reduce((a,j) => a + j.applicants, 0)), label: "Total Applicants" },
+            { val: "AI",                                               label: "Powered"          },
+          ].map(({ val, label }) => (
+            <div key={label} className={styles.statItem}>
+              <span className={styles.statVal}>{val}</span>
+              <span className={styles.statLabel}>{label}</span>
+            </div>
           ))}
+        </div>
+      </div>
 
-        </tbody>
+      {/* ── SERVICES + JOB LISTINGS ── */}
+      <ServiceCards jobs={jobs} onOpen={setModal} />
+      <JobListings  jobs={jobs} />
 
-      </table>
-
+      {/* ── MODALS ── */}
+      {modal === "postJob"          && <PostJob          onClose={() => setModal(null)} onAdd={handleAddJob} />}
+      {modal === "companyProfile"   && <CompanyProfile   onClose={() => setModal(null)} />}
+      {modal === "recruiterProfile" && <RecruiterProfile onClose={() => setModal(null)} />}
+      {modal === "hiringStats"      && <HiringStats      jobs={jobs} onClose={() => setModal(null)} />}
     </div>
-
   );
-
 };
