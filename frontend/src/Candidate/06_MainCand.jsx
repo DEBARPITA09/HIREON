@@ -9,6 +9,7 @@ const services = [
   { icon: "🎯", title: "Job Recommendations",     desc: "Our algorithm matches your profile against live listings and surfaces the most relevant roles for your skills.", tag: "Recommended", color: "teal", path: "/Candidate/services/job-matching"      },
   { icon: "📬", title: "Application Status",      desc: "Track every job from submitted to shortlisted to rejected, all in one clean real-time dashboard view.", tag: "Stay Updated", color: "blue", path: "/Candidate/services/application-tracker" },
   { icon: "💡", title: "DSA + Aptitude",          desc: "Company-wise DSA problem sheets and previous year aptitude questions with quiz mode. Crack every placement round.", tag: "Prep Mode",  color: "teal", path: "/Candidate/services/dsa-aptitude"       },
+  { icon: "🎙️", title: "AI Mock Interview",       desc: "Real AI-powered voice interview. Get asked questions, answer by voice, and receive detailed feedback and scores.", tag: "AI Powered",  color: "blue", path: "/Candidate/services/ai-interview"      },
 ];
 
 /* subtle animated grid background */
@@ -93,7 +94,7 @@ export const CandidateMain = () => {
         {/* stats row */}
         <div className={styles.statsRow}>
           {[
-            { val: "6",    label: "AI Tools"       },
+            { val: "7",    label: "AI Tools"       },
             { val: "100%", label: "Free Forever"   },
             { val: "ATS",  label: "Optimised"      },
           ].map(({ val, label }) => (
@@ -122,7 +123,7 @@ export const CandidateMain = () => {
             <div className={styles.cardTop}>
               <span className={`${styles.tag} ${s.color === "teal" ? styles.tagTeal : styles.tagBlue}`}>{s.tag}</span>
             </div>
-            <h3 className={styles.cardTitle}>{s.title}</h3>
+            <h3 className={styles.cardTitle}>{s.icon} {s.title}</h3>
             <p className={styles.cardDesc}>{s.desc}</p>
             <div className={styles.cardAction}>
               <span>Get Started</span>
