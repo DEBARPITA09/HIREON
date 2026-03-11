@@ -1,115 +1,80 @@
-/* keeps your original class name */
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
 .my-footer {
-    background: #0D1220;
-    border-top: 1px solid rgba(79, 142, 247, 0.12);
-    padding: 52px 60px 28px;
-    font-family: 'Outfit', 'Segoe UI', sans-serif;
+  background: #0a0a0a;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 52px 60px 28px;
+  font-family: 'Outfit', sans-serif;
 }
 
-/* ── TOP ROW ── */
+/* TOP ROW */
 .top {
-    display: flex;
-    justify-content: space-between;
-    gap: 48px;
-    flex-wrap: wrap;
-    margin-bottom: 40px;
+  display: flex; justify-content: space-between;
+  gap: 48px; flex-wrap: wrap; margin-bottom: 40px;
 }
 
-/* ── BRAND BLOCK ── */
+/* BRAND */
 .brand {
-    max-width: 260px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+  max-width: 260px; display: flex;
+  flex-direction: column; gap: 12px;
 }
-
 .logo {
-    font-size: 24px;
-    font-weight: 800;
-    color: #F0F4FF;
-    letter-spacing: -0.5px;
+  display: flex; align-items: center; gap: 0.5rem;
 }
-.logoBlue { color: #4F8EF7; }
+.logoSq {
+  width: 28px; height: 28px; border-radius: 6px;
+  background: linear-gradient(135deg, #f5a623, #ff8000);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif; font-size: 0.8rem; font-weight: 900;
+  color: #0a0a0a; box-shadow: 0 0 10px rgba(245,166,35,0.35);
+}
+.logoWord {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.1rem; font-weight: 900;
+  letter-spacing: 0.06em; color: #fff;
+}
+.logoWord span { color: #f5a623; }
 
-.brand p {
-    font-size: 13px;
-    color: #5A7090;
-    line-height: 1.75;
-}
+.brand p { font-size: 13px; color: rgba(255,255,255,0.3); line-height: 1.75; }
 
 .tagline {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 12px;
-    color: #3D4F6B;
-    font-weight: 500;
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 12px; color: rgba(255,255,255,0.2); font-weight: 500;
 }
-
 .dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: #00D4AA;
-    box-shadow: 0 0 7px #00D4AA;
-    flex-shrink: 0;
-    animation: pulse 2s infinite;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #f5a623; box-shadow: 0 0 7px #f5a623;
+  flex-shrink: 0; animation: pulse 2s infinite;
 }
-@keyframes pulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50%       { transform: scale(1.5); opacity: 0.5; }
-}
+@keyframes pulse { 0%,100%{transform:scale(1);opacity:1;} 50%{transform:scale(1.5);opacity:0.5;} }
 
-/* ── LINKS GROUP ── */
-.linksGroup {
-    display: flex;
-    gap: 52px;
-    flex-wrap: wrap;
-}
-
-.col {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
+/* LINKS GROUP */
+.linksGroup { display: flex; gap: 52px; flex-wrap: wrap; }
+.col { display: flex; flex-direction: column; gap: 10px; }
 .col h4 {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: #3D4F6B;
-    margin-bottom: 4px;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(255,255,255,0.2); margin-bottom: 4px;
 }
-
 .col a {
-    font-size: 14px;
-    color: #5A7090;
-    text-decoration: none;
-    transition: color 0.2s;
+  font-size: 14px; color: rgba(255,255,255,0.35);
+  text-decoration: none; transition: color 0.2s;
 }
-.col a:hover { color: #F0F4FF; }
+.col a:hover { color: #f5a623; }
 
-/* ── BOTTOM ROW ── */
+/* BOTTOM */
 .bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 24px;
-    border-top: 1px solid rgba(79, 142, 247, 0.08);
-    flex-wrap: wrap;
-    gap: 8px;
+  display: flex; justify-content: space-between;
+  align-items: center; padding-top: 24px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  flex-wrap: wrap; gap: 8px;
 }
+.bottom p { font-size: 13px; color: rgba(255,255,255,0.18); }
 
-.bottom p {
-    font-size: 13px;
-    color: #3D4F6B;
-}
-
-/* ── MOBILE ── */
+/* MOBILE */
 @media (max-width: 768px) {
-    .my-footer { padding: 40px 24px 24px; }
-    .top { flex-direction: column; }
-    .linksGroup { gap: 32px; }
-    .bottom { flex-direction: column; text-align: center; gap: 6px; }
+  .my-footer { padding: 40px 24px 24px; }
+  .top { flex-direction: column; }
+  .linksGroup { gap: 32px; }
+  .bottom { flex-direction: column; text-align: center; gap: 6px; }
 }

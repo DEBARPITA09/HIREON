@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
 import { Nav } from './Components/01_Nav';
 import { Home } from './Components/01a_Home';
-import { Services } from './Components/01b_Services';
+
 import { About } from './Components/01c_About';
 import { Contact } from './Components/01d_Contact';
 import { Help } from './Components/01e_Help';
@@ -44,7 +44,7 @@ function AppLayout() {
         <Routes>
 
           <Route path="/" element={<Home />} />
-          <Route path="/services" element={<Services />} />
+
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/help" element={<Help />} />

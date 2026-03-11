@@ -4,13 +4,25 @@ import styles from "./01d_Contact.module.css";
 export const Contact = () => {
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   const [sent, setSent] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    setErrors({ ...errors, [e.target.name]: "" });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const validate = () => {
+    const errs = {};
+    if (!form.name.trim())    errs.name    = "Name is required.";
+    if (!form.email.trim())   errs.email   = "Email is required.";
+    if (!form.subject.trim()) errs.subject = "Subject is required.";
+    if (!form.message.trim()) errs.message = "Message cannot be empty.";
+    return errs;
+  };
+
+  const handleSubmit = () => {
+    const errs = validate();
+    if (Object.keys(errs).length > 0) { setErrors(errs); return; }
     setSent(true);
   };
 
@@ -33,6 +45,7 @@ export const Contact = () => {
 
       <div className={styles.layout}>
 
+        {/* INFO COL */}
         <div className={styles.infoCol}>
           <h3 className={styles.infoHeading}>Reach Us Directly</h3>
 
@@ -75,36 +88,34 @@ export const Contact = () => {
 
           <div className={styles.faqBox}>
             <h4 className={styles.faqTitle}>Common Questions</h4>
-            <div className={styles.faqItem}>
-              <span className={styles.faqDot}></span>
-              <p>How do I reset my password?</p>
-            </div>
-            <div className={styles.faqItem}>
-              <span className={styles.faqDot}></span>
-              <p>How do I delete my account?</p>
-            </div>
-            <div className={styles.faqItem}>
-              <span className={styles.faqDot}></span>
-              <p>Why is my ATS score low?</p>
-            </div>
-            <div className={styles.faqItem}>
-              <span className={styles.faqDot}></span>
-              <p>How do I update my resume?</p>
-            </div>
-            <div className={styles.faqItem}>
-              <span className={styles.faqDot}></span>
-              <p>Can I apply to multiple jobs?</p>
-            </div>
+            {[
+              "How do I reset my password?",
+              "How do I delete my account?",
+              "Why is my ATS score low?",
+              "How do I update my resume?",
+              "Can I apply to multiple jobs?",
+            ].map((q) => (
+              <div key={q} className={styles.faqItem}>
+                <span className={styles.faqDot}></span>
+                <p>{q}</p>
+              </div>
+            ))}
           </div>
         </div>
 
+        {/* FORM */}
         <div className={styles.formWrap}>
           {sent ? (
             <div className={styles.successBox}>
               <span className={styles.successIcon}>✅</span>
               <h3>Message Sent!</h3>
               <p>Thanks for reaching out. We will get back to you within 24 hours.</p>
-              <button className={styles.btnPrimary} onClick={() => setSent(false)}>Send Another</button>
+              <button
+                className={styles.btnPrimary}
+                onClick={() => { setSent(false); setForm({ name: "", email: "", subject: "", message: "" }); }}
+              >
+                Send Another
+              </button>
             </div>
           ) : (
             <div className={styles.form}>
@@ -118,7 +129,9 @@ export const Contact = () => {
                     value={form.name}
                     onChange={handleChange}
                     placeholder="John Doe"
+                    className={errors.name ? styles.inputError : ""}
                   />
+                  {errors.name && <span className={styles.errorMsg}>{errors.name}</span>}
                 </div>
                 <div className={styles.group}>
                   <label>Email Address</label>
@@ -128,7 +141,9 @@ export const Contact = () => {
                     value={form.email}
                     onChange={handleChange}
                     placeholder="you@example.com"
+                    className={errors.email ? styles.inputError : ""}
                   />
+                  {errors.email && <span className={styles.errorMsg}>{errors.email}</span>}
                 </div>
               </div>
 
@@ -139,7 +154,9 @@ export const Contact = () => {
                   value={form.subject}
                   onChange={handleChange}
                   placeholder="How can we help?"
+                  className={errors.subject ? styles.inputError : ""}
                 />
+                {errors.subject && <span className={styles.errorMsg}>{errors.subject}</span>}
               </div>
 
               <div className={styles.group}>
@@ -150,11 +167,13 @@ export const Contact = () => {
                   onChange={handleChange}
                   placeholder="Describe your question or issue in detail..."
                   rows={5}
+                  className={errors.message ? styles.inputError : ""}
                 />
+                {errors.message && <span className={styles.errorMsg}>{errors.message}</span>}
               </div>
 
               <button className={styles.btnPrimary} onClick={handleSubmit}>
-                Send Message
+                Send Message →
               </button>
             </div>
           )}

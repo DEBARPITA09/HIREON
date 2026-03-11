@@ -39,8 +39,16 @@ const faqs = [
     a: "Review the suggestions in your analysis report. Common fixes include adding relevant keywords, improving formatting, and making sure your skills section is detailed and up to date."
   },
   {
+    q: "How do I reset my password?",
+    a: "On the login page, click Forgot Password and enter your registered email address. You will be directed to reset your password from there."
+  },
+  {
     q: "Is HIREON free to use?",
     a: "Yes, HIREON is completely free for candidates. Recruiters have access to all core features at no cost as well."
+  },
+  {
+    q: "How do I delete my account?",
+    a: "To delete your account, go to your profile settings and select Delete Account. This action is permanent and all your data will be removed from our platform."
   },
 ];
 
@@ -53,7 +61,7 @@ const FAQItem = ({ q, a }) => {
     >
       <div className={styles.faqQ}>
         <span>{q}</span>
-        <span className={styles.chevron}>{open ? "-" : "+"}</span>
+        <span className={styles.chevron}>{open ? "−" : "+"}</span>
       </div>
       {open && <p className={styles.faqA}>{a}</p>}
     </div>
@@ -61,6 +69,14 @@ const FAQItem = ({ q, a }) => {
 };
 
 export const Help = () => {
+  const [search, setSearch] = useState("");
+
+  const filtered = faqs.filter(
+    f =>
+      f.q.toLowerCase().includes(search.toLowerCase()) ||
+      f.a.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <div className={styles.page}>
 
@@ -76,6 +92,19 @@ export const Help = () => {
           Find answers to common questions about HIREON for both candidates and recruiters.
           If you still need help, our team is always ready to assist you.
         </p>
+        <div className={styles.searchWrap}>
+          <span className={styles.searchIcon}>🔍</span>
+          <input
+            className={styles.searchInput}
+            type="text"
+            placeholder="Search for answers..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
+          {search && (
+            <button className={styles.searchClear} onClick={() => setSearch("")}>✕</button>
+          )}
+        </div>
       </div>
 
       <div className={styles.layout}>
@@ -129,11 +158,27 @@ export const Help = () => {
         </div>
 
         <div className={styles.faqCol}>
-          <h2 className={styles.faqHeading}>Frequently Asked Questions</h2>
+          <div className={styles.faqHeader}>
+            <h2 className={styles.faqHeading}>Frequently Asked Questions</h2>
+            {search && (
+              <span className={styles.resultCount}>
+                {filtered.length} result{filtered.length !== 1 ? "s" : ""} for "{search}"
+              </span>
+            )}
+          </div>
+
           <div className={styles.faqList}>
-            {faqs.map(function(faq) {
-              return <FAQItem key={faq.q} q={faq.q} a={faq.a} />;
-            })}
+            {filtered.length > 0 ? (
+              filtered.map(faq => (
+                <FAQItem key={faq.q} q={faq.q} a={faq.a} />
+              ))
+            ) : (
+              <div className={styles.noResults}>
+                <span>🔍</span>
+                <p>No results found for "<strong>{search}</strong>"</p>
+                <p className={styles.noResultsSub}>Try different keywords or browse the topics on the left.</p>
+              </div>
+            )}
           </div>
         </div>
 
