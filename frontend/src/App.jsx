@@ -20,7 +20,7 @@ import { ResumeAnalysis } from './Candidate/08_ResumeAnalysis';
 import { ATSChecker } from './Candidate/09_ATSChecker';
 import { JobMatching } from './Candidate/10_JobRecommendation';
 import { ApplicationTracker } from './Candidate/11_ApplicationStatus';
-import { ProfileManagement } from './Candidate/12_ProfileManagement';
+import { DSAAptitude } from './Candidate/13_DSA_Aptitude';
 
 import { RecruiterHomePage } from './Recruiter/01_Recruiter';
 import { LoginRecruiter } from './Recruiter/02_LoginRec';
@@ -60,7 +60,7 @@ function AppLayout() {
           <Route path="/Candidate/services/ats-checker" element={<ATSChecker />} />
           <Route path="/Candidate/services/job-matching" element={<JobMatching />} />
           <Route path="/Candidate/services/application-tracker" element={<ApplicationTracker />} />
-          <Route path="/Candidate/services/profile-management" element={<ProfileManagement />} />
+          <Route path="/Candidate/services/dsa-aptitude" element={<DSAAptitude />} />
 
           <Route path="/Recruiter/01_Recruiter" element={<RecruiterHomePage />} />
           <Route path="/Recruiter/02_LoginRec" element={<LoginRecruiter />} />

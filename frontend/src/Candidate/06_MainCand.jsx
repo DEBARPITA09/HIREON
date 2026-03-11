@@ -8,7 +8,7 @@ const services = [
   { icon: "📊", title: "ATS Score and Insights",  desc: "See how Applicant Tracking Systems score your resume and get suggestions to increase your shortlisting chances.", tag: "Smart Score", color: "blue", path: "/Candidate/services/ats-checker"       },
   { icon: "🎯", title: "Job Recommendations",     desc: "Our algorithm matches your profile against live listings and surfaces the most relevant roles for your skills.", tag: "Recommended", color: "teal", path: "/Candidate/services/job-matching"      },
   { icon: "📬", title: "Application Status",      desc: "Track every job from submitted to shortlisted to rejected, all in one clean real-time dashboard view.", tag: "Stay Updated", color: "blue", path: "/Candidate/services/application-tracker" },
-  { icon: "👤", title: "Profile Management",      desc: "Build a compelling professional profile. Recruiters discover you directly based on your skills and experience.", tag: "My Profile",  color: "teal", path: "/Candidate/services/profile-management"  },
+  { icon: "💡", title: "DSA + Aptitude",          desc: "Company-wise DSA problem sheets and previous year aptitude questions with quiz mode. Crack every placement round.", tag: "Prep Mode",  color: "teal", path: "/Candidate/services/dsa-aptitude"       },
 ];
 
 /* subtle animated grid background */
@@ -32,7 +32,6 @@ function GridCanvas() {
       ctx.lineWidth = 1;
       for (let x = 0; x < W; x += size) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
       for (let y = 0; y < H; y += size) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
-      // subtle pulse dot at center
       const cx = W / 2, cy = 220;
       const r = 280 + Math.sin(t) * 30;
       const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
