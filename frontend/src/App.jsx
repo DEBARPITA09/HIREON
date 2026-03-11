@@ -1,5 +1,7 @@
 import './App.css';
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import { ProtectedRoute } from "./Components/ProtectedRoute";
 
 import { Nav } from './Components/01_Nav';
 import { Home } from './Components/01a_Home';
@@ -34,9 +36,10 @@ import { CandidatesApplied } from "./Recruiter/07_CandidatesApplied";
 function AppLayout() {
   const location = useLocation();
 
-  const hideNavFooter = location.pathname.startsWith("/Candidate/services") ||
-                        location.pathname.startsWith("/Candidate/06") ||
-                        location.pathname.startsWith("/Recruiter/06");
+  const hideNavFooter =
+    location.pathname.startsWith("/Candidate/services") ||
+    location.pathname.startsWith("/Candidate/06") ||
+    location.pathname.startsWith("/Recruiter/06");
 
   return (
     <div className="app-container">
@@ -44,33 +47,62 @@ function AppLayout() {
       <div className="content">
         <Routes>
 
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
+          {/* ── PUBLIC ROUTES ── */}
+          <Route path="/"        element={<Home />} />
+          <Route path="/about"   element={<About />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/help" element={<Help />} />
+          <Route path="/help"    element={<Help />} />
 
-          <Route path="/Candidate/01_Candidate" element={<CandidateHomePage />} />
-          <Route path="/Candidate/02_LoginCand" element={<LoginCandidate />} />
-          <Route path="/Candidate/03_SignupCand" element={<SignupCandidate />} />
+          {/* ── CANDIDATE AUTH (no login needed) ── */}
+          <Route path="/Candidate/01_Candidate"   element={<CandidateHomePage />} />
+          <Route path="/Candidate/02_LoginCand"   element={<LoginCandidate />} />
+          <Route path="/Candidate/03_SignupCand"  element={<SignupCandidate />} />
           <Route path="/Candidate/04_ForgotPassword" element={<ForgotPasswordCandidate />} />
-          <Route path="/Candidate/05_ResetPassword" element={<ResetPasswordCandidate />} />
-          <Route path="/Candidate/06_MainCand" element={<CandidateMain />} />
-          <Route path="/Candidate/services/resume-builder" element={<ResumeBuilder />} />
-          <Route path="/Candidate/services/resume-analysis" element={<ResumeAnalysis />} />
-          <Route path="/Candidate/services/ats-checker" element={<ATSChecker />} />
-          <Route path="/Candidate/services/job-matching" element={<JobMatching />} />
-          <Route path="/Candidate/services/application-tracker" element={<ApplicationTracker />} />
-          <Route path="/Candidate/services/dsa-aptitude" element={<DSAAptitude />} />
-          <Route path="/Candidate/services/ai-interview" element={<AIInterview />} />
-          <Route path="/Candidate/services/profile-management" element={<ProfileManagement />} />
+          <Route path="/Candidate/05_ResetPassword"  element={<ResetPasswordCandidate />} />
 
-          <Route path="/Recruiter/01_Recruiter" element={<RecruiterHomePage />} />
-          <Route path="/Recruiter/02_LoginRec" element={<LoginRecruiter />} />
-          <Route path="/Recruiter/03_SignupRec" element={<SignupRecruiter />} />
+          {/* ── CANDIDATE PROTECTED (must be logged in as candidate) ── */}
+          <Route path="/Candidate/06_MainCand" element={
+            <ProtectedRoute requiredRole="candidate"><CandidateMain /></ProtectedRoute>
+          }/>
+          <Route path="/Candidate/services/resume-builder" element={
+            <ProtectedRoute requiredRole="candidate"><ResumeBuilder /></ProtectedRoute>
+          }/>
+          <Route path="/Candidate/services/resume-analysis" element={
+            <ProtectedRoute requiredRole="candidate"><ResumeAnalysis /></ProtectedRoute>
+          }/>
+          <Route path="/Candidate/services/ats-checker" element={
+            <ProtectedRoute requiredRole="candidate"><ATSChecker /></ProtectedRoute>
+          }/>
+          <Route path="/Candidate/services/job-matching" element={
+            <ProtectedRoute requiredRole="candidate"><JobMatching /></ProtectedRoute>
+          }/>
+          <Route path="/Candidate/services/application-tracker" element={
+            <ProtectedRoute requiredRole="candidate"><ApplicationTracker /></ProtectedRoute>
+          }/>
+          <Route path="/Candidate/services/dsa-aptitude" element={
+            <ProtectedRoute requiredRole="candidate"><DSAAptitude /></ProtectedRoute>
+          }/>
+          <Route path="/Candidate/services/ai-interview" element={
+            <ProtectedRoute requiredRole="candidate"><AIInterview /></ProtectedRoute>
+          }/>
+          <Route path="/Candidate/services/profile-management" element={
+            <ProtectedRoute requiredRole="candidate"><ProfileManagement /></ProtectedRoute>
+          }/>
+
+          {/* ── RECRUITER AUTH (no login needed) ── */}
+          <Route path="/Recruiter/01_Recruiter"      element={<RecruiterHomePage />} />
+          <Route path="/Recruiter/02_LoginRec"       element={<LoginRecruiter />} />
+          <Route path="/Recruiter/03_SignupRec"      element={<SignupRecruiter />} />
           <Route path="/Recruiter/04_ForgotPassword" element={<ForgotPasswordRecruiter />} />
-          <Route path="/Recruiter/05_ResetPassword" element={<ResetPasswordRecruiter />} />
-          <Route path="/Recruiter/06_MainRec" element={<RecruiterMain />} />
-          <Route path="/job/:jobId" element={<CandidatesApplied />} />
+          <Route path="/Recruiter/05_ResetPassword"  element={<ResetPasswordRecruiter />} />
+
+          {/* ── RECRUITER PROTECTED (must be logged in as recruiter) ── */}
+          <Route path="/Recruiter/06_MainRec" element={
+            <ProtectedRoute requiredRole="recruiter"><RecruiterMain /></ProtectedRoute>
+          }/>
+          <Route path="/job/:jobId" element={
+            <ProtectedRoute requiredRole="recruiter"><CandidatesApplied /></ProtectedRoute>
+          }/>
 
         </Routes>
       </div>
@@ -81,9 +113,11 @@ function AppLayout() {
 
 function App() {
   return (
-    <BrowserRouter>
-      <AppLayout />
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <AppLayout />
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
