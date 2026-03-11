@@ -1,22 +1,62 @@
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:wght@300;400;500;600&display=swap');
 
 :root {
-  --gold: #f5a623;
-  --amber: #ff8000;
-  --bg: #0a0a0a;
-  --card-bg: rgba(14,16,22,0.98);
+  --bg:      #080808;
+  --surface: #111111;
+  --border:  rgba(255,255,255,0.07);
+  --text:    #e8e8e8;
+  --muted:   #555;
+  --accent:  #c8c8c8;
+  --white:   #ffffff;
+  --card-bg: rgba(12,12,12,0.97);
 }
 
 .page {
   min-height: 100vh;
   background: var(--bg);
-  font-family: 'Outfit', sans-serif;
+  font-family: 'DM Sans', sans-serif;
   overflow-x: hidden;
   padding-top: 60px;
+  position: relative;
+  cursor: none;
 }
 
-/* ── HERO SPLIT ── */
+/* ── LIVE CANVAS BACKGROUND ── */
+.bgCanvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ── CUSTOM CURSOR ── */
+.cursor {
+  position: fixed;
+  width: 8px; height: 8px;
+  background: #fff;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: transform 0.08s ease;
+}
+.cursorFollower {
+  position: fixed;
+  width: 32px; height: 32px;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%,-50%);
+  transition: all 0.13s ease;
+}
+
+/* ── HERO ── */
 .hero {
+  position: relative;
+  z-index: 10;
   min-height: calc(100vh - 60px);
   display: grid;
   grid-template-columns: 44% 56%;
@@ -28,42 +68,38 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 4rem 2.5rem 4rem 3.5rem;
+  padding: 3rem 2.5rem 3rem 3.5rem;
   position: relative;
   z-index: 10;
-  animation: slideIn 0.7s cubic-bezier(0.16,1,0.3,1) both;
+  animation: slideIn 0.8s cubic-bezier(0.16,1,0.3,1) both;
 }
 @keyframes slideIn {
   from { opacity: 0; transform: translateX(-24px); }
   to   { opacity: 1; transform: translateX(0); }
 }
 
-.pill {
-  display: inline-flex; align-items: center; gap: 8px;
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 100px; padding: 0.28rem 0.9rem;
-  margin-bottom: 1.8rem; width: fit-content;
-  font-size: 0.72rem; font-weight: 600; color: rgba(255,255,255,0.6);
-  background: rgba(255,255,255,0.04);
-}
-
 .heroH {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(2.8rem, 5vw, 4.6rem);
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(3rem, 5.2vw, 5rem);
   font-weight: 900;
-  line-height: 1.02;
-  letter-spacing: -0.04em;
+  line-height: 1.0;
+  letter-spacing: -0.03em;
   margin-bottom: 1.4rem;
-  color: #fff;
+  color: var(--white);
 }
-.ac { color: var(--gold); }
+.heroH .italic { font-style: italic; color: var(--accent); }
+.heroH .outline {
+  -webkit-text-stroke: 1px rgba(255,255,255,0.35);
+  color: transparent;
+}
 
 .heroP {
   font-size: 0.9rem;
-  color: rgba(255,255,255,0.38);
+  color: var(--muted);
   line-height: 1.85;
   max-width: 400px;
   margin-bottom: 2.2rem;
+  font-weight: 300;
 }
 
 /* PORTAL BUTTONS */
@@ -75,84 +111,63 @@
 .portalRecruiter {
   display: flex; align-items: center; justify-content: space-between;
   gap: 10px; padding: 14px 20px;
-  border-radius: 12px; text-decoration: none;
+  border-radius: 8px; text-decoration: none;
   flex: 1; transition: all 0.22s;
 }
 .portalCandidate svg,
 .portalRecruiter svg {
-  width: 16px; height: 16px; fill: none;
-  stroke-width: 2.5; stroke-linecap: round; flex-shrink: 0;
+  width: 15px; height: 15px; fill: none;
+  stroke-width: 2; stroke-linecap: round; flex-shrink: 0;
 }
 .portalCandidate {
-  background: rgba(79,142,247,0.08);
-  border: 1px solid rgba(79,142,247,0.22);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
 }
-.portalCandidate svg { stroke: #4f8ef7; }
+.portalCandidate svg { stroke: rgba(255,255,255,0.5); }
 .portalCandidate:hover {
-  background: rgba(79,142,247,0.16);
-  border-color: rgba(79,142,247,0.45);
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.25);
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(79,142,247,0.18);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.5);
 }
 .portalRecruiter {
-  background: rgba(245,166,35,0.08);
-  border: 1px solid rgba(245,166,35,0.22);
+  background: var(--white);
 }
-.portalRecruiter svg { stroke: #f5a623; }
+.portalRecruiter svg { stroke: #000; }
 .portalRecruiter:hover {
-  background: rgba(245,166,35,0.16);
-  border-color: rgba(245,166,35,0.45);
+  background: var(--accent);
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(245,166,35,0.18);
+  box-shadow: 0 12px 28px rgba(255,255,255,0.15);
 }
 .portalLabel {
-  font-family: 'Syne', sans-serif;
-  font-size: 0.85rem; font-weight: 800; color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem; font-weight: 600; color: var(--white);
   margin-bottom: 2px;
 }
+.portalRecruiter .portalLabel { color: #000; }
 .portalSub { font-size: 0.68rem; color: rgba(255,255,255,0.35); }
+.portalRecruiter .portalSub { color: rgba(0,0,0,0.45); }
 
 /* BULLETS */
 .bullets { display: flex; flex-direction: column; gap: 10px; }
 .bl {
   display: flex; align-items: flex-start; gap: 10px;
-  font-size: 0.82rem; color: rgba(255,255,255,0.38); line-height: 1.55;
+  font-size: 0.82rem; color: var(--muted); line-height: 1.55;
+  font-weight: 300;
 }
 .blDot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--gold); flex-shrink: 0; margin-top: 6px;
-  box-shadow: 0 0 6px var(--gold);
+  width: 5px; height: 5px; border-radius: 50%;
+  background: rgba(255,255,255,0.4); flex-shrink: 0; margin-top: 7px;
 }
-.bl strong { color: rgba(255,255,255,0.75); }
+.bl strong { color: rgba(255,255,255,0.75); font-weight: 500; }
 
-/* ── RIGHT — 3D SCENE ── */
-.heroRight {
-  position: relative;
-  overflow: hidden;
-  /* left fade */
-}
-.heroRight::before {
-  content: '';
-  position: absolute; top: 0; left: 0;
-  width: 120px; height: 100%;
-  background: linear-gradient(to right, var(--bg), transparent);
-  z-index: 50; pointer-events: none;
-}
-.heroRight::after {
-  content: '';
-  position: absolute; bottom: 0; left: 0; right: 0;
-  height: 180px;
-  background: linear-gradient(to top, var(--bg), transparent);
-  z-index: 50; pointer-events: none;
-}
+/* ── RIGHT — orbital panel (overridden below) ── */
 
-/* PERSPECTIVE CONTAINER — this gives the 3D depth */
 .perspective {
   position: absolute; inset: 0;
   perspective: 1200px;
 }
 
-/* SCENE wrapper — fades in/out */
 .scene {
   position: absolute; inset: 0;
   opacity: 0;
@@ -164,47 +179,43 @@
   pointer-events: auto;
 }
 
-/* ── CARDS — stacked with 3D tilt ── */
-/* Each card uses translateZ + rotateX/Y to create depth layers */
+/* ── CARDS ── */
 .card {
   position: absolute;
-  border-radius: 14px;
+  border-radius: 12px;
   overflow: hidden;
   background: var(--card-bg);
   border: 1px solid rgba(255,255,255,0.07);
-  box-shadow: 0 32px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.04);
+  box-shadow: 0 32px 80px rgba(0,0,0,0.85), 0 0 0 1px rgba(255,255,255,0.03);
   transform-style: preserve-3d;
 }
 
-/* Back card — blurred, tilted back, small */
 .cardBack {
   width: 520px;
-  top: 6%;
+  top: 2%;
   left: 8%;
-  opacity: 0.22;
+  opacity: 0.18;
   filter: blur(2px);
   z-index: 5;
   transform: perspective(900px) rotateX(8deg) rotateY(-6deg) translateZ(-80px) scale(0.9);
 }
 
-/* Mid card — slightly blurred, partially visible */
 .cardMid {
   width: 490px;
-  top: 24%;
+  top: 20%;
   left: 13%;
-  opacity: 0.55;
+  opacity: 0.5;
   z-index: 10;
   transform: perspective(900px) rotateX(5deg) rotateY(-4deg) translateZ(-30px) scale(0.95);
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  transition: transform 0.4s ease;
 }
 .sceneOn:hover .cardMid {
-  transform: perspective(900px) rotateX(3deg) rotateY(-2deg) translateZ(0px) scale(0.97);
+  transform: perspective(900px) rotateX(3deg) rotateY(-2deg) translateZ(0) scale(0.97);
 }
 
-/* Front card — sharp, full, slight tilt */
 .cardFront {
   width: 460px;
-  top: 44%;
+  top: 40%;
   left: 11%;
   transform: translateY(-14%) perspective(900px) rotateX(2deg) rotateY(-1deg);
   z-index: 20;
@@ -212,26 +223,26 @@
 }
 .sceneOn:hover .cardFront {
   transform: translateY(-14%) perspective(900px) rotateX(0deg) rotateY(0deg);
-  box-shadow: 0 40px 100px rgba(0,0,0,0.85), 0 0 0 1px rgba(255,255,255,0.06);
+  box-shadow: 0 40px 100px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.06);
 }
 
-/* CHROME BAR */
+/* CHROME */
 .chrome {
-  background: #0c0e13;
+  background: #0a0a0a;
   padding: 8px 12px;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
   display: flex; align-items: center; gap: 6px;
 }
 .dots { display: flex; gap: 4px; }
 .dots span { width: 8px; height: 8px; border-radius: 50%; }
-.urlBar { flex: 1; height: 14px; background: rgba(255,255,255,0.05); border-radius: 4px; }
-.urlTxt { font-size: 0.54rem; color: rgba(255,255,255,0.18); }
+.urlBar { flex: 1; height: 14px; background: rgba(255,255,255,0.04); border-radius: 4px; }
+.urlTxt { font-size: 0.54rem; color: rgba(255,255,255,0.15); }
 
 .cardBody { padding: 14px 16px; }
 .slbl {
-  font-size: 0.54rem; font-weight: 700;
-  color: rgba(255,255,255,0.27);
-  letter-spacing: 0.12em; text-transform: uppercase;
+  font-size: 0.52rem; font-weight: 600;
+  color: rgba(255,255,255,0.22);
+  letter-spacing: 0.14em; text-transform: uppercase;
   margin-bottom: 8px;
 }
 
@@ -239,61 +250,86 @@
 .jr {
   display: flex; align-items: center; gap: 8px;
   padding: 8px 10px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 9px; margin-bottom: 6px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 8px; margin-bottom: 6px;
 }
 .jr:last-child { margin-bottom: 0; }
 .jav {
   width: 28px; height: 28px; border-radius: 7px;
   flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-  font-family: 'Syne', sans-serif; font-size: 0.62rem; font-weight: 900; color: #fff;
+  font-family: 'DM Sans', sans-serif; font-size: 0.62rem; font-weight: 600; color: #fff;
 }
-.jt { font-size: 0.72rem; font-weight: 700; color: #fff; }
-.jc { font-size: 0.58rem; color: rgba(255,255,255,0.3); margin-top: 1px; }
+.jt { font-size: 0.72rem; font-weight: 500; color: #fff; }
+.jc { font-size: 0.58rem; color: rgba(255,255,255,0.28); margin-top: 1px; }
 .jb {
   padding: 2px 8px; border-radius: 100px;
-  font-size: 0.55rem; font-weight: 700;
+  font-size: 0.55rem; font-weight: 600;
   margin-left: auto; white-space: nowrap;
 }
 
-/* WELCOME */
-.welcomeText { font-family: 'Syne',sans-serif; font-size: 0.88rem; font-weight: 800; color: #fff; }
-.welcomeSub { font-size: 0.58rem; color: rgba(255,255,255,0.3); margin-top: 2px; }
+.welcomeText { font-family: 'Playfair Display', serif; font-size: 0.92rem; font-weight: 700; color: #fff; }
+.welcomeSub  { font-size: 0.58rem; color: rgba(255,255,255,0.28); margin-top: 2px; }
 .activeBadge {
   display: flex; align-items: center; gap: 5px;
-  padding: 3px 10px; font-size: 0.58rem; font-weight: 700;
-  background: rgba(0,230,118,0.1); border: 1px solid rgba(0,230,118,0.2);
-  border-radius: 100px; color: #00e676; white-space: nowrap;
+  padding: 3px 10px; font-size: 0.58rem; font-weight: 500;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 100px; color: rgba(255,255,255,0.7); white-space: nowrap;
 }
 .activeBadge::before {
   content: ''; width: 5px; height: 5px;
-  border-radius: 50%; background: #00e676; flex-shrink: 0;
+  border-radius: 50%; background: #fff; flex-shrink: 0;
 }
 
-/* FLOATING CHIP */
+/* CHIP */
 .chip {
   position: absolute; z-index: 200;
-  background: rgba(13,15,21,0.97);
+  background: rgba(10,10,10,0.97);
   border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 12px; padding: 8px 14px;
+  border-radius: 10px; padding: 8px 14px;
   backdrop-filter: blur(12px);
-  box-shadow: 0 12px 32px rgba(0,0,0,0.65);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.7);
   display: flex; align-items: center; gap: 10px;
   white-space: nowrap;
 }
-.chipTop { top: 10%; right: 4%; animation: floatY 4s ease-in-out infinite; }
+.chipTop { top: 8%; right: 4%; animation: floatY 4s ease-in-out infinite; }
 @keyframes floatY {
   0%,100% { transform: translateY(0); }
   50%      { transform: translateY(-8px); }
 }
 .chipDot {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: var(--gold); box-shadow: 0 0 8px var(--gold);
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #fff; box-shadow: 0 0 8px rgba(255,255,255,0.6);
   flex-shrink: 0;
 }
-.chipTitle { font-size: 0.68rem; font-weight: 700; color: #fff; }
-.chipSub { font-size: 0.57rem; color: rgba(255,255,255,0.38); margin-top: 1px; }
+.chipTitle { font-size: 0.68rem; font-weight: 500; color: #fff; font-family: 'DM Sans', sans-serif; }
+.chipSub   { font-size: 0.57rem; color: rgba(255,255,255,0.35); margin-top: 1px; }
+
+/* ── TICKER ── */
+.ticker {
+  position: relative; z-index: 10;
+  overflow: hidden;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 0;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(8px);
+}
+.tickerTrack {
+  display: flex; gap: 48px;
+  animation: ticker 24s linear infinite;
+  white-space: nowrap;
+}
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.tickerItem {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.72rem; font-style: italic;
+  color: rgba(255,255,255,0.28);
+  letter-spacing: 0.05em; flex-shrink: 0;
+}
 
 /* MOBILE */
 @media (max-width: 900px) {
@@ -301,4 +337,82 @@
   .heroLeft { padding: 3rem 1.5rem 2rem; }
   .heroRight { height: 420px; position: relative; }
   .portalRow { flex-direction: column; }
+}
+
+/* ══════════════════════════════════════════
+   ORBITAL CAROUSEL
+══════════════════════════════════════════ */
+
+/* Right panel — tall enough for orbit */
+.heroRight {
+  position: relative;
+  overflow: visible !important;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Container that holds all orbiting cards */
+.orbitWrap {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 60px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Visible elliptical orbit path hint */
+.orbitPath {
+  position: absolute;
+  width: 420px;
+  height: 130px;
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 50%;
+  pointer-events: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Each card in the orbit — NO transition, RAF drives everything */
+.orbitCard {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 380px;
+  background: rgba(12,12,12,0.97);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.03);
+  will-change: transform, opacity, filter;
+}
+
+/* Floating chip above carousel */
+.orbitChip {
+  position: absolute;
+  top: 8%;
+  right: 4%;
+  background: rgba(10,10,10,0.97);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 8px 14px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+  z-index: 200;
+  animation: floatY 4s ease-in-out infinite;
+}
+
+.orbitChipDot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #81e6a0;
+  box-shadow: 0 0 8px #81e6a0;
+  flex-shrink: 0;
 }

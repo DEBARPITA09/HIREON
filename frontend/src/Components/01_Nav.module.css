@@ -1,4 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap');
+
+:root {
+  --bg:     #080808;
+  --border: rgba(255,255,255,0.07);
+  --white:  #ffffff;
+  --muted:  rgba(255,255,255,0.45);
+}
 
 .nav {
   position: fixed;
@@ -9,62 +16,111 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(10,10,10,0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-  font-family: 'Outfit', sans-serif;
+  background: rgba(14,14,14,0.95);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  font-family: 'DM Sans', sans-serif;
   transition: background 0.3s, box-shadow 0.3s;
 }
 .scrolled {
-  background: rgba(10,10,10,0.97);
-  box-shadow: 0 4px 32px rgba(0,0,0,0.7);
+  background: rgba(8,8,8,0.97);
+  box-shadow: 0 4px 32px rgba(0,0,0,0.8);
 }
 
+/* ── LOGO ── */
 .logo {
-  display: flex; align-items: center; gap: 0.55rem;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
   text-decoration: none;
 }
+
+/* Square icon — SVG H, always crisp */
 .logoSq {
-  width: 30px; height: 30px; border-radius: 7px;
-  background: linear-gradient(135deg, #f5a623, #ff8000);
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  background: #ffffff;
   display: flex; align-items: center; justify-content: center;
-  font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 900;
-  color: #0a0a0a;
-  box-shadow: 0 0 12px rgba(245,166,35,0.45);
+  flex-shrink: 0;
+  outline: 2px solid rgba(255,255,255,0.9);
+  outline-offset: 2px;
 }
+
+/* HIREON — full bright white, no dark ON */
 .logoWord {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.15rem; font-weight: 900;
-  letter-spacing: 0.08em; color: #fff;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+  text-transform: uppercase;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
 }
-.logoWord span { color: #f5a623; }
+.logoWord span {
+  color: #ffffff;
+  opacity: 0.55;
+}
 
-.navActions { display: flex; gap: 0.6rem; align-items: center; }
+/* ── NAV ACTIONS ── */
+.navActions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
 
+/* CANDIDATE — ghost / outline button */
 .btnOutline {
   background: transparent;
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 8px; padding: 0.38rem 1.1rem;
-  color: rgba(255,255,255,0.55);
-  font-family: 'Outfit', sans-serif; font-size: 0.82rem; font-weight: 500;
-  text-decoration: none; transition: all 0.2s;
-  display: inline-flex; align-items: center;
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 7px;
+  padding: 0.38rem 1.2rem;
+  color: rgba(255,255,255,0.5);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
 }
-.btnOutline:hover { border-color: rgba(245,166,35,0.4); color: #fff; }
+.btnOutline:hover {
+  border-color: rgba(255,255,255,0.35);
+  color: var(--white);
+  background: rgba(255,255,255,0.05);
+}
 
-.btnGold {
-  background: #f5a623; border: none; border-radius: 8px;
-  padding: 0.42rem 1.15rem; color: #0a0a0a;
-  font-family: 'Outfit', sans-serif; font-size: 0.82rem; font-weight: 800;
-  text-decoration: none; transition: all 0.2s;
-  display: inline-flex; align-items: center; gap: 0.3rem;
-  box-shadow: 0 0 16px rgba(245,166,35,0.35);
+/* RECRUITER — solid white button, black text */
+.btnPrimary {
+  background: var(--white);
+  border: none;
+  border-radius: 7px;
+  padding: 0.42rem 1.2rem;
+  color: #080808;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  box-shadow: 0 2px 14px rgba(255,255,255,0.12);
 }
-.btnGold:hover { background: #ff8000; transform: translateY(-1px); }
-.btnGold svg {
-  width: 12px; height: 12px; stroke: #0a0a0a;
-  fill: none; stroke-width: 2.5; stroke-linecap: round;
+.btnPrimary:hover {
+  background: rgba(255,255,255,0.88);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(255,255,255,0.18);
+}
+.btnPrimary svg {
+  width: 11px; height: 11px;
+  stroke: #080808;
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
 }
 
 @media (max-width: 480px) {
