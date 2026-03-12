@@ -1,0 +1,115 @@
+/* keeps your original class name */
+.my-footer {
+    background: #0D1220;
+    border-top: 1px solid rgba(79, 142, 247, 0.12);
+    padding: 52px 60px 28px;
+    font-family: 'Outfit', 'Segoe UI', sans-serif;
+}
+
+/* ── TOP ROW ── */
+.top {
+    display: flex;
+    justify-content: space-between;
+    gap: 48px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+}
+
+/* ── BRAND BLOCK ── */
+.brand {
+    max-width: 260px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 800;
+    color: #F0F4FF;
+    letter-spacing: -0.5px;
+}
+.logoBlue { color: #4F8EF7; }
+
+.brand p {
+    font-size: 13px;
+    color: #5A7090;
+    line-height: 1.75;
+}
+
+.tagline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #3D4F6B;
+    font-weight: 500;
+}
+
+.dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #00D4AA;
+    box-shadow: 0 0 7px #00D4AA;
+    flex-shrink: 0;
+    animation: pulse 2s infinite;
+}
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50%       { transform: scale(1.5); opacity: 0.5; }
+}
+
+/* ── LINKS GROUP ── */
+.linksGroup {
+    display: flex;
+    gap: 52px;
+    flex-wrap: wrap;
+}
+
+.col {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.col h4 {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #3D4F6B;
+    margin-bottom: 4px;
+}
+
+.col a {
+    font-size: 14px;
+    color: #5A7090;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.col a:hover { color: #F0F4FF; }
+
+/* ── BOTTOM ROW ── */
+.bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 24px;
+    border-top: 1px solid rgba(79, 142, 247, 0.08);
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.bottom p {
+    font-size: 13px;
+    color: #3D4F6B;
+}
+
+/* ── MOBILE ── */
+@media (max-width: 768px) {
+    .my-footer { padding: 40px 24px 24px; }
+    .top { flex-direction: column; }
+    .linksGroup { gap: 32px; }
+    .bottom { flex-direction: column; text-align: center; gap: 6px; }
+}
