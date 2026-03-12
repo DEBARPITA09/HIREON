@@ -52,7 +52,7 @@ function GridCanvas() {
 export const CandidateMain = () => {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
-  const name = user ? user.name : "Candidate";
+  const name = user ? (user.username || user.name || "Candidate") : "Candidate";
   const initial = name.charAt(0).toUpperCase();
 
   return (
