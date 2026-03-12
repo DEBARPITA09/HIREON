@@ -562,12 +562,13 @@ export const Home = () => {
           <h1 className={styles.heroH}>
             ONE STOP<br/>
             <span className={styles.italic}>Hiring<br/>Platform</span><br/>
-            For Top<br/>
-            <span className={styles.outline}>Talent</span>
+            Hire Smarter.<br/>
+            <span className={styles.outline}>Get Hired Faster.</span>
           </h1>
           <p className={styles.heroP}>
-            Connect with world-class companies using AI-powered matching, smart screening,
-            and real-time job alerts — designed to get you hired faster.
+            Whether you're building a world-class team or landing your dream role —
+            HIREON puts AI-powered tools, smart screening, and real-time matching
+            on both sides of the table.
           </p>
 
           {/* ── PORTAL BUTTONS ── */}
@@ -582,9 +583,9 @@ export const Home = () => {
 
           <div className={styles.bullets}>
             {[
-              {t:"AI-powered matching",           s:"designed for faster, smarter hiring."},
-              {t:"Resume analysis & ATS scoring", s:"to maximise shortlisting chances."},
-              {t:"Real-time application tracking",s:"from apply to offer."},
+              {t:"For Candidates —",  s:"AI resume tools, ATS scoring & mock interviews to get you hired."},
+              {t:"For Recruiters —",  s:"smart screening, job posting & real-time applicant tracking."},
+              {t:"One platform.",      s:"Zero friction. Everything in one place."},
             ].map((b,i) => (
               <div key={i} className={styles.bl}>
                 <div className={styles.blDot}/>
