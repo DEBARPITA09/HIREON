@@ -600,16 +600,6 @@ export const Home = () => {
         </div>
 
       </section>
-
-      {/* ── TICKER ── */}
-      <div className={styles.ticker}>
-        <div className={styles.tickerTrack}>
-          {["3,20,000+ Placed","·","94% Match Rate","·","14 Day Avg Hire","·","500+ Companies","·","AI-Powered Matching","·",
-            "3,20,000+ Placed","·","94% Match Rate","·","14 Day Avg Hire","·","500+ Companies","·","AI-Powered Matching","·"].map((item,i)=>(
-            <span key={i} className={styles.tickerItem}>{item}</span>
-          ))}
-        </div>
-      </div>
     </div>
   );
 };
