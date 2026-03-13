@@ -29,32 +29,38 @@ function ApplyModal({ job, candidate, onClose, onApplied }) {
     reader.readAsDataURL(file);
   };
 
+  const [submitError, setSubmitError] = useState("");
+
   const submit = () => {
+    setSubmitError("");
     const resumeB64  = useProfileResume ? candidate.resumeB64  : customResumeB64;
     const resumeName = useProfileResume ? candidate.resumeName : customResumeName;
 
-    if (!resumeB64) { alert("Please upload a resume before applying."); return; }
+    if (!resumeB64) {
+      setSubmitError("Please upload a resume before applying.");
+      return;
+    }
 
-    // build application object
+    // build application object — NO resumeB64 stored (too large for localStorage)
+    // resumeB64 is already in hireon_candidate and can be read from there
     const application = {
-      id:          `app_${Date.now()}`,
-      jobId:       job.id,
-      jobRole:     job.role,
-      company:     job.company,
-      salary:      job.salary,
-      location:    job.location,
-      mode:        job.mode,
-      deadline:    job.deadline,
-      skills:      job.skills,
-      appliedAt:   new Date().toISOString(),
-      status:      "Pending",
-      candidateId: candidate.email,
+      id:             `app_${Date.now()}`,
+      jobId:          String(job.id),
+      jobRole:        job.role,
+      company:        job.company,
+      salary:         job.salary,
+      location:       job.location,
+      mode:           job.mode,
+      deadline:       job.deadline,
+      skills:         job.skills,
+      appliedAt:      new Date().toISOString(),
+      status:         "Pending",
+      candidateId:    candidate.email,
       candidateName:  candidate.name,
       candidateEmail: candidate.email,
-      candidatePhone: candidate.phone  || "",
-      candidateSkills:candidate.skills || [],
-      candidateDomain:candidate.domain || "",
-      resumeB64,
+      candidatePhone: candidate.phone   || "",
+      candidateSkills:candidate.skills  || [],
+      candidateDomain:candidate.domain  || "",
       resumeName,
       coverNote,
     };
@@ -62,8 +68,10 @@ function ApplyModal({ job, candidate, onClose, onApplied }) {
     // save to applications list
     const existing = JSON.parse(localStorage.getItem("hireon_applications")) || [];
     // prevent duplicate
-    const alreadyApplied = existing.some(a => a.jobId === job.id && a.candidateId === candidate.email);
-    if (alreadyApplied) { alert("You have already applied to this job."); return; }
+    const alreadyApplied = existing.some(
+      a => String(a.jobId) === String(job.id) && a.candidateId === candidate.email
+    );
+    if (alreadyApplied) { setSubmitError("You have already applied to this job."); return; }
 
     localStorage.setItem("hireon_applications", JSON.stringify([...existing, application]));
     setApplied(true);
@@ -202,6 +210,9 @@ function ApplyModal({ job, candidate, onClose, onApplied }) {
               rows={3}
             />
 
+            {submitError && (
+              <p className={styles.submitError}>⚠️ {submitError}</p>
+            )}
             <div className={styles.formActions}>
               <button className={styles.btnDetails} onClick={() => setShowDetails(true)}>More Details</button>
               <button className={styles.btnCancel} onClick={onClose}>Cancel</button>
@@ -231,14 +242,25 @@ export const HireonJobsTab = () => {
     const applied = new Set(applications.filter(a => a.candidateId === cand.email).map(a => a.jobId));
     setAppliedIds(applied);
 
-    // filter jobs by candidate skills
-    const candSkills = (cand.skills || []).map(s => s.toLowerCase());
+    // Match: ALL job-required skills must exist in candidate's skills/domain
+    const candSkills  = (cand.skills || []).map(s => s.toLowerCase().trim());
+    const candDomain  = (cand.domain || "").toLowerCase();
+    // treat domain keywords as additional skills candidate has
+    const domainWords = candDomain.split(/[\s,\/]+/).filter(w => w.length > 1);
+    const candAll     = [...new Set([...candSkills, ...domainWords])];
+
     const matched = posted.filter(job => {
-      if (!candSkills.length) return true; // show all if no skills yet
-      const reqSkills = (job.skills || "").toLowerCase();
-      return candSkills.some(s => reqSkills.includes(s));
+      if (!candAll.length) return true; // no profile data = show all
+      // parse job required skills (comma/space separated)
+      const jobSkills = (job.skills || "")
+        .split(/[,]+/)
+        .map(s => s.trim().toLowerCase())
+        .filter(Boolean);
+      if (!jobSkills.length) return true; // job has no skill requirement = show it
+      // ALL job skills must be covered by candidate's skills/domain
+      return jobSkills.every(js => candAll.some(cs => cs.includes(js) || js.includes(cs)));
     });
-    setJobs(matched);
+        setJobs(matched);
   };
 
   useEffect(() => { loadData(); }, []);

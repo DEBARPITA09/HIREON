@@ -6,21 +6,47 @@ const empty = {
   headquarters: "", description: "", mission: "", linkedin: "", email: "", phone: "",
 };
 
+// Required fields for posting a job
+const REQUIRED = ["name", "industry", "headquarters"];
+
 export const CompanyProfile = ({ onClose }) => {
   const [company, setCompany] = useState(empty);
+  const [errors, setErrors]   = useState({});
+  const [saved, setSaved]     = useState(false);
 
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("recruiterCompany")) || {};
+    const auth = JSON.parse(localStorage.getItem("recruiter")) || {};
+    const email = auth.email || "";
+    const key = email ? `recruiterCompany_${email}` : "recruiterCompany_default";
+    const stored = JSON.parse(localStorage.getItem(key)) || {};
     setCompany(prev => ({ ...prev, ...stored }));
   }, []);
 
-  const handleChange = (e) => setCompany({ ...company, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    setCompany({ ...company, [e.target.name]: e.target.value });
+    if (errors[e.target.name]) setErrors(prev => ({ ...prev, [e.target.name]: false }));
+  };
+
+  const validate = () => {
+    const errs = {};
+    REQUIRED.forEach(f => { if (!company[f]?.trim()) errs[f] = true; });
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
 
   const handleSave = (e) => {
     e.preventDefault();
-    localStorage.setItem("recruiterCompany", JSON.stringify(company));
-    onClose();
+    if (!validate()) return;
+    const auth = JSON.parse(localStorage.getItem("recruiter")) || {};
+    const email = auth.email || "";
+    const key = email ? `recruiterCompany_${email}` : "recruiterCompany_default";
+    localStorage.setItem(key, JSON.stringify(company));
+    localStorage.setItem("recruiter", JSON.stringify({ ...auth, company: company.name }));
+    setSaved(true);
+    setTimeout(() => { setSaved(false); onClose(); }, 900);
   };
+
+  const req = (field) => REQUIRED.includes(field);
 
   return (
     <div className={styles.overlay} onClick={onClose}>
@@ -29,17 +55,21 @@ export const CompanyProfile = ({ onClose }) => {
           <h2 className={styles.modalTitle}>Company Profile</h2>
           <button className={styles.closeBtn} onClick={onClose}>✕</button>
         </div>
-        <form onSubmit={handleSave} className={styles.form}>
 
+        <p className={styles.requiredNote}><span className={styles.star}>*</span> Required fields must be filled to post a job.</p>
+
+        <form onSubmit={handleSave} className={styles.form}>
           <p className={styles.formSection}>Identity</p>
           <div className={styles.formRow}>
             <div className={styles.formGroup}>
-              <label className={styles.label}>Company Name</label>
-              <input className={styles.input} type="text" name="name" value={company.name} onChange={handleChange} placeholder="e.g. Acme Technologies" />
+              <label className={styles.label}>Company Name {req("name") && <span className={styles.star}>*</span>}</label>
+              <input className={`${styles.input} ${errors.name ? styles.inputError : ""}`} type="text" name="name" value={company.name} onChange={handleChange} placeholder="e.g. Acme Technologies" />
+              {errors.name && <span className={styles.errorMsg}>Required</span>}
             </div>
             <div className={styles.formGroup}>
-              <label className={styles.label}>Industry</label>
-              <input className={styles.input} type="text" name="industry" value={company.industry} onChange={handleChange} placeholder="e.g. Software / FinTech" />
+              <label className={styles.label}>Industry {req("industry") && <span className={styles.star}>*</span>}</label>
+              <input className={`${styles.input} ${errors.industry ? styles.inputError : ""}`} type="text" name="industry" value={company.industry} onChange={handleChange} placeholder="e.g. Software / FinTech" />
+              {errors.industry && <span className={styles.errorMsg}>Required</span>}
             </div>
           </div>
           <div className={styles.formRow3}>
@@ -56,8 +86,9 @@ export const CompanyProfile = ({ onClose }) => {
               <input className={styles.input} type="text" name="founded" value={company.founded} onChange={handleChange} placeholder="e.g. 2015" />
             </div>
             <div className={styles.formGroup}>
-              <label className={styles.label}>Headquarters</label>
-              <input className={styles.input} type="text" name="headquarters" value={company.headquarters} onChange={handleChange} placeholder="e.g. Mumbai, India" />
+              <label className={styles.label}>Headquarters {req("headquarters") && <span className={styles.star}>*</span>}</label>
+              <input className={`${styles.input} ${errors.headquarters ? styles.inputError : ""}`} type="text" name="headquarters" value={company.headquarters} onChange={handleChange} placeholder="e.g. Mumbai, India" />
+              {errors.headquarters && <span className={styles.errorMsg}>Required</span>}
             </div>
           </div>
 
@@ -95,7 +126,9 @@ export const CompanyProfile = ({ onClose }) => {
 
           <div className={styles.formActions}>
             <button type="button" className={styles.btnCancel} onClick={onClose}>Cancel</button>
-            <button type="submit" className={styles.btnSubmit}>Save Profile</button>
+            <button type="submit" className={styles.btnSubmit}>
+              {saved ? "✓ Saved!" : "Save Company Profile"}
+            </button>
           </div>
         </form>
       </div>

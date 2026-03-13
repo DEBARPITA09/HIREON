@@ -180,7 +180,13 @@ export const AtsScreening = ({ jobs, onClose }) => {
   const selectedJob = jobs.find(j => j.id === selectedJobId);
 
   useEffect(() => {
-    const allApps = JSON.parse(localStorage.getItem("hireon_applications")) || [];
+    const auth     = JSON.parse(localStorage.getItem("recruiter")) || {};
+    const recEmail = auth.email || "";
+    const recJobKey= recEmail ? `hireon_jobs_${recEmail}` : "hireon_jobs";
+    const recJobs  = JSON.parse(localStorage.getItem(recJobKey)) || [];
+    const myJobIds = new Set(recJobs.map(j => String(j.id)));
+    const allAppsRaw = JSON.parse(localStorage.getItem("hireon_applications")) || [];
+    const allApps  = allAppsRaw.filter(a => myJobIds.has(String(a.jobId)));
     const filtered = allApps.filter(a => String(a.jobId) === String(selectedJobId));
     setApplications(filtered);
     setScores({});

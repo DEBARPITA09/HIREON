@@ -1,11 +1,20 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Navbar.module.css";
 
-export const Navbar = ({ recruiterName, onProfileClick }) => {
-  const navigate  = useNavigate();
-  const firstName = (recruiterName || "Recruiter").split(" ")[0];
-  const initial   = firstName.charAt(0).toUpperCase();
+export const Navbar = ({ recruiter = {}, onSignOut, onOpenModal }) => {
+  const [open, setOpen] = useState(false);
+  const dropRef = useRef();
+  const name     = recruiter.name || "Recruiter";
+  const initials = name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (dropRef.current && !dropRef.current.contains(e.target)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
   return (
     <div className={styles.topBar}>
@@ -13,17 +22,49 @@ export const Navbar = ({ recruiterName, onProfileClick }) => {
         <span className={styles.logoHire}>HIRE</span>
         <span className={styles.logoOn}>ON</span>
       </div>
+
       <div className={styles.topRight}>
-        <div className={styles.userPill} onClick={onProfileClick}>
-          <div className={styles.avatar}>{initial}</div>
-          <span className={styles.welcomeText}>Welcome {firstName}</span>
+        {/* Avatar pill + dropdown */}
+        <div className={styles.avatarWrap} ref={dropRef}>
+          <button className={styles.avatarBtn} onClick={() => setOpen(v => !v)}>
+            <div className={styles.avatar}>{initials}</div>
+            <span className={styles.avatarName}>{name.split(" ")[0]}</span>
+            <span className={styles.chevron}>{open ? "▲" : "▾"}</span>
+          </button>
+
+          {open && (
+            <div className={styles.dropdown}>
+              {/* Header */}
+              <div className={styles.dropHead}>
+                <div className={styles.dropAvatar}>{initials}</div>
+                <div className={styles.dropHeadInfo}>
+                  <p className={styles.dropName}>{name}</p>
+                  {recruiter.email   && <p className={styles.dropMeta}>{recruiter.email}</p>}
+                  {recruiter.company && <p className={styles.dropMeta}>{recruiter.company}</p>}
+                </div>
+              </div>
+
+              <div className={styles.dropDivider} />
+
+              {/* Menu items */}
+              <button className={styles.dropItem} onClick={() => { setOpen(false); onOpenModal("recruiterProfile"); }}>
+                My Profile
+              </button>
+              <button className={styles.dropItem} onClick={() => { setOpen(false); onOpenModal("companyProfile"); }}>
+                Company Profile
+              </button>
+
+              <div className={styles.dropDivider} />
+
+              <button className={`${styles.dropItem} ${styles.dropItemLogout}`} onClick={() => { setOpen(false); onSignOut(); }}>
+                Logout
+              </button>
+            </div>
+          )}
         </div>
-        <button
-          className={styles.logoutBtn}
-          onClick={() => navigate("/Recruiter/02_LoginRec")}
-        >
-          Sign out
-        </button>
+
+        {/* Instant sign out */}
+        <button className={styles.signOutBtn} onClick={onSignOut}>Sign out</button>
       </div>
     </div>
   );

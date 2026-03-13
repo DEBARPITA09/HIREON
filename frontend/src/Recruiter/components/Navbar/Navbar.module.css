@@ -1,46 +1,118 @@
+/* ── Top Bar ── */
 .topBar {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 16px 48px;
-  background: rgba(5,8,15,0.85);
-  border-bottom: 1px solid rgba(255,255,255,0.055);
-  position: sticky; top: 0; z-index: 100;
-  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+  position: sticky; top: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px; height: 62px;
+  background: rgba(5,8,15,0.96);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  font-family: 'Outfit','Segoe UI',sans-serif;
 }
 
-.topLogo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+.topLogo { font-size: 20px; font-weight: 900; letter-spacing: -0.5px; }
 .logoHire { color: #f0f4ff; }
 .logoOn   { color: #4f8ef7; }
 
-.topRight { display: flex; align-items: center; gap: 16px; }
+.topRight { display: flex; align-items: center; gap: 12px; }
 
-.userPill {
-  display: flex; align-items: center; gap: 10px;
+/* ── Avatar pill ── */
+.avatarWrap { position: relative; }
+
+.avatarBtn {
+  display: flex; align-items: center; gap: 8px;
   background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 40px; padding: 6px 14px 6px 6px;
-  cursor: pointer; transition: background 0.2s, border-color 0.2s;
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 99px;
+  padding: 5px 14px 5px 6px;
+  cursor: pointer; font-family: inherit;
+  transition: border-color 0.2s, background 0.2s;
 }
-.userPill:hover { background: rgba(255,255,255,0.07); border-color: rgba(0,212,170,0.25); }
+.avatarBtn:hover { border-color: rgba(79,142,247,0.4); background: rgba(255,255,255,0.06); }
 
 .avatar {
-  width: 28px; height: 28px; border-radius: 50%;
+  width: 30px; height: 30px; border-radius: 50%;
   background: linear-gradient(135deg, #4f8ef7, #00d4aa);
   display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-weight: 800; color: #fff; flex-shrink: 0;
+  font-size: 11px; font-weight: 800; color: #05080f;
+  flex-shrink: 0;
+}
+.avatarName { font-size: 13px; font-weight: 600; color: #e2e8f0; }
+.chevron    { font-size: 9px; color: #475569; margin-left: 2px; }
+
+/* ── Dropdown ── */
+.dropdown {
+  position: absolute; top: calc(100% + 8px); right: 0;
+  width: 230px;
+  background: #0d1117;
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+  animation: dropIn 0.16s ease;
+  z-index: 999;
+}
+@keyframes dropIn {
+  from { opacity:0; transform: translateY(-6px) scale(0.98); }
+  to   { opacity:1; transform: translateY(0) scale(1); }
 }
 
-.welcomeText { font-size: 13px; font-weight: 600; color: #94a3b8; }
-
-.logoutBtn {
-  background: transparent; color: #64748b;
-  border: 1px solid rgba(255,255,255,0.08);
-  padding: 7px 18px; border-radius: 8px;
-  font-family: inherit; font-size: 13px; font-weight: 600;
-  cursor: pointer; transition: all 0.2s;
+/* Dropdown head */
+.dropHead {
+  display: flex; align-items: center; gap: 11px;
+  padding: 16px 16px 14px;
 }
-.logoutBtn:hover { background: rgba(239,68,68,0.08); color: #f87171; border-color: rgba(239,68,68,0.2); }
-
-@media (max-width: 560px) {
-  .topBar      { padding: 14px 20px; }
-  .welcomeText { display: none; }
+.dropAvatar {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, #4f8ef7, #00d4aa);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; color: #05080f;
 }
+.dropHeadInfo { min-width: 0; }
+.dropName { font-size: 13px; font-weight: 700; color: #f0f4ff; margin: 0 0 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dropMeta { font-size: 11px; color: #475569; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Divider */
+.dropDivider { height: 1px; background: rgba(255,255,255,0.06); margin: 0; }
+
+/* Menu items */
+.dropItem {
+  display: block; width: 100%;
+  padding: 13px 18px;
+  background: none; border: none;
+  color: #94a3b8;
+  font-size: 13px; font-weight: 500;
+  font-family: inherit; text-align: left;
+  cursor: pointer;
+  border-bottom: 1px solid transparent;
+  transition: color 0.15s, background 0.15s;
+  position: relative;
+}
+.dropItem:hover {
+  color: #f0f4ff;
+  background: rgba(255,255,255,0.04);
+}
+/* underline accent on hover */
+.dropItem::after {
+  content: "";
+  position: absolute; bottom: 0; left: 18px; right: 18px;
+  height: 1px; background: rgba(79,142,247,0.4);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.2s;
+}
+.dropItem:hover::after { transform: scaleX(1); }
+
+.dropItemLogout { color: #f87171; }
+.dropItemLogout:hover { color: #fca5a5; background: rgba(248,113,113,0.06); }
+.dropItemLogout::after { background: rgba(248,113,113,0.4); }
+
+/* ── Instant sign out button ── */
+.signOutBtn {
+  background: none;
+  border: 1px solid rgba(248,113,113,0.3);
+  color: #f87171;
+  padding: 7px 16px; border-radius: 8px;
+  font-size: 12px; font-weight: 600;
+  font-family: inherit; cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.signOutBtn:hover { background: rgba(248,113,113,0.08); border-color: rgba(248,113,113,0.5); }

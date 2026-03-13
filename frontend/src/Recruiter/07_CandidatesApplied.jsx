@@ -1,172 +1,328 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import styles from "./07_CandidatesApplied.module.css";
 
-const ALL_CANDIDATES = [
-  { id: 1, name: "Rahul Sharma", resume: "/resumes/resume2.pdf", role: "Frontend Dev",    score: 87 },
-  { id: 2, name: "Priya Singh",  resume: "/resumes/resume1.pdf", role: "UI/UX Designer",  score: 92 },
-  { id: 3, name: "Arjun Mehta",  resume: "/resumes/resume3.pdf", role: "Backend Dev",     score: 78 },
-  { id: 4, name: "Sneha Reddy",  resume: "/resumes/resume4.pdf", role: "Data Analyst",    score: 84 },
-  { id: 5, name: "Karan Verma",  resume: "/resumes/resume5.pdf", role: "DevOps Engineer", score: 76 },
-];
+const DECISIONS_KEY = (jobId) => `hireon_decisions_${jobId}`;
 
-const STORAGE_KEY = (jobId) => `hireon_decisions_${jobId}`;
+/* ── Score bar color ── */
+const scoreColor = (s) => s >= 70 ? "#00d4aa" : s >= 50 ? "#fbbf24" : "#f87171";
 
+/* ── Resume Viewer Modal ── */
+function ResumeModal({ candidate, onClose }) {
+  const b64 = candidate?.resumeB64;
+  const src = b64 ? `data:application/pdf;base64,${b64}` : null;
+  return (
+    <div className={styles.overlay} onClick={onClose}>
+      <div className={styles.resumeBox} onClick={e => e.stopPropagation()}>
+        <div className={styles.resumeHeader}>
+          <span>📄 {candidate?.candidateName} — {candidate?.resumeName || "Resume"}</span>
+          <button className={styles.resumeClose} onClick={onClose}>✕</button>
+        </div>
+        {src
+          ? <iframe src={src} className={styles.resumeFrame} title="Resume" />
+          : <div className={styles.noResume}>No resume PDF available for this candidate.</div>
+        }
+      </div>
+    </div>
+  );
+}
+
+/* ── Single Candidate Card ── */
+function CandidateCard({ app, decision, onDecide, onViewResume }) {
+  const initials = (n = "?") => n.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2);
+
+  return (
+    <div className={`${styles.card} ${decision === "Accepted" ? styles.cardAccepted : decision === "Rejected" ? styles.cardRejected : ""}`}>
+
+      {/* Top row */}
+      <div className={styles.cardTop}>
+        <div className={styles.avatar}>{initials(app.candidateName)}</div>
+        <div className={styles.info}>
+          <p className={styles.name}>{app.candidateName}</p>
+          <p className={styles.email}>{app.candidateEmail}</p>
+          {app.candidateDomain && <p className={styles.domain}>{app.candidateDomain}</p>}
+        </div>
+        <span className={`${styles.badge} ${decision === "Accepted" ? styles.badgeGreen : decision === "Rejected" ? styles.badgeRed : styles.badgeYellow}`}>
+          {decision || "Pending"}
+        </span>
+      </div>
+
+      {/* Skills */}
+      {app.candidateSkills?.length > 0 && (
+        <div className={styles.skills}>
+          {app.candidateSkills.slice(0, 5).map(s => <span key={s} className={styles.skillChip}>{s}</span>)}
+          {app.candidateSkills.length > 5 && <span className={styles.skillChip}>+{app.candidateSkills.length - 5}</span>}
+        </div>
+      )}
+
+      {/* ATS score */}
+      {app.atsScore > 0 && (
+        <div className={styles.scoreRow}>
+          <div className={styles.scoreTop}>
+            <span className={styles.scoreLabel}>ATS Score</span>
+            <span className={styles.scoreNum} style={{ color: scoreColor(app.atsScore) }}>{app.atsScore}%</span>
+          </div>
+          <div className={styles.scoreTrack}>
+            <div className={styles.scoreFill} style={{ width: `${app.atsScore}%`, background: scoreColor(app.atsScore) }} />
+          </div>
+        </div>
+      )}
+
+      {/* Cover note */}
+      {app.coverNote && (
+        <p className={styles.coverNote}><span className={styles.coverLabel}>Note: </span>{app.coverNote}</p>
+      )}
+
+      <p className={styles.appliedDate}>
+        Applied {new Date(app.appliedAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+      </p>
+
+      {/* Actions */}
+      <div className={styles.actions}>
+        <button className={styles.resumeBtn} onClick={() => onViewResume(app)}>📄 View Resume</button>
+        {!decision
+          ? <div className={styles.decisionBtns}>
+              <button className={styles.acceptBtn} onClick={() => onDecide(app, "Accepted")}>✓ Accept</button>
+              <button className={styles.rejectBtn} onClick={() => onDecide(app, "Rejected")}>✕ Reject</button>
+            </div>
+          : <span className={styles.decidedTag} style={{ color: decision === "Accepted" ? "#00d4aa" : "#f87171" }}>
+              {decision === "Accepted" ? "✓ Accepted" : "✕ Rejected"}
+            </span>
+        }
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════
+   MAIN PAGE
+══════════════════════════════════════════════ */
 export const CandidatesApplied = () => {
-  const { jobId } = useParams();
   const navigate  = useNavigate();
+  const { jobId } = useParams();          // from /job/:jobId
 
-  /* decisions: { [candidateId]: "Accepted" | "Rejected" } — persisted to localStorage */
-  const [decisions, setDecisions] = useState(() => {
-    try {
-      const raw = JSON.parse(localStorage.getItem(STORAGE_KEY(jobId))) || {};
-      // normalize: ensure all keys are strings (fixes any previously saved numeric keys)
-      const normalized = {};
-      Object.entries(raw).forEach(([k, v]) => { normalized[String(k)] = v; });
-      return normalized;
-    }
-    catch { return {}; }
-  });
+  const recruiter = JSON.parse(localStorage.getItem("recruiter")) || {};
 
+  const [jobs,      setJobs]      = useState([]);
+  const [allApps,   setAllApps]   = useState([]);
+  const [decisions, setDecisions] = useState({});
+  const [activeJob, setActiveJob] = useState(null);
+  const [resumeApp, setResumeApp] = useState(null);
+  const [toast,     setToast]     = useState(null);
+
+  /* ── Load data ── */
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY(jobId), JSON.stringify(decisions));
-  }, [decisions, jobId]);
+    // Load ONLY this recruiter's jobs
+    const auth      = JSON.parse(localStorage.getItem("recruiter"))            || {};
+    const recEmail  = auth.email || "";
+    const recJobKey = recEmail ? `hireon_jobs_${recEmail}` : "hireon_jobs";
+    const postedJobs= JSON.parse(localStorage.getItem(recJobKey))              || [];
+    const apps      = JSON.parse(localStorage.getItem("hireon_applications"))  || [];
+    const candProfile= JSON.parse(localStorage.getItem("hireon_candidate"))    || {};
 
-  // always store/lookup with string keys so JSON round-trip never breaks matching
-  const decide = (id, verdict) => setDecisions(prev => ({ ...prev, [String(id)]: verdict }));
+    // Filter applications to only those for THIS recruiter's jobs
+    const myJobIds = new Set(postedJobs.map(j => String(j.id)));
+    const myApps   = apps.filter(a => myJobIds.has(String(a.jobId)));
 
-  const pending  = ALL_CANDIDATES.filter(c => !decisions[String(c.id)]);
-  const accepted = ALL_CANDIDATES.filter(c => decisions[String(c.id)] === "Accepted");
-  const rejected = ALL_CANDIDATES.filter(c => decisions[String(c.id)] === "Rejected");
+    // Attach resumeB64 from profile when email matches
+    const enriched = myApps.map(a => ({
+      ...a,
+      resumeB64: a.candidateEmail === candProfile.email ? candProfile.resumeB64 : null,
+    }));
 
-  const initials = (name) => name.split(" ").map(n => n[0]).join("").toUpperCase();
+    setJobs(postedJobs);
+    setAllApps(enriched);
+
+    // Load all decisions keyed by jobId
+    const dec = {};
+    postedJobs.forEach(j => {
+      try { dec[String(j.id)] = JSON.parse(localStorage.getItem(DECISIONS_KEY(j.id))) || {}; }
+      catch { dec[String(j.id)] = {}; }
+    });
+    setDecisions(dec);
+
+    // Set active job: prefer URL param, else first job
+    const preferred = jobId
+      ? String(jobId)
+      : postedJobs.length > 0 ? String(postedJobs[0].id) : null;
+    setActiveJob(preferred);
+  }, [jobId]);
+
+  const appsForJob    = (jid) => allApps.filter(a => String(a.jobId) === String(jid));
+  const getDecision   = (jid, aid) => decisions[String(jid)]?.[String(aid)];
+
+  /* ── Accept / Reject ── */
+  const handleDecide = (app, verdict) => {
+    const jid = String(app.jobId);
+    const aid = String(app.id);
+
+    const updated = { ...decisions, [jid]: { ...(decisions[jid] || {}), [aid]: verdict } };
+    setDecisions(updated);
+    localStorage.setItem(DECISIONS_KEY(jid), JSON.stringify(updated[jid]));
+
+    // Write status back to hireon_applications so candidate can read it
+    const saved = JSON.parse(localStorage.getItem("hireon_applications")) || [];
+    const newSaved = saved.map(a =>
+      a.id === app.id
+        ? { ...a, status: verdict, recruiterName: recruiter.name || "", recruiterCompany: recruiter.company || recruiter.companyName || "" }
+        : a
+    );
+    localStorage.setItem("hireon_applications", JSON.stringify(newSaved));
+
+    setToast({ verdict, name: app.candidateName });
+    setTimeout(() => setToast(null), 2800);
+  };
+
+  /* ── Derived counts for active job ── */
+  const activeApps    = activeJob ? appsForJob(activeJob) : [];
+  const pendingApps   = activeApps.filter(a => !getDecision(activeJob, a.id));
+  const acceptedApps  = activeApps.filter(a => getDecision(activeJob, a.id) === "Accepted");
+  const rejectedApps  = activeApps.filter(a => getDecision(activeJob, a.id) === "Rejected");
+  const activeJobData = jobs.find(j => String(j.id) === String(activeJob));
+
+  const initials = (n = "R") => n.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2);
 
   return (
     <div className={styles.page}>
-      <div className={styles.blob1} />
-      <div className={styles.blob2} />
+      <div className={styles.blob1} /><div className={styles.blob2} />
 
       {/* ── NAVBAR ── */}
       <nav className={styles.navbar}>
         <div className={styles.logo}>
-          <span className={styles.logoHire}>HIRE</span>
-          <span className={styles.logoOn}>ON</span>
+          <span className={styles.logoHire}>HIRE</span><span className={styles.logoOn}>ON</span>
         </div>
         <div className={styles.navRight}>
-          <button className={styles.backBtn} onClick={() => navigate(-1)}>← Back</button>
-          <button
-            className={styles.resetBtn}
-            onClick={() => {
-              localStorage.removeItem(STORAGE_KEY(jobId));
-              setDecisions({});
-            }}
-            title="Reset all decisions for this job (demo reset)"
-          >
-            ↺ Reset Demo
-          </button>
-          <div className={styles.avatar}>R</div>
-          <button className={styles.signOut} onClick={() => navigate("/Recruiter/02_LoginRec")}>Sign out</button>
+          <button className={styles.backBtn} onClick={() => navigate("/Recruiter/06_MainRec")}>← Dashboard</button>
+          <div className={styles.navAvatar}>{initials(recruiter.name)}</div>
+          <span className={styles.navName}>{recruiter.name || "Recruiter"}</span>
+          <button className={styles.signOutBtn} onClick={() => navigate("/Recruiter/02_LoginRec")}>Sign out</button>
         </div>
       </nav>
 
-      <div className={styles.container}>
-
-        {/* ── HERO ── */}
-        <div className={styles.hero}>
-          <div className={styles.badge}>
-            <span className={styles.dot} />
-            Job ID: {jobId}
-          </div>
-          <h1 className={styles.heroTitle}>
-            Candidates<br />
-            <span className={styles.grad}>Applied</span>
-          </h1>
-          <p className={styles.heroSub}>
-            Review applicants, check their resumes, and make your hiring decisions below.
-          </p>
-
-          {/* live counts */}
-          <div className={styles.statsRow}>
-            <div className={styles.statBox}>
-              <span className={styles.statNum}>{ALL_CANDIDATES.length}</span>
-              <span className={styles.statLabel}>TOTAL</span>
-            </div>
-            <div className={styles.statBox}>
-              <span className={styles.statNum} style={{ color: "#fbbf24" }}>{pending.length}</span>
-              <span className={styles.statLabel}>PENDING</span>
-            </div>
-            <div className={styles.statBox}>
-              <span className={styles.statNum} style={{ color: "#00d4aa" }}>
-                {accepted.length}
-              </span>
-              <span className={styles.statLabel}>ACCEPTED</span>
-            </div>
-            <div className={styles.statBox}>
-              <span className={styles.statNum} style={{ color: "#f87171" }}>
-                {rejected.length}
-              </span>
-              <span className={styles.statLabel}>REJECTED</span>
-            </div>
-          </div>
+      {/* ── TOAST ── */}
+      {toast && (
+        <div className={`${styles.toast} ${toast.verdict === "Accepted" ? styles.toastGreen : styles.toastRed}`}>
+          {toast.verdict === "Accepted" ? `✓ ${toast.name} accepted!` : `✕ ${toast.name} rejected.`}
         </div>
+      )}
 
-        {/* ── PENDING APPLICANTS ── */}
-        <div className={styles.section}>
-          <p className={styles.sectionLabel}>— PENDING REVIEW —</p>
+      <div className={styles.layout}>
 
-          {pending.length === 0 ? (
-            <div className={styles.emptyState}>
-              <div className={styles.emptyIcon}>✓</div>
-              <p className={styles.emptyText}>All applicants have been reviewed.</p>
-              <p className={styles.emptySub}>
-                Open <strong>Hiring Statistics</strong> on the dashboard to see accepted &amp; rejected candidates.
-              </p>
-            </div>
-          ) : (
-            <div className={styles.grid}>
-              {pending.map((c) => (
-                <div key={c.id} className={styles.card}>
-                  <div className={styles.cardTop}>
-                    <div className={styles.candidateAvatar}>{initials(c.name)}</div>
-                    <div className={styles.candidateInfo}>
-                      <h3 className={styles.candidateName}>{c.name}</h3>
-                      <p className={styles.candidateRole}>{c.role}</p>
+        {/* ══ LEFT SIDEBAR ══ */}
+        <aside className={styles.sidebar}>
+          <p className={styles.sidebarHeading}>Your Job Posts</p>
+          {jobs.length === 0
+            ? <p className={styles.sidebarEmpty}>No jobs posted yet.</p>
+            : jobs.map(job => {
+                const count    = appsForJob(job.id).length;
+                const isActive = String(job.id) === String(activeJob);
+                return (
+                  <div key={job.id}
+                    className={`${styles.jobTab} ${isActive ? styles.jobTabActive : ""}`}
+                    onClick={() => setActiveJob(String(job.id))}
+                  >
+                    <div className={styles.jobTabRow}>
+                      <span className={styles.jobTabRole}>{job.role}</span>
+                      <span className={styles.jobTabCount}>{count}</span>
                     </div>
-                    <div className={styles.statusBadge}>Pending</div>
-                  </div>
-
-                  {c.score && (
-                    <div className={styles.scoreBar}>
-                      <div className={styles.scoreLabel}>
-                        <span>ATS Score</span>
-                        <span className={styles.scoreNum}>{c.score}%</span>
-                      </div>
-                      <div className={styles.scoreTrack}>
-                        <div className={styles.scoreFill} style={{ width: `${c.score}%` }} />
-                      </div>
-                    </div>
-                  )}
-
-                  <div className={styles.cardActions}>
-                    <a href={c.resume} target="_blank" rel="noreferrer" className={styles.resumeBtn}>
-                      📄 View Resume
-                    </a>
-                    <div className={styles.decisionBtns}>
-                      <button className={styles.acceptBtn} onClick={() => decide(c.id, "Accepted")}>
-                        ✓ Accept
-                      </button>
-                      <button className={styles.rejectBtn} onClick={() => decide(c.id, "Rejected")}>
-                        ✕ Reject
-                      </button>
+                    <span className={styles.jobTabSub}>{job.company} · {job.location}</span>
+                    <div className={styles.jobTabTags}>
+                      {job.mode   && <span className={styles.jTag}>{job.mode}</span>}
+                      {job.salary && <span className={styles.jTagGreen}>{job.salary}</span>}
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })
+          }
+        </aside>
+
+        {/* ══ MAIN CONTENT ══ */}
+        <main className={styles.main}>
+
+          {/* No jobs at all */}
+          {jobs.length === 0 && (
+            <div className={styles.emptyFull}>
+              <span className={styles.emptyIcon}>📋</span>
+              <p className={styles.emptyTitle}>No job posts yet</p>
+              <p className={styles.emptySub}>Go to the dashboard and post a job first.</p>
             </div>
           )}
-        </div>
 
+          {/* Job selected */}
+          {activeJobData && (
+            <>
+              {/* Job header card */}
+              <div className={styles.jobHeader}>
+                <div className={styles.jobHeaderLeft}>
+                  <div className={styles.jobHeaderInitial}>{(activeJobData.company||"?")[0].toUpperCase()}</div>
+                  <div>
+                    <h2 className={styles.jobHeaderRole}>{activeJobData.role}</h2>
+                    <p className={styles.jobHeaderMeta}>{activeJobData.company} · {activeJobData.location} · {activeJobData.mode}</p>
+                    {activeJobData.skills && <p className={styles.jobHeaderSkills}>Required skills: {activeJobData.skills}</p>}
+                  </div>
+                </div>
+                <div className={styles.statsRow}>
+                  <div className={styles.stat}><span className={styles.statNum}>{activeApps.length}</span><span className={styles.statLabel}>Total</span></div>
+                  <div className={styles.stat}><span className={styles.statNum} style={{color:"#fbbf24"}}>{pendingApps.length}</span><span className={styles.statLabel}>Pending</span></div>
+                  <div className={styles.stat}><span className={styles.statNum} style={{color:"#00d4aa"}}>{acceptedApps.length}</span><span className={styles.statLabel}>Accepted</span></div>
+                  <div className={styles.stat}><span className={styles.statNum} style={{color:"#f87171"}}>{rejectedApps.length}</span><span className={styles.statLabel}>Rejected</span></div>
+                </div>
+              </div>
+
+              {/* No applicants */}
+              {activeApps.length === 0 && (
+                <div className={styles.emptyFull}>
+                  <span className={styles.emptyIcon}>👥</span>
+                  <p className={styles.emptyTitle}>No applications yet</p>
+                  <p className={styles.emptySub}>When candidates apply to this role, they'll appear here.</p>
+                </div>
+              )}
+
+              {/* Pending */}
+              {pendingApps.length > 0 && (
+                <section className={styles.section}>
+                  <p className={styles.sectionTitle}>— Pending Review —</p>
+                  <div className={styles.grid}>
+                    {pendingApps.map(app => (
+                      <CandidateCard key={app.id} app={app} decision={null}
+                        onDecide={handleDecide} onViewResume={setResumeApp} />
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {/* Accepted */}
+              {acceptedApps.length > 0 && (
+                <section className={styles.section}>
+                  <p className={styles.sectionTitle} style={{color:"#00d4aa"}}>— Accepted —</p>
+                  <div className={styles.grid}>
+                    {acceptedApps.map(app => (
+                      <CandidateCard key={app.id} app={app} decision="Accepted"
+                        onDecide={handleDecide} onViewResume={setResumeApp} />
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {/* Rejected */}
+              {rejectedApps.length > 0 && (
+                <section className={styles.section}>
+                  <p className={styles.sectionTitle} style={{color:"#f87171"}}>— Rejected —</p>
+                  <div className={styles.grid}>
+                    {rejectedApps.map(app => (
+                      <CandidateCard key={app.id} app={app} decision="Rejected"
+                        onDecide={handleDecide} onViewResume={setResumeApp} />
+                    ))}
+                  </div>
+                </section>
+              )}
+            </>
+          )}
+        </main>
       </div>
+
+      {/* Resume modal */}
+      {resumeApp && <ResumeModal candidate={resumeApp} onClose={() => setResumeApp(null)} />}
     </div>
   );
 };

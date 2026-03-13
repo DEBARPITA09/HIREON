@@ -3,12 +3,10 @@ import { useNavigate } from "react-router-dom";
 import styles from "./ServiceCards.module.css";
 
 const services = [
-  { title: "Post a Job",        desc: "Create a detailed job listing with role, location, salary, work mode and deadlines to attract the right candidates.",  tag: "Quick Post",  color: "blue", action: "postJob"         },
-  { title: "View Applicants",   desc: "Browse all candidates who applied to your roles. Review resumes and update application statuses in one place.",         tag: "AI Powered",  color: "teal", action: "viewApplicants"  },
-  { title: "ATS Screening",     desc: "Automatically rank applicants by ATS compatibility scores so you spend time only on the most relevant profiles.",        tag: "Smart Score", color: "blue", action: "ats"             },
-  { title: "Company Profile",   desc: "Showcase your company's mission, culture, industry, size and contact info so candidates know who they're applying to.", tag: "My Company",  color: "teal", action: "companyProfile"  },
-  { title: "Recruiter Profile", desc: "Add your professional details, qualifications, experience and contact info so candidates can learn more about you.",    tag: "My Profile",  color: "blue", action: "recruiterProfile" },
-  { title: "Hiring Statistics", desc: "Visualise your pipeline — applicant trends, acceptance curves, per-job breakdowns, and funnel analytics in one view.", tag: "Analytics",   color: "teal", action: "hiringStats"      },
+  { title: "Post a Job",        desc: "Create a detailed job listing with role, location, salary, work mode and deadlines to attract the right candidates.",  tag: "Quick Post",  color: "blue", action: "postJob"        },
+  { title: "View Applicants",   desc: "Browse all candidates who applied to your roles. Review resumes and update application statuses in one place.",         tag: "Live",        color: "teal", action: "viewApplicants" },
+  { title: "ATS Screening",     desc: "Automatically rank applicants by ATS compatibility scores so you spend time only on the most relevant profiles.",        tag: "Smart Score", color: "blue", action: "ats"            },
+  { title: "Hiring Statistics", desc: "Visualise your pipeline — applicant trends, acceptance curves, per-job breakdowns, and funnel analytics in one view.", tag: "Analytics",   color: "teal", action: "hiringStats"    },
 ];
 
 export function GridCanvas() {
