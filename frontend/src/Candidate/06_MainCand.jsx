@@ -63,9 +63,26 @@ const STATS = [
 
 export const CandidateMain = () => {
   const navigate = useNavigate();
+  const [photoURL, setPhotoURL] = React.useState(null);
+  const [displayName, setDisplayName] = React.useState("");
 
-  const user = null; // TODO: replace with useAuth() when Firebase is set up
-  const displayName = user?.displayName || user?.email?.split("@")[0] || "";
+  React.useEffect(() => {
+    // Load from localStorage — ProfileManagement saves here
+    const profileRaw = localStorage.getItem("hireon_candidate_profile");
+    if (profileRaw) {
+      try {
+        const profile = JSON.parse(profileRaw);
+        if (profile.name) setDisplayName(profile.name);
+      } catch(e) {}
+    }
+    // Load photo — try uid-specific key first, then generic
+    const keys = Object.keys(localStorage).filter(k => k.startsWith("hireon_photo_"));
+    if (keys.length > 0) {
+      const photo = localStorage.getItem(keys[0]);
+      if (photo) setPhotoURL(photo);
+    }
+  }, []);
+
   const initials = displayName.trim()
     ? displayName.trim().split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase()
     : "";
@@ -99,12 +116,15 @@ export const CandidateMain = () => {
 
           <div className={styles.topbarDivider}/>
 
-          {/* User chip — illustrated avatar + name, links to profile */}
+          {/* User chip — shows uploaded photo or illustrated avatar */}
           <div className={styles.userChip}
             onClick={() => navigate("/Candidate/services/profile-management")}
             title="Manage Profile">
             <div className={styles.userAvatarWrap}>
-              <ProAvatar size={28} initials={initials}/>
+              {photoURL
+                ? <img src={photoURL} alt="profile" style={{width:28,height:28,borderRadius:"50%",objectFit:"cover",display:"block"}}/>
+                : <ProAvatar size={28} initials={initials}/>
+              }
             </div>
             {displayName && <span className={styles.userName}>{displayName}</span>}
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" style={{opacity:0.35}}>

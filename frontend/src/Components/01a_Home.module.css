@@ -74,8 +74,8 @@
 }
 .italic { font-style: italic; color: var(--accent); }
 .outline {
-  -webkit-text-stroke: 1px rgba(255,255,255,0.35);
-  color: transparent;
+  font-style: italic;
+  color: var(--accent);
 }
 
 .heroP {
