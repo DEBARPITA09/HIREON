@@ -10,52 +10,15 @@ import { CompanyProfile }            from "./components/CompanyProfile/CompanyPr
 import { RecruiterProfile }          from "./components/RecruiterProfile/RecruiterProfile";
 import { HiringStats }               from "./components/HiringStats/HiringStats";
 import { AtsScreening }              from "./components/AtsScreening/AtsScreening";
+import { ProfileWizard }             from "./components/ProfileWizard/ProfileWizard";
 
-/* ── Profile required prompt ── */
-function ProfilePrompt({ isFirstLogin, onFillNow, onSkip }) {
-  return (
-    <div className={styles.promptOverlay}>
-      <div className={styles.promptBox}>
-        <div className={styles.promptIcon}>{isFirstLogin ? "👋" : "⚠️"}</div>
-        <h2 className={styles.promptTitle}>
-          {isFirstLogin ? "Welcome to HIREON!" : "Profile Incomplete"}
-        </h2>
-        <p className={styles.promptMsg}>
-          {isFirstLogin
-            ? "To maintain the quality and credibility of job listings on HIREON, we require all recruiters to complete their professional profile before posting. This helps candidates make informed decisions and increases the trust and response rate for your roles."
-            : "Posting a job requires your Recruiter Profile and Company Profile to be complete. Please fill in all mandatory fields before proceeding — this ensures candidates have the information they need to apply with confidence."
-          }
-        </p>
-        {isFirstLogin && (
-          <p className={styles.promptSub}>It only takes a couple of minutes and is a one-time setup.</p>
-        )}
-        {!isFirstLogin && (
-          <div className={styles.promptChecklist}>
-            <p className={styles.promptCheckItem}>👤 Recruiter Profile — Name, Designation, Phone</p>
-            <p className={styles.promptCheckItem}>🏢 Company Profile — Company Name, Industry, Headquarters</p>
-          </div>
-        )}
-        <div className={styles.promptActions}>
-          <button className={styles.promptFill} onClick={onFillNow}>
-            Fill Profile Now →
-          </button>
-          {isFirstLogin && (
-            <button className={styles.promptSkip} onClick={onSkip}>
-              Skip for now
-            </button>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
+
 
 export const RecruiterMain = () => {
   const navigate = useNavigate();
   const [modal,        setModal]        = useState(null);
   const [recruiter,    setRecruiter]    = useState({});
-  const [showPrompt,   setShowPrompt]   = useState(false);
-  const [isFirstLogin, setIsFirstLogin] = useState(false);
+  const [showWizard, setShowWizard] = useState(false);
 
   /* ── helpers ── */
   const getAuth     = () => JSON.parse(localStorage.getItem("recruiter")) || {};
@@ -98,24 +61,19 @@ export const RecruiterMain = () => {
   useEffect(() => {
     const r = getAuth();
     setRecruiter(r);
-    const prompted   = localStorage.getItem(promptKey());
-    const hasProfile = isProfileComplete(r);
-    if (!prompted && !hasProfile) {
-      setIsFirstLogin(true);
-      setShowPrompt(true);
-    }
+    // Profile is always complete after signup (enforced in 03_SignupRec)
+    // Wizard only shows if "Post a Job" is clicked without complete profile
   }, [modal]);
 
   const setPrompted = () => localStorage.setItem(promptKey(), "1");
 
-  const handlePromptFill = () => { setPrompted(); setShowPrompt(false); setModal("recruiterProfile"); };
-  const handlePromptSkip = () => { setPrompted(); setShowPrompt(false); };
+
 
   /* ── intercept Post a Job ── */
   const handleOpenModal = (action) => {
     if (action === "postJob" && !isProfileComplete()) {
-      setIsFirstLogin(false);
-      setShowPrompt(true);
+      setPrompted();
+      setShowWizard(true);
       return;
     }
     setModal(action);
@@ -139,11 +97,10 @@ export const RecruiterMain = () => {
     <div className={styles.page}>
       <GridCanvas />
 
-      {showPrompt && (
-        <ProfilePrompt
-          isFirstLogin={isFirstLogin}
-          onFillNow={handlePromptFill}
-          onSkip={handlePromptSkip}
+      {showWizard && (
+        <ProfileWizard
+          onClose={() => setShowWizard(false)}
+          onReadyToPost={() => setModal("postJob")}
         />
       )}
 
