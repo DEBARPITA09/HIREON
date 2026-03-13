@@ -1,0 +1,118 @@
+.overlay {
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+}
+
+.modal {
+  background: #0d1117;
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 20px;
+  width: 100%; max-width: 480px;
+  padding: 36px 32px 32px;
+  position: relative;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.7);
+  animation: popIn 0.22s ease;
+}
+@keyframes popIn {
+  from { opacity:0; transform:scale(0.96) translateY(10px); }
+  to   { opacity:1; transform:scale(1) translateY(0); }
+}
+
+.closeBtn {
+  position: absolute; top: 16px; right: 16px;
+  background: none; border: none; color: #475569;
+  font-size: 16px; cursor: pointer; padding: 4px 8px;
+  border-radius: 6px; transition: color 0.2s, background 0.2s;
+}
+.closeBtn:hover { color: #f0f4ff; background: rgba(255,255,255,0.06); }
+
+/* ── Progress ── */
+.progress {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0; margin-bottom: 32px;
+}
+.progressStep {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
+.progressDot {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  border: 2px solid rgba(255,255,255,0.1);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: #475569;
+  transition: all 0.3s;
+}
+.progressDot.active {
+  background: linear-gradient(135deg, #4f8ef7, #00d4aa);
+  border-color: transparent; color: #05080f;
+}
+.progressDot.done {
+  background: #00d4aa; border-color: transparent; color: #05080f;
+}
+.progressLabel {
+  font-size: 10px; color: #334155; font-weight: 500;
+  white-space: nowrap; font-family: 'Outfit', sans-serif;
+  transition: color 0.3s;
+}
+.progressLabelActive { color: #94a3b8; }
+.progressLine {
+  width: 48px; height: 2px;
+  background: rgba(255,255,255,0.07);
+  margin: 0 4px; margin-bottom: 22px;
+  transition: background 0.3s;
+}
+.progressLineDone { background: #00d4aa; }
+
+/* ── Step content ── */
+.step { display: flex; flex-direction: column; gap: 0; }
+
+.stepIcon  { font-size: 40px; margin-bottom: 12px; }
+.stepTitle { font-size: 20px; font-weight: 800; color: #f0f4ff; margin: 0 0 8px; font-family: 'Outfit', sans-serif; }
+.stepSub   { font-size: 13px; color: #64748b; margin: 0 0 24px; line-height: 1.6; }
+
+/* ── Fields ── */
+.fields     { display: flex; flex-direction: column; gap: 16px; margin-bottom: 28px; }
+.fieldGroup { display: flex; flex-direction: column; gap: 6px; }
+.label      { font-size: 11px; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.06em; font-family: 'Outfit', sans-serif; }
+.star       { color: #f87171; }
+.input {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px; padding: 12px 14px;
+  color: #f0f4ff; font-size: 14px;
+  font-family: 'Outfit', sans-serif; outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.input:focus {
+  border-color: #4f8ef7;
+  box-shadow: 0 0 0 3px rgba(79,142,247,0.15);
+}
+.inputError { border-color: rgba(248,113,113,0.5) !important; }
+.inputError:focus { box-shadow: 0 0 0 3px rgba(248,113,113,0.12) !important; }
+.errorMsg { font-size: 11px; color: #f87171; }
+
+/* ── Actions ── */
+.actions {
+  display: flex; gap: 10px; justify-content: flex-end;
+}
+.btnCancel {
+  padding: 10px 18px; background: none;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px; color: #64748b;
+  font-size: 13px; font-weight: 600;
+  font-family: 'Outfit', sans-serif; cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.btnCancel:hover { border-color: rgba(255,255,255,0.2); color: #94a3b8; }
+.btnNext {
+  padding: 10px 22px;
+  background: linear-gradient(135deg, #4f8ef7, #00d4aa);
+  border: none; border-radius: 10px;
+  color: #05080f; font-size: 13px; font-weight: 800;
+  font-family: 'Outfit', sans-serif; cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.btnNext:hover { opacity: 0.88; transform: translateY(-1px); }

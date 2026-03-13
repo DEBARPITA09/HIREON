@@ -11,7 +11,7 @@
 }
 
 .grid {
-  display: grid; grid-template-columns: repeat(3, 1fr);
+  display: grid; grid-template-columns: repeat(2, 1fr);
   gap: 1px; max-width: 1080px; margin: 0 auto;
   background: rgba(255,255,255,0.05);
   border-top: 1px solid rgba(255,255,255,0.05);
@@ -20,8 +20,7 @@
 }
 
 /* 5 cards: row 2 has 2 cards — center them */
-.grid > :nth-child(4) { grid-column: 1; }
-.grid > :nth-child(5) { grid-column: 2; }
+
 
 .card {
   background: #05080f; padding: 32px 28px; cursor: pointer;
