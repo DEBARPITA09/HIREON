@@ -18,12 +18,12 @@ const T = {
   muted:   "rgba(255,255,255,0.38)",
   muted2:  "rgba(255,255,255,0.62)",
   green:   "#81e6a0",
-  blue:    "#8ab4f8",
+  blue:    "#c8c8c8",
   yellow:  "#fbbf24",
   accent:  "#c8c8c8",
   red:     "#f87171",
   purple:  "#c084fc",
-  india:   "#fb923c",
+  india:   "#c8c8c8",
 };
 
 /* ═══════════════════════════════════
@@ -411,7 +411,7 @@ export const JobMatching = () => {
         <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "80px 24px", textAlign: "center", position: "relative", zIndex: 1 }}>
 
           {/* Badge */}
-          <div className="jm-fade" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: `${T.purple}08`, color: T.purple, border: `1px solid ${T.purple}22`, padding: "5px 16px", borderRadius: 20, fontSize: "0.68rem", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 32 }}>
+          <div className="jm-fade" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: T.surface, color: T.muted2, border: `1px solid ${T.border2}`, padding: "5px 16px", borderRadius: 20, fontSize: "0.68rem", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 32 }}>
             <span style={{ width: 6, height: 6, borderRadius: "50%", background: T.green, boxShadow: `0 0 8px ${T.green}`, display: "inline-block", animation: "pulse 2s infinite" }} />
             India + Global + HIREON · Live Listings
           </div>
@@ -426,16 +426,16 @@ export const JobMatching = () => {
 
           {/* Description */}
           <p className="jm-fade" style={{ fontSize: "0.88rem", color: T.muted, maxWidth: 500, lineHeight: 1.85, margin: "0 0 50px", animationDelay: "0.22s" }}>
-            Real listings from <span style={{ color: T.india, fontWeight: 700 }}>India</span> via Adzuna,{" "}
-            <span style={{ color: T.blue, fontWeight: 700 }}>global remote</span> opportunities,
+            Real listings from <span style={{ color: T.accent, fontWeight: 700 }}>India</span> via Adzuna,{" "}
+            <span style={{ color: T.accent, fontWeight: 700 }}>global remote</span> opportunities,
             and <span style={{ color: T.green, fontWeight: 700 }}>HIREON recruiter jobs</span> matched to your skills.
           </p>
 
           {/* Stats strip */}
           <div className="jm-fade" style={{ display: "flex", background: T.surface, border: `1px solid ${T.border}`, borderRadius: 12, overflow: "hidden", marginBottom: 52, animationDelay: "0.28s" }}>
             {[
-              { val: "India",  label: "Adzuna Jobs",    color: T.india },
-              { val: "Global", label: "Remote Jobs",    color: T.blue  },
+              { val: "India",  label: "Adzuna Jobs",    color: T.accent },
+              { val: "Global", label: "Remote Jobs",    color: T.accent },
               { val: "HIREON", label: "Matched to You", color: T.green },
             ].map(({ val, label, color }, i, arr) => (
               <div key={label} style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "16px 38px", gap: 4, borderRight: i < arr.length - 1 ? `1px solid ${T.border}` : "none" }}>
@@ -473,8 +473,8 @@ export const JobMatching = () => {
         <div style={{ display: "flex", padding: "0 32px", background: "rgba(8,8,8,0.9)", borderBottom: `1px solid ${T.border}`, backdropFilter: "blur(10px)", position: "sticky", top: 56, zIndex: 190, alignItems: "center" }}>
           {[
             { val: "all",    label: "All Jobs",     count: jobs.length,  color: T.accent },
-            { val: "india",  label: "India",         count: indiaCount,   color: T.india  },
-            { val: "global", label: "Global Remote", count: globalCount,  color: T.blue   },
+            { val: "india",  label: "India",         count: indiaCount,   color: T.accent },
+            { val: "global", label: "Global Remote", count: globalCount,  color: T.accent },
             { val: "hireon", label: "HIREON Jobs",   count: hireonCount,  color: T.green  },
           ].map(({ val, label, count, color }) => (
             <button key={val} onClick={() => { setActiveSource(val); setPage(1); }}
@@ -565,7 +565,7 @@ export const JobMatching = () => {
                       {["React", "Python", "Java", "Node.js", "AWS", "ML", "DevOps", "Flutter", "Go", "SQL"].map(chip => (
                         <button key={chip} onClick={() => { setSearchInput(chip); fetchJobs(chip); }}
                           style={{ background: T.surface, border: `1px solid ${T.border}`, borderRadius: 7, padding: "4px 10px", color: T.muted, fontSize: "0.68rem", fontWeight: 600, cursor: "pointer", fontFamily: "'DM Sans',sans-serif", transition: "all 0.2s" }}
-                          onMouseEnter={e => { e.currentTarget.style.color = T.blue; e.currentTarget.style.borderColor = `${T.blue}40`; e.currentTarget.style.background = `${T.blue}0a`; }}
+                          onMouseEnter={e => { e.currentTarget.style.color = T.accent; e.currentTarget.style.borderColor = `${T.accent}40`; e.currentTarget.style.background = `${T.accent}0a`; }}
                           onMouseLeave={e => { e.currentTarget.style.color = T.muted; e.currentTarget.style.borderColor = T.border; e.currentTarget.style.background = T.surface; }}>
                           {chip}
                         </button>
@@ -582,8 +582,8 @@ export const JobMatching = () => {
                 </div>
                 <div style={{ padding: "14px 18px" }}>
                   {[
-                    { label: "India Jobs",    val: indiaCount,      color: T.india },
-                    { label: "Global Remote", val: globalCount,     color: T.blue  },
+                    { label: "India Jobs",    val: indiaCount,      color: T.accent },
+                    { label: "Global Remote", val: globalCount,     color: T.accent },
                     { label: "Showing Now",   val: filtered.length, color: T.green },
                   ].map(({ label, val, color }) => (
                     <div key={label} style={{ marginBottom: 14 }}>
@@ -613,7 +613,7 @@ export const JobMatching = () => {
                 </div>
                 <div style={{ color: T.muted, fontSize: "0.75rem", marginBottom: 18 }}>Connecting to Adzuna India &amp; Remotive</div>
                 <div style={{ background: T.border, borderRadius: 99, height: 3, overflow: "hidden", maxWidth: 200, margin: "0 auto" }}>
-                  <div style={{ height: "100%", width: "50%", background: `linear-gradient(90deg,${T.india},${T.blue},${T.green})`, borderRadius: 99, animation: "shimmer 1.8s ease-in-out infinite" }} />
+                  <div style={{ height: "100%", width: "50%", background: `linear-gradient(90deg,${T.accent},${T.white},${T.green})`, borderRadius: 99, animation: "shimmer 1.8s ease-in-out infinite" }} />
                 </div>
               </div>
             )}
@@ -644,7 +644,7 @@ export const JobMatching = () => {
                 </div>
                 <div style={{ fontSize: "0.75rem", color: T.muted, marginBottom: 20 }}>Try clearing filters or a different search term</div>
                 <button onClick={() => { setFilters({ location: "", type: "all", company: "" }); setActiveSource("all"); }}
-                  style={{ background: "transparent", color: T.blue, border: `1px solid ${T.blue}30`, borderRadius: 9, padding: "8px 20px", fontSize: "0.75rem", fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans',sans-serif", letterSpacing: "0.07em", textTransform: "uppercase" }}>
+                  style={{ background: "transparent", color: T.accent, border: `1px solid ${T.accent}30`, borderRadius: 9, padding: "8px 20px", fontSize: "0.75rem", fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans',sans-serif", letterSpacing: "0.07em", textTransform: "uppercase" }}>
                   Clear Filters
                 </button>
               </div>

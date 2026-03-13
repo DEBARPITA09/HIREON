@@ -4,7 +4,7 @@
   --bg:#080808; --bg-surface:rgba(255,255,255,0.03); --border:rgba(255,255,255,0.07);
   --border-md:rgba(255,255,255,0.12); --white:#ffffff; --muted:rgba(255,255,255,0.35);
   --muted-md:rgba(255,255,255,0.55); --accent:#c8c8c8; --green:#81e6a0;
-  --blue:#8ab4f8; --yellow:#fbbf24;
+  --yellow:#fbbf24;
 }
 
 .page { min-height:100vh; background:var(--bg); font-family:'DM Sans',sans-serif; color:var(--white); }
@@ -76,7 +76,7 @@
 
 /* OVERVIEW CARD */
 .overviewCard { background:var(--bg-surface); border:1px solid var(--border); border-radius:16px; overflow:hidden; margin-bottom:2rem; }
-.overviewCover { height:80px; background:linear-gradient(135deg,rgba(138,180,248,0.12) 0%,rgba(129,230,160,0.08) 50%,rgba(192,132,252,0.1) 100%); border-bottom:1px solid var(--border); }
+.overviewCover { height:80px; background:linear-gradient(135deg,rgba(200,200,200,0.08) 0%,rgba(129,230,160,0.08) 50%,rgba(200,200,200,0.06) 100%); border-bottom:1px solid var(--border); }
 .overviewBody { padding:0 1.6rem 1.4rem; display:flex; align-items:flex-end; gap:1.2rem; margin-top:-36px; }
 .overviewAvatarWrap { position:relative; width:80px; height:80px; border-radius:50%; overflow:hidden; cursor:pointer; border:3px solid var(--bg); flex-shrink:0; }
 .overviewAvatarImg { width:100%; height:100%; object-fit:cover; }
@@ -139,14 +139,14 @@
 .btnSmDanger:hover { border-color:rgba(239,68,68,0.5); color:rgb(239,68,68); }
 .btnDanger { display:inline-flex; align-items:center; gap:6px; padding:9px 18px; background:transparent; border:1px solid rgba(239,68,68,0.3); border-radius:8px; color:rgba(239,68,68,0.8); font-family:'DM Sans',sans-serif; font-size:0.8rem; font-weight:500; cursor:pointer; transition:all 0.2s; white-space:nowrap; }
 .btnDanger:hover { border-color:rgba(239,68,68,0.6); color:rgb(239,68,68); background:rgba(239,68,68,0.05); }
-.linkBtn { background:none; border:none; padding:0; color:var(--blue); font-family:'DM Sans',sans-serif; font-size:0.82rem; cursor:pointer; text-decoration:underline; }
+.linkBtn { background:none; border:none; padding:0; color:var(--accent); font-family:'DM Sans',sans-serif; font-size:0.82rem; cursor:pointer; text-decoration:underline; }
 
 .saveRow { margin-top:2rem; padding-top:1.5rem; border-top:1px solid var(--border); }
 .divider { height:1px; background:var(--border); margin:1.5rem 0; }
 
 /* RESUME */
 .resumeCard { display:flex; align-items:center; gap:1rem; padding:16px 20px; background:var(--bg-surface); border:1px solid var(--border-md); border-radius:12px; margin-bottom:1rem; }
-.resumeCardIcon { width:48px; height:48px; border-radius:10px; background:rgba(138,180,248,0.1); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.resumeCardIcon { width:48px; height:48px; border-radius:10px; background:rgba(200,200,200,0.08); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
 .resumeCardInfo { flex:1; }
 .resumeCardName { font-size:0.85rem; font-weight:500; color:var(--white); }
 .resumeCardMeta { font-size:0.7rem; color:var(--muted); margin-top:2px; }
@@ -159,7 +159,7 @@
 .uploadSub { font-size:0.72rem; color:var(--muted); margin-bottom:1rem; }
 .uploadBtn { padding:7px 20px; border:1px solid var(--border-md); border-radius:7px; font-size:0.76rem; color:var(--muted-md); background:var(--bg-surface); }
 
-.infoBox { display:flex; align-items:flex-start; gap:8px; padding:12px 16px; background:rgba(138,180,248,0.06); border:1px solid rgba(138,180,248,0.15); border-radius:9px; font-size:0.78rem; color:var(--muted-md); line-height:1.55; }
+.infoBox { display:flex; align-items:flex-start; gap:8px; padding:12px 16px; background:rgba(200,200,200,0.04); border:1px solid rgba(200,200,200,0.14); border-radius:9px; font-size:0.78rem; color:var(--muted-md); line-height:1.55; }
 
 /* SKILLS */
 .skillInputRow { display:flex; gap:10px; margin-bottom:1.2rem; }

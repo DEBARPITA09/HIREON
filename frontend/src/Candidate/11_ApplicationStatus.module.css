@@ -11,7 +11,7 @@
   --muted:   rgba(255,255,255,0.38);
   --muted2:  rgba(255,255,255,0.62);
   --green:   #81e6a0;
-  --blue:    #8ab4f8;
+
   --yellow:  #fbbf24;
   --accent:  #c8c8c8;
   --red:     #f87171;
@@ -75,8 +75,8 @@
 /* ── PAGE HEADER ── */
 .heroBadge {
   display: inline-flex; align-items: center; gap: 8px;
-  background: rgba(138,180,248,0.07); color: var(--blue);
-  border: 1px solid rgba(138,180,248,0.2);
+  background: rgba(200,200,200,0.06); color: #c8c8c8;
+  border: 1px solid rgba(200,200,200,0.18);
   padding: 4px 14px; border-radius: 20px;
   font-size: 0.65rem; font-weight: 600;
   letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px;
@@ -122,9 +122,9 @@
 }
 .filterTab:hover { color: var(--white); border-color: var(--border2); }
 .filterTabActive {
-  background: rgba(138,180,248,0.08) !important;
-  border-color: rgba(138,180,248,0.3) !important;
-  color: var(--blue) !important;
+  background: rgba(200,200,200,0.06) !important;
+  border-color: rgba(200,200,200,0.22) !important;
+  color: #c8c8c8 !important;
 }
 .filterCount { font-size: 0.62rem; background: rgba(255,255,255,0.06); padding: 1px 7px; border-radius: 10px; }
 
@@ -179,11 +179,11 @@
 
 .viewDecisionBtn {
   margin-top: 2px; font-size: 0.68rem; padding: 4px 12px;
-  background: rgba(138,180,248,0.08); border: 1px solid rgba(138,180,248,0.25);
-  color: var(--blue); border-radius: 20px;
+  background: rgba(200,200,200,0.06); border: 1px solid rgba(200,200,200,0.2);
+  color: #c8c8c8; border-radius: 20px;
   cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s;
 }
-.viewDecisionBtn:hover { background: rgba(138,180,248,0.15); }
+.viewDecisionBtn:hover { background: rgba(200,200,200,0.12); }
 
 /* ── EMPTY STATE ── */
 .emptyState { display: flex; flex-direction: column; align-items: center; padding: 72px 24px; gap: 10px; text-align: center; }

@@ -425,10 +425,14 @@ function UploadScreen({ onAnalyze }) {
 ═══════════════════════════════════ */
 function ResultsScreen({ result, fileName, wordCount, onRetry }) {
   const navigate = useNavigate();
+  const canvasRef = useRef();
+  useParticles(canvasRef);
   const sc = scoreColor(result.overallScore);
 
   return (
     <div style={{minHeight:"100vh",background:T.bg,fontFamily:"'DM Sans',sans-serif",paddingBottom:80}}>
+      <canvas ref={canvasRef} style={{position:"fixed",inset:0,width:"100%",height:"100%",pointerEvents:"none",zIndex:0}}/>
+      <div style={{position:"relative",zIndex:1}}>
       <Topbar
         breadcrumb="ATS Report"
         right={
@@ -581,6 +585,7 @@ function ResultsScreen({ result, fileName, wordCount, onRetry }) {
           </button>
         </div>
 
+      </div>
       </div>
     </div>
   );
