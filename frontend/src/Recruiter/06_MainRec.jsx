@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./06_MainRec.module.css";
 
@@ -14,8 +14,47 @@ import { ProfileWizard }             from "./components/ProfileWizard/ProfileWiz
 
 
 
+
+/* ─── Particle Network Background — same as candidate ─── */
+function useParticles(ref) {
+  useEffect(() => {
+    const canvas = ref.current; if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    let W, H, raf;
+    const resize = () => { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; };
+    resize(); window.addEventListener("resize", resize);
+    const N = 90;
+    const pts = Array.from({length:N}, () => ({
+      x:Math.random(), y:Math.random(),
+      vx:(Math.random()-.5)*.00018, vy:(Math.random()-.5)*.00018,
+      r:.6+Math.random()*1.4, a:.1+Math.random()*.32, ph:Math.random()*Math.PI*2,
+    }));
+    let t = 0;
+    function draw() {
+      ctx.clearRect(0,0,W,H);
+      pts.forEach(p => {
+        p.x+=p.vx; p.y+=p.vy;
+        if(p.x<0)p.x=1; if(p.x>1)p.x=0; if(p.y<0)p.y=1; if(p.y>1)p.y=0;
+        const pulse=.82+.18*Math.sin(t*.016+p.ph);
+        ctx.beginPath(); ctx.arc(p.x*W,p.y*H,p.r*pulse,0,Math.PI*2);
+        ctx.fillStyle=`rgba(255,255,255,${p.a*pulse})`; ctx.fill();
+      });
+      for(let i=0;i<N;i++) for(let j=i+1;j<N;j++){
+        const dx=pts[i].x-pts[j].x, dy=pts[i].y-pts[j].y, d=Math.sqrt(dx*dx+dy*dy);
+        if(d<.08){ctx.beginPath();ctx.moveTo(pts[i].x*W,pts[i].y*H);ctx.lineTo(pts[j].x*W,pts[j].y*H);
+          ctx.strokeStyle=`rgba(255,255,255,${.05*(1-d/.08)})`;ctx.lineWidth=.4;ctx.stroke();}
+      }
+      t++; raf=requestAnimationFrame(draw);
+    }
+    draw();
+    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize",resize); };
+  }, []);
+}
+
 export const RecruiterMain = () => {
   const navigate = useNavigate();
+  const canvasRef = useRef(null);
+  useParticles(canvasRef);
   const [modal,        setModal]        = useState(null);
   const [recruiter,    setRecruiter]    = useState({});
   const [showWizard, setShowWizard] = useState(false);
@@ -95,7 +134,7 @@ export const RecruiterMain = () => {
 
   return (
     <div className={styles.page}>
-      <GridCanvas />
+      <canvas ref={canvasRef} style={{position:"fixed",inset:0,width:"100%",height:"100%",pointerEvents:"none",zIndex:0}}/>
 
       {showWizard && (
         <ProfileWizard
@@ -110,28 +149,31 @@ export const RecruiterMain = () => {
         onOpenModal={setModal}
       />
 
-      {/* HERO */}
-      <div className={styles.hero}>
-        <div className={styles.heroBadge}>
-          <span className={styles.dot} />
-          Recruiter Dashboard
+      {/* MAIN */}
+      <div style={{position:"relative",zIndex:1}}>
+      <div className={styles.main}>
+        <div className={styles.pageHeader}>
+          <div className={styles.pageBadge}>
+            <span className={styles.pageBadgeDot}/>
+            RECRUITER DASHBOARD
+          </div>
+          <h1 className={styles.pageTitle}>
+            Hire the <em>Best.</em><br />Build Great Teams.
+          </h1>
+          <p className={styles.pageSub}>
+            Every tool below is powered by AI to help you find the right talent, screen smarter, and close roles faster.
+          </p>
         </div>
-        <h1 className={styles.heroTitle}>
-          Hire the Best.<br />
-          <span className={styles.heroItalic}>Build Great Teams.</span>
-        </h1>
-        <p className={styles.heroSub}>
-          Every tool below is powered by AI to help you find the right talent, screen smarter, and close roles faster.
-        </p>
+
         <div className={styles.statsRow}>
           {[
-            { val: String(jobs.length),                                     label: "Active Jobs"      },
-            { val: String(jobs.reduce((a,j) => a + (j.applicants||0), 0)), label: "Total Applicants" },
-            { val: "AI",                                                     label: "Powered"          },
-          ].map(({ val, label }) => (
-            <div key={label} className={styles.statItem}>
-              <span className={styles.statVal}>{val}</span>
-              <span className={styles.statLabel}>{label}</span>
+            { value: String(jobs.length),                                     label: "Active Jobs"      },
+            { value: String(jobs.reduce((a,j) => a + (j.applicants||0), 0)), label: "Total Applicants" },
+            { value: "AI",                                                     label: "Powered"          },
+          ].map(({ value, label }) => (
+            <div key={label} className={styles.statCard}>
+              <div className={styles.statValue}>{value}</div>
+              <div className={styles.statLabel}>{label}</div>
             </div>
           ))}
         </div>
@@ -145,6 +187,7 @@ export const RecruiterMain = () => {
       {modal === "recruiterProfile" && <RecruiterProfile onClose={() => setModal(null)} />}
       {modal === "hiringStats"      && <HiringStats      jobs={jobs} onClose={() => setModal(null)} />}
       {modal === "ats"              && <AtsScreening     jobs={jobs} onClose={() => setModal(null)} />}
+    </div>
     </div>
   );
 };

@@ -1,100 +1,76 @@
-/* shared by PostJob, CompanyProfile, RecruiterProfile */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=DM+Sans:wght@300;400;500;600&display=swap');
 
 .overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.75);
-  backdrop-filter: blur(8px); z-index: 200;
-  display: flex; align-items: center; justify-content: center;
-  padding: 24px; animation: fadeIn 0.2s ease; overflow-y: auto;
+  position:fixed; inset:0;
+  background:rgba(0,0,0,0.75);
+  backdrop-filter:blur(8px); z-index:200;
+  display:flex; align-items:center; justify-content:center;
+  padding:24px; animation:fadeIn 0.2s ease; overflow-y:auto;
 }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
 
 .modal {
-  background: #0b0f1a; border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 18px; padding: 36px;
-  width: 100%; max-width: 580px;
-  animation: slideUp 0.25s ease; box-shadow: 0 32px 80px rgba(0,0,0,0.6);
-  max-height: 90vh; overflow-y: auto;
-  scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent;
-  font-family: 'Outfit', 'Segoe UI', sans-serif;
+  background:#0d0d0d;
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:16px; padding:2rem;
+  width:100%; max-width:560px;
+  animation:slideUp 0.25s ease;
+  box-shadow:0 32px 80px rgba(0,0,0,0.7);
+  max-height:90vh; overflow-y:auto;
+  scrollbar-width:thin; scrollbar-color:rgba(255,255,255,0.06) transparent;
+  font-family:"DM Sans",sans-serif;
 }
-@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideUp { from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:translateY(0);} }
 
-.modalHeader {
-  display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;
-}
-.modalTitle { font-size: 17px; font-weight: 800; color: #f0f4ff; margin: 0; letter-spacing: -0.3px; }
-
+.modalHeader { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.6rem; }
+.modalTitle { font-family:"Playfair Display",serif; font-size:1.4rem; font-weight:900; color:#fff; margin:0; }
 .closeBtn {
-  background: rgba(255,255,255,0.05); border: none; color: #475569;
-  width: 30px; height: 30px; border-radius: 8px; cursor: pointer; font-size: 13px;
-  display: flex; align-items: center; justify-content: center;
-  transition: all 0.2s; font-family: inherit;
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  color:rgba(255,255,255,0.4); width:30px; height:30px;
+  border-radius:7px; cursor:pointer; font-size:13px;
+  display:flex; align-items:center; justify-content:center; transition:all 0.2s;
 }
-.closeBtn:hover { background: rgba(255,255,255,0.1); color: #f0f4ff; }
+.closeBtn:hover { background:rgba(255,255,255,0.08); color:#fff; }
 
-/* profile preview strip (RecruiterProfile only) */
-.profileTop {
-  display: flex; align-items: center; gap: 14px;
-  padding: 14px 16px; margin-bottom: 20px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.06); border-radius: 12px;
+.requiredNote { font-size:0.75rem; color:rgba(255,255,255,0.25); margin:0 0 1.2rem; }
+.star { color:rgba(239,68,68,0.7); }
+
+.form { display:flex; flex-direction:column; gap:0; }
+.formSection { font-size:0.6rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:rgba(255,255,255,0.25); margin:1.2rem 0 0.8rem; padding-bottom:6px; border-bottom:1px solid rgba(255,255,255,0.06); }
+.formRow  { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:1rem; }
+.formRow3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:1rem; }
+.formGroup { display:flex; flex-direction:column; gap:6px; margin-bottom:1rem; }
+.label { font-size:0.65rem; font-weight:600; color:rgba(255,255,255,0.5); text-transform:uppercase; letter-spacing:0.1em; }
+
+.input {
+  background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
+  border-radius:8px; padding:11px 13px; color:#fff; font-size:0.85rem;
+  font-family:"DM Sans",sans-serif; outline:none; width:100%;
+  transition:border-color 0.2s;
 }
-.profileAvatarLg {
-  width: 48px; height: 48px; border-radius: 13px;
-  background: linear-gradient(135deg, #4f8ef7, #00d4aa);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px; font-weight: 800; color: #fff; flex-shrink: 0;
-}
-.profileName { font-size: 14px; font-weight: 700; color: #f0f4ff; margin: 0 0 3px; }
-.profileSub  { font-size: 12px; color: #475569; margin: 0; }
+.input:focus { border-color:rgba(255,255,255,0.3); }
+.input::placeholder { color:rgba(255,255,255,0.2); }
+.textarea { resize:vertical; min-height:80px; }
+.inputError { border-color:rgba(239,68,68,0.4) !important; }
+.errorMsg { font-size:0.72rem; color:rgba(239,68,68,0.8); margin-top:2px; display:block; }
 
-/* form layout */
-.form { display: flex; flex-direction: column; gap: 14px; }
+.profileTop { display:flex; align-items:center; gap:14px; padding:14px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:10px; margin-bottom:1.4rem; }
+.profileAvatarLg { width:46px; height:46px; border-radius:50%; background:rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:800; color:#fff; flex-shrink:0; }
+.profileName { font-family:"Playfair Display",serif; font-size:15px; font-weight:900; color:#fff; margin:0 0 2px; }
+.profileSub  { font-size:0.72rem; color:rgba(255,255,255,0.3); margin:0; }
 
-.formSection {
-  font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
-  text-transform: uppercase; color: #4f8ef7;
-  margin: 8px 0 0; padding-bottom: 8px;
-  border-bottom: 1px solid rgba(79,142,247,0.15);
-}
-
-.formRow  { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.formRow3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-.formGroup { display: flex; flex-direction: column; gap: 5px; }
-
-.label {
-  font-size: 10px; font-weight: 600; color: #475569;
-  letter-spacing: 0.06em; text-transform: uppercase;
-}
-
-.input, .textarea {
-  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
-  color: #f0f4ff; padding: 9px 12px; border-radius: 9px;
-  font-size: 13px; font-family: inherit; outline: none;
-  transition: border 0.2s; width: 100%; box-sizing: border-box;
-}
-.input:focus, .textarea:focus { border-color: rgba(79,142,247,0.5); background: rgba(79,142,247,0.04); }
-.input::placeholder, .textarea::placeholder { color: #334155; }
-.textarea { resize: vertical; }
-.input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.4); cursor: pointer; }
-.input option { background: #0b0f1a; color: #f0f4ff; }
-
-.formActions { display: flex; gap: 10px; justify-content: flex-end; padding-top: 6px; }
-
+.formActions { display:flex; gap:10px; justify-content:flex-end; margin-top:1.6rem; padding-top:1.2rem; border-top:1px solid rgba(255,255,255,0.06); }
 .btnCancel {
-  background: transparent; border: 1px solid rgba(255,255,255,0.08); color: #475569;
-  padding: 9px 20px; border-radius: 8px; font-size: 13px; font-weight: 600;
-  font-family: inherit; cursor: pointer; transition: all 0.2s;
+  padding:9px 18px; background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.1); border-radius:8px;
+  color:rgba(255,255,255,0.5); font-size:0.83rem; font-weight:600;
+  font-family:"DM Sans",sans-serif; cursor:pointer; transition:all 0.2s;
 }
-.btnCancel:hover { border-color: rgba(255,255,255,0.18); color: #94a3b8; }
-
+.btnCancel:hover { border-color:rgba(255,255,255,0.2); color:#fff; }
 .btnSubmit {
-  background: linear-gradient(135deg, #4f8ef7, #00d4aa); border: none; color: #fff;
-  padding: 9px 24px; border-radius: 8px; font-size: 13px; font-weight: 700;
-  font-family: inherit; cursor: pointer; transition: all 0.2s;
+  padding:9px 22px; background:#fff; border:none; border-radius:8px;
+  color:#080808; font-size:0.83rem; font-weight:700;
+  font-family:"DM Sans",sans-serif; cursor:pointer;
+  transition:background 0.2s,transform 0.15s;
 }
-.btnSubmit:hover { opacity: 0.88; transform: translateY(-1px); }
-
-@media (max-width: 560px) {
-  .formRow, .formRow3 { grid-template-columns: 1fr; }
-}
+.btnSubmit:hover { background:rgba(255,255,255,0.88); transform:translateY(-1px); }
