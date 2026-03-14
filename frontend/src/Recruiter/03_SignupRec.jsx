@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import styles from "./03_SignupRec.module.css";
 
 const STEP1_FIELDS = [
-  { name: "name",        label: "Full Name",        icon: "👤", type: "text",     placeholder: "e.g. Debarpita Das"    },
+  { name: "name",        label: "Full Name",        icon: "👤", type: "text",     placeholder: "e.g. Debarpita Mohanty"    },
   { name: "email",       label: "Email Address",    icon: "📧", type: "email",    placeholder: "e.g. you@company.com"  },
   { name: "password",    label: "Password",         icon: "🔒", type: "password", placeholder: "At least 6 characters" },
   { name: "confirm",     label: "Confirm Password", icon: "🔐", type: "password", placeholder: "Re-enter your password" },
@@ -14,7 +14,7 @@ const STEP2_FIELDS = [
   { name: "phone",        label: "Phone Number",      icon: "📱", type: "text", placeholder: "+91 XXXXX XXXXX",          required: true  },
   { name: "companyName",  label: "Company Name",      icon: "🏢", type: "text", placeholder: "e.g. Acme Technologies",   required: true  },
   { name: "industry",     label: "Industry",          icon: "💼", type: "text", placeholder: "e.g. Software / FinTech",  required: true  },
-  { name: "headquarters", label: "Headquarters",      icon: "📍", type: "text", placeholder: "e.g. Mumbai, India",       required: true  },
+  { name: "headquarters", label: "Headquarters",      icon: "📍", type: "text", placeholder: "e.g. Bhubaneswar, India",       required: true  },
 ];
 
 export const SignupRecruiter = () => {
