@@ -155,9 +155,10 @@ export const RecruiterMain = () => {
         onOpenModal={setModal}
       />
 
-      {/* MAIN */}
+      {/* MAIN — everything inside one centered container, same as candidate */}
       <div style={{position:"relative",zIndex:1}}>
-      <div className={styles.main}>
+      <main className={styles.main}>
+
         <div className={styles.pageHeader}>
           <div className={styles.pageBadge}>
             <span className={styles.pageBadgeDot}/>
@@ -173,9 +174,9 @@ export const RecruiterMain = () => {
 
         <div className={styles.statsRow}>
           {[
-            { value: String(jobs.length),                                     label: "Active Jobs"      },
-            { value: String(liveAppCount), label: "Total Applicants" },
-            { value: "AI",                                                     label: "Powered"          },
+            { value: String(jobs.length),      label: "Active Jobs"      },
+            { value: String(liveAppCount),      label: "Total Applicants" },
+            { value: "AI",                      label: "Powered"          },
           ].map(({ value, label }) => (
             <div key={label} className={styles.statCard}>
               <div className={styles.statValue}>{value}</div>
@@ -183,10 +184,11 @@ export const RecruiterMain = () => {
             </div>
           ))}
         </div>
-      </div>
 
-      <ServiceCards jobs={jobs} onOpen={handleOpenModal} />
-      <JobListings  jobs={jobs} />
+        <ServiceCards jobs={jobs} onOpen={handleOpenModal} />
+        <JobListings  jobs={jobs} />
+
+      </main>
 
       {modal === "postJob"          && <PostJob          onClose={() => setModal(null)} onAdd={handleAddJob} />}
       {modal === "companyProfile"   && <CompanyProfile   onClose={() => setModal(null)} />}
