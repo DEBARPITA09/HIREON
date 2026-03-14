@@ -1,26 +1,166 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import styles from "./CompanyProfile.module.css";
 
 const empty = {
   name: "", industry: "", size: "", founded: "", website: "",
   headquarters: "", description: "", mission: "", linkedin: "", email: "", phone: "",
 };
-
-// Required fields for posting a job
 const REQUIRED = ["name", "industry", "headquarters"];
 
+/* ─── Logo Crop Dialog — same pan/zoom as recruiter photo, but square output ─── */
+function LogoCropDialog({ rawSrc, onConfirm, onCancel }) {
+  const canvasRef = useRef();
+  const imgRef    = useRef(new Image());
+  const S         = useRef({ x:0, y:0, scale:1, dragging:false, lastX:0, lastY:0 });
+  const [scale, setScale] = useState(1);
+  const SIZE = 220;
+
+  const draw = useCallback(() => {
+    const canvas = canvasRef.current; if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const s = S.current;
+    ctx.clearRect(0, 0, SIZE, SIZE);
+    ctx.fillStyle = "#111"; ctx.fillRect(0, 0, SIZE, SIZE);
+    const img = imgRef.current;
+    if (img.naturalWidth) ctx.drawImage(img, s.x, s.y, img.naturalWidth * s.scale, img.naturalHeight * s.scale);
+    // square guide lines (dashed)
+    const pad = 18;
+    ctx.strokeStyle = "rgba(255,255,255,0.25)"; ctx.lineWidth = 1;
+    ctx.setLineDash([4, 3]);
+    ctx.strokeRect(pad, pad, SIZE - pad*2, SIZE - pad*2);
+    ctx.setLineDash([]);
+    // corner marks
+    const c = pad, len = 12;
+    ctx.strokeStyle = "rgba(255,255,255,0.6)"; ctx.lineWidth = 2;
+    [[c,c,1,0],[c,c,0,1],[SIZE-c,c,-1,0],[SIZE-c,c,0,1],
+     [c,SIZE-c,1,0],[c,SIZE-c,0,-1],[SIZE-c,SIZE-c,-1,0],[SIZE-c,SIZE-c,0,-1]
+    ].forEach(([x,y,dx,dy]) => {
+      ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+dx*len, y+dy*len); ctx.stroke();
+    });
+  }, []);
+
+  useEffect(() => {
+    const img = imgRef.current;
+    img.onload = () => {
+      const s = S.current;
+      const a = img.naturalWidth / img.naturalHeight;
+      const init = a >= 1 ? SIZE / img.naturalHeight : SIZE / img.naturalWidth;
+      s.scale = init;
+      s.x = (SIZE - img.naturalWidth  * init) / 2;
+      s.y = (SIZE - img.naturalHeight * init) / 2;
+      setScale(init); draw();
+    };
+    img.src = rawSrc;
+  }, [rawSrc, draw]);
+
+  const onMD = (e) => { S.current.dragging=true; S.current.lastX=e.clientX; S.current.lastY=e.clientY; };
+  const onMM = (e) => {
+    if (!S.current.dragging) return;
+    S.current.x += e.clientX - S.current.lastX;
+    S.current.y += e.clientY - S.current.lastY;
+    S.current.lastX = e.clientX; S.current.lastY = e.clientY; draw();
+  };
+  const onMU = () => { S.current.dragging = false; };
+  const onTD = (e) => { const t=e.touches[0]; S.current.dragging=true; S.current.lastX=t.clientX; S.current.lastY=t.clientY; };
+  const onTM = (e) => {
+    if (!S.current.dragging) return;
+    const t = e.touches[0];
+    S.current.x += t.clientX - S.current.lastX;
+    S.current.y += t.clientY - S.current.lastY;
+    S.current.lastX = t.clientX; S.current.lastY = t.clientY; draw();
+  };
+
+  const zoom = (newScale) => {
+    const s = S.current;
+    newScale = Math.max(0.2, Math.min(6, newScale));
+    s.x = SIZE/2 - (SIZE/2 - s.x) * (newScale / s.scale);
+    s.y = SIZE/2 - (SIZE/2 - s.y) * (newScale / s.scale);
+    s.scale = newScale; setScale(newScale); draw();
+  };
+  const onWheel = (e) => { e.preventDefault(); zoom(S.current.scale * (e.deltaY < 0 ? 1.07 : 0.93)); };
+  const pan = (dx, dy) => { S.current.x += dx; S.current.y += dy; draw(); };
+
+  const handleConfirm = () => {
+    const pad = 18, cropSize = SIZE - pad*2;
+    const out = document.createElement("canvas"); out.width = 160; out.height = 160;
+    const ctx = out.getContext("2d");
+    const r = 160 / cropSize; const s = S.current;
+    ctx.drawImage(
+      imgRef.current,
+      (s.x - pad) * r, (s.y - pad) * r,
+      imgRef.current.naturalWidth * s.scale * r,
+      imgRef.current.naturalHeight * s.scale * r
+    );
+    onConfirm(out.toDataURL("image/png", 0.9));
+  };
+
+  return (
+    <div className={styles.cropOverlay}>
+      <div className={styles.cropBox}>
+        <p className={styles.cropTitle}>Adjust company logo</p>
+        <p className={styles.cropHint}>Drag to pan · Scroll or slider to zoom · Fit within the square</p>
+        <canvas ref={canvasRef} width={SIZE} height={SIZE} className={styles.cropCanvas}
+          onMouseDown={onMD} onMouseMove={onMM} onMouseUp={onMU} onMouseLeave={onMU}
+          onTouchStart={onTD} onTouchMove={onTM} onTouchEnd={onMU} onWheel={onWheel}
+        />
+        <div className={styles.cropSliderRow}>
+          <button className={styles.cropZoomBtn} onClick={() => zoom(S.current.scale * 0.9)}>−</button>
+          <input type="range" min="0.2" max="6" step="0.01"
+            value={scale} onChange={e => zoom(parseFloat(e.target.value))}
+            className={styles.cropSlider} />
+          <button className={styles.cropZoomBtn} onClick={() => zoom(S.current.scale * 1.1)}>+</button>
+        </div>
+        <div className={styles.cropArrowGrid}>
+          <div/><button className={styles.cropArrowBtn} onClick={() => pan(0, 14)}>↓</button><div/>
+          <button className={styles.cropArrowBtn} onClick={() => pan(14, 0)}>←</button>
+          <div className={styles.cropArrowCenter}/>
+          <button className={styles.cropArrowBtn} onClick={() => pan(-14, 0)}>→</button>
+          <div/><button className={styles.cropArrowBtn} onClick={() => pan(0, -14)}>↑</button><div/>
+        </div>
+        <div className={styles.cropActions}>
+          <button className={styles.cropCancel} onClick={onCancel}>Cancel</button>
+          <button className={styles.cropConfirm} onClick={handleConfirm}>Use Logo</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Main Component ─── */
 export const CompanyProfile = ({ onClose }) => {
   const [company, setCompany] = useState(empty);
   const [errors, setErrors]   = useState({});
   const [saved, setSaved]     = useState(false);
+  const [logoURL, setLogoURL] = useState(null);
+  const [rawSrc, setRawSrc]   = useState(null);
+  const fileInputRef = useRef();
 
   useEffect(() => {
-    const auth = JSON.parse(localStorage.getItem("recruiter")) || {};
+    const auth  = JSON.parse(localStorage.getItem("recruiter")) || {};
     const email = auth.email || "";
-    const key = email ? `recruiterCompany_${email}` : "recruiterCompany_default";
+    const key   = email ? `recruiterCompany_${email}` : "recruiterCompany_default";
     const stored = JSON.parse(localStorage.getItem(key)) || {};
     setCompany(prev => ({ ...prev, ...stored }));
+    const logoKey = email ? `companyLogo_${email}` : "companyLogo_default";
+    const savedLogo = localStorage.getItem(logoKey);
+    if (savedLogo) setLogoURL(savedLogo);
   }, []);
+
+  const handleFileSelect = (e) => {
+    const file = e.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => setRawSrc(ev.target.result);
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  };
+
+  const handleCropConfirm = (dataUrl) => {
+    setLogoURL(dataUrl); setRawSrc(null);
+    const auth  = JSON.parse(localStorage.getItem("recruiter")) || {};
+    const email = auth.email || "";
+    const logoKey = email ? `companyLogo_${email}` : "companyLogo_default";
+    localStorage.setItem(logoKey, dataUrl);
+  };
 
   const handleChange = (e) => {
     setCompany({ ...company, [e.target.name]: e.target.value });
@@ -37,9 +177,9 @@ export const CompanyProfile = ({ onClose }) => {
   const handleSave = (e) => {
     e.preventDefault();
     if (!validate()) return;
-    const auth = JSON.parse(localStorage.getItem("recruiter")) || {};
+    const auth  = JSON.parse(localStorage.getItem("recruiter")) || {};
     const email = auth.email || "";
-    const key = email ? `recruiterCompany_${email}` : "recruiterCompany_default";
+    const key   = email ? `recruiterCompany_${email}` : "recruiterCompany_default";
     localStorage.setItem(key, JSON.stringify(company));
     localStorage.setItem("recruiter", JSON.stringify({ ...auth, company: company.name }));
     setSaved(true);
@@ -47,13 +187,36 @@ export const CompanyProfile = ({ onClose }) => {
   };
 
   const req = (field) => REQUIRED.includes(field);
+  const companyInitial = (company.name || "C").charAt(0).toUpperCase();
 
   return (
     <div className={styles.overlay} onClick={onClose}>
-      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+      <div className={styles.modal} onClick={e => e.stopPropagation()}>
+
+        {rawSrc && <LogoCropDialog rawSrc={rawSrc} onConfirm={handleCropConfirm} onCancel={() => setRawSrc(null)} />}
+
         <div className={styles.modalHeader}>
           <h2 className={styles.modalTitle}>Company Profile</h2>
           <button className={styles.closeBtn} onClick={onClose}>✕</button>
+        </div>
+
+        {/* Logo strip */}
+        <div className={styles.profileTop}>
+          <div className={styles.profileAvatarWrap} onClick={() => fileInputRef.current?.click()}>
+            {logoURL
+              ? <img src={logoURL} className={styles.profileAvatarImg} alt="logo" />
+              : <div className={styles.profileAvatarLg}>{companyInitial}</div>
+            }
+            <div className={styles.profileAvatarOverlay}>
+              <span style={{fontSize:"10px",color:"#fff",fontWeight:600,letterSpacing:"0.06em"}}>CHANGE</span>
+            </div>
+          </div>
+          <input ref={fileInputRef} type="file" accept="image/*" style={{display:"none"}} onChange={handleFileSelect} />
+          <div>
+            <p className={styles.profileName}>{company.name || "Company Name"}</p>
+            <p className={styles.profileSub}>{company.industry || "Industry"}{company.headquarters ? ` · ${company.headquarters}` : ""}</p>
+            <p className={styles.profilePhotoHint}>Click logo → pan &amp; zoom to crop</p>
+          </div>
         </div>
 
         <p className={styles.requiredNote}><span className={styles.star}>*</span> Required fields must be filled to post a job.</p>

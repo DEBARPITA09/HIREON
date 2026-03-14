@@ -63,3 +63,71 @@
 .btnCancel:hover { border-color:rgba(255,255,255,0.2); color:#fff; }
 .btnSubmit   { padding:9px 22px; background:#fff; border:none; border-radius:8px; color:#080808; font-size:0.83rem; font-weight:700; font-family:"DM Sans",sans-serif; cursor:pointer; transition:background 0.2s,transform 0.15s; }
 .btnSubmit:hover { background:rgba(255,255,255,0.88); transform:translateY(-1px); }
+
+
+/* ─── Logo avatar strip — square, not circular ─── */
+.profileAvatarWrap {
+  border-radius: 10px !important;   /* square logo shape */
+}
+.profileAvatarImg {
+  border-radius: 10px;
+  width: 100%; height: 100%; object-fit: cover;
+}
+
+/* ─── Logo Crop Dialog ─── */
+.cropOverlay {
+  position:absolute; inset:0; z-index:10;
+  background:rgba(0,0,0,0.9); backdrop-filter:blur(6px);
+  display:flex; align-items:center; justify-content:center;
+  border-radius:16px;
+}
+.cropBox {
+  display:flex; flex-direction:column; align-items:center; gap:14px;
+  padding:24px 20px; width:100%; max-width:300px;
+}
+.cropTitle { font-family:'Playfair Display',serif; font-size:1rem; font-weight:900; color:#fff; margin:0; }
+.cropHint  { font-size:0.65rem; color:rgba(255,255,255,0.3); margin:0; text-align:center; line-height:1.5; }
+
+.cropCanvas {
+  border-radius:10px;
+  cursor:grab; display:block; touch-action:none;
+  box-shadow:0 0 0 1px rgba(255,255,255,0.12), 0 8px 32px rgba(0,0,0,0.6);
+}
+.cropCanvas:active { cursor:grabbing; }
+
+.cropSliderRow { display:flex; align-items:center; gap:10px; width:100%; }
+.cropZoomBtn {
+  width:28px; height:28px; border-radius:6px;
+  background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1);
+  color:#fff; font-size:16px; line-height:1; cursor:pointer; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; transition:background 0.2s;
+}
+.cropZoomBtn:hover { background:rgba(255,255,255,0.12); }
+.cropSlider {
+  flex:1; -webkit-appearance:none; appearance:none;
+  height:3px; border-radius:2px; outline:none; cursor:pointer;
+  background:rgba(255,255,255,0.15);
+}
+.cropSlider::-webkit-slider-thumb {
+  -webkit-appearance:none; width:14px; height:14px; border-radius:50%;
+  background:#fff; cursor:pointer; border:none;
+}
+
+.cropArrowGrid {
+  display:grid; grid-template-columns:repeat(3,32px); grid-template-rows:repeat(3,32px);
+  gap:4px; align-items:center; justify-items:center;
+}
+.cropArrowBtn {
+  width:32px; height:32px; border-radius:7px;
+  background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1);
+  color:rgba(255,255,255,0.7); font-size:14px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; transition:background 0.2s,color 0.2s;
+}
+.cropArrowBtn:hover { background:rgba(255,255,255,0.12); color:#fff; }
+.cropArrowCenter { width:32px; height:32px; }
+
+.cropActions { display:flex; gap:10px; width:100%; }
+.cropCancel  { flex:1; padding:9px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:rgba(255,255,255,0.5); font-size:0.83rem; font-weight:600; font-family:'DM Sans',sans-serif; cursor:pointer; transition:all 0.2s; }
+.cropCancel:hover { border-color:rgba(255,255,255,0.2); color:#fff; }
+.cropConfirm { flex:2; padding:9px; background:#fff; border:none; border-radius:8px; color:#080808; font-size:0.83rem; font-weight:700; font-family:'DM Sans',sans-serif; cursor:pointer; transition:background 0.2s,transform 0.15s; }
+.cropConfirm:hover { background:rgba(255,255,255,0.88); transform:translateY(-1px); }
