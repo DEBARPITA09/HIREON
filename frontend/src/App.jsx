@@ -1,15 +1,13 @@
 import './App.css';
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-
 import { Nav } from './Components/01_Nav';
 import { Home } from './Components/01a_Home';
 import { About } from './Components/01c_About';
 import { Contact } from './Components/01d_Contact';
 import { Help } from './Components/01e_Help';
 import { Footer } from './Components/02_Footer';
-
 import { CandidateHomePage } from './Candidate/01_Candidate';
-import { LoginCandidate } from './Candidate/02_LoginCand';
+import { LoginCand } from './Candidate/02_LoginCand';
 import { SignupCandidate } from './Candidate/03_SignupCand';
 import { ForgotPasswordCandidate } from './Candidate/04_ForgotPassword';
 import { ResetPasswordCandidate } from './Candidate/05_ResetPassword';
@@ -24,12 +22,13 @@ import { ProfileManagement } from './Candidate/12_ProfileManagement';
 import AIInterview from "./Candidate/AIInterview/AIInterview";
 
 import { RecruiterHomePage } from './Recruiter/01_Recruiter';
-import { LoginRecruiter } from './Recruiter/02_LoginRec';
+import { LoginRec } from './Recruiter/02_LoginRec';
 import { SignupRecruiter } from './Recruiter/03_SignupRec';
 import { ForgotPasswordRecruiter } from './Recruiter/04_ForgotPassword';
 import { ResetPasswordRecruiter } from './Recruiter/05_ResetPassword';
 import { RecruiterMain } from './Recruiter/06_MainRec';
 import { CandidatesApplied } from "./Recruiter/07_CandidatesApplied";
+import AuthCallback from "./Components/AuthCallback"; 
 
 function AppLayout() {
   const location = useLocation();
@@ -50,10 +49,11 @@ function AppLayout() {
           <Route path="/about"   element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/help"    element={<Help />} />
+          <Route path="/auth/callback" element={<AuthCallback />} /> 
 
           {/* ── CANDIDATE ROUTES ── */}
           <Route path="/Candidate/01_Candidate"      element={<CandidateHomePage />} />
-          <Route path="/Candidate/02_LoginCand"      element={<LoginCandidate />} />
+          <Route path="/Candidate/02_LoginCand" element={<LoginCand />} />
           <Route path="/Candidate/03_SignupCand"     element={<SignupCandidate />} />
           <Route path="/Candidate/04_ForgotPassword" element={<ForgotPasswordCandidate />} />
           <Route path="/Candidate/05_ResetPassword"  element={<ResetPasswordCandidate />} />
@@ -69,7 +69,7 @@ function AppLayout() {
 
           {/* ── RECRUITER ROUTES ── */}
           <Route path="/Recruiter/01_Recruiter"      element={<RecruiterHomePage />} />
-          <Route path="/Recruiter/02_LoginRec"       element={<LoginRecruiter />} />
+          <Route path="/Recruiter/02_LoginRec" element={<LoginRec />} />
           <Route path="/Recruiter/03_SignupRec"      element={<SignupRecruiter />} />
           <Route path="/Recruiter/04_ForgotPassword" element={<ForgotPasswordRecruiter />} />
           <Route path="/Recruiter/05_ResetPassword"  element={<ResetPasswordRecruiter />} />
