@@ -231,7 +231,7 @@ export const CandidatesApplied = () => {
                   >
                     <div className={styles.jobTabRow}>
                       <span className={styles.jobTabRole}>{job.role}</span>
-                      <span className={styles.jobTabCount}>{count}</span>
+                      <span className={styles.jobTabCount}>{appsForJob(job.id).filter(a => !decisions[String(job.id)]?.[String(a.id)]).length} pending</span>
                     </div>
                     <span className={styles.jobTabSub}>{job.company} · {job.location}</span>
                     <div className={styles.jobTabTags}>
@@ -273,8 +273,7 @@ export const CandidatesApplied = () => {
                 <div className={styles.statsRow}>
                   <div className={styles.stat}><span className={styles.statNum}>{activeApps.length}</span><span className={styles.statLabel}>Total</span></div>
                   <div className={styles.stat}><span className={styles.statNum} style={{color:"#fbbf24"}}>{pendingApps.length}</span><span className={styles.statLabel}>Pending</span></div>
-                  <div className={styles.stat}><span className={styles.statNum} style={{color:"#00d4aa"}}>{acceptedApps.length}</span><span className={styles.statLabel}>Accepted</span></div>
-                  <div className={styles.stat}><span className={styles.statNum} style={{color:"#f87171"}}>{rejectedApps.length}</span><span className={styles.statLabel}>Rejected</span></div>
+                  <div className={styles.stat}><span className={styles.statNum} style={{color:"rgba(255,255,255,0.35)"}}>{activeApps.length - pendingApps.length}</span><span className={styles.statLabel}>Decided</span></div>
                 </div>
               </div>
 
@@ -287,10 +286,10 @@ export const CandidatesApplied = () => {
                 </div>
               )}
 
-              {/* Pending */}
+              {/* Only show PENDING — decided candidates move to Hiring Stats */}
               {pendingApps.length > 0 && (
                 <section className={styles.section}>
-                  <p className={styles.sectionTitle}>— Pending Review —</p>
+                  <p className={styles.sectionTitle}>AWAITING REVIEW</p>
                   <div className={styles.grid}>
                     {pendingApps.map(app => (
                       <CandidateCard key={app.id} app={app} decision={null}
@@ -300,30 +299,13 @@ export const CandidatesApplied = () => {
                 </section>
               )}
 
-              {/* Accepted */}
-              {acceptedApps.length > 0 && (
-                <section className={styles.section}>
-                  <p className={styles.sectionTitle} style={{color:"#00d4aa"}}>— Accepted —</p>
-                  <div className={styles.grid}>
-                    {acceptedApps.map(app => (
-                      <CandidateCard key={app.id} app={app} decision="Accepted"
-                        onDecide={handleDecide} onViewResume={setResumeApp} />
-                    ))}
-                  </div>
-                </section>
-              )}
-
-              {/* Rejected */}
-              {rejectedApps.length > 0 && (
-                <section className={styles.section}>
-                  <p className={styles.sectionTitle} style={{color:"#f87171"}}>— Rejected —</p>
-                  <div className={styles.grid}>
-                    {rejectedApps.map(app => (
-                      <CandidateCard key={app.id} app={app} decision="Rejected"
-                        onDecide={handleDecide} onViewResume={setResumeApp} />
-                    ))}
-                  </div>
-                </section>
+              {/* All decided — nothing pending */}
+              {activeApps.length > 0 && pendingApps.length === 0 && (
+                <div className={styles.emptyFull}>
+                  <span className={styles.emptyIcon}>✓</span>
+                  <p className={styles.emptyTitle}>All reviewed</p>
+                  <p className={styles.emptySub}>You've responded to every applicant. Check Hiring Stats to see your decisions.</p>
+                </div>
               )}
             </>
           )}
