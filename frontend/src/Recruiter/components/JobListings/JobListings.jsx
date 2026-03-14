@@ -1,9 +1,20 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./JobListings.module.css";
 
 export const JobListings = ({ jobs }) => {
   const navigate = useNavigate();
+  const [appCounts, setAppCounts] = useState({});
+
+  useEffect(() => {
+    const apps = JSON.parse(localStorage.getItem("hireon_applications")) || [];
+    const counts = {};
+    apps.forEach(a => {
+      const jid = String(a.jobId);
+      counts[jid] = (counts[jid] || 0) + 1;
+    });
+    setAppCounts(counts);
+  }, [jobs]);
 
   return (
     <div className={styles.wrapper}>
@@ -17,7 +28,7 @@ export const JobListings = ({ jobs }) => {
                 <p className={styles.jobRole}>{job.role}</p>
                 <p className={styles.jobCompany}>{job.company}</p>
               </div>
-              <span className={styles.jobAppliedTag}>{job.applicants} Applied</span>
+              <span className={styles.jobAppliedTag}>{appCounts[String(job.id)] || 0} Applied</span>
             </div>
             <div className={styles.jobTags}>
               {job.mode       && <span className={styles.jobMeta}>{job.mode}</span>}

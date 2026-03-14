@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./06_MainRec.module.css";
 
@@ -10,52 +10,55 @@ import { CompanyProfile }            from "./components/CompanyProfile/CompanyPr
 import { RecruiterProfile }          from "./components/RecruiterProfile/RecruiterProfile";
 import { HiringStats }               from "./components/HiringStats/HiringStats";
 import { AtsScreening }              from "./components/AtsScreening/AtsScreening";
+import { ProfileWizard }             from "./components/ProfileWizard/ProfileWizard";
 
-/* ── Profile required prompt ── */
-function ProfilePrompt({ isFirstLogin, onFillNow, onSkip }) {
-  return (
-    <div className={styles.promptOverlay}>
-      <div className={styles.promptBox}>
-        <div className={styles.promptIcon}>{isFirstLogin ? "👋" : "⚠️"}</div>
-        <h2 className={styles.promptTitle}>
-          {isFirstLogin ? "Welcome to HIREON!" : "Profile Incomplete"}
-        </h2>
-        <p className={styles.promptMsg}>
-          {isFirstLogin
-            ? "To maintain the quality and credibility of job listings on HIREON, we require all recruiters to complete their professional profile before posting. This helps candidates make informed decisions and increases the trust and response rate for your roles."
-            : "Posting a job requires your Recruiter Profile and Company Profile to be complete. Please fill in all mandatory fields before proceeding — this ensures candidates have the information they need to apply with confidence."
-          }
-        </p>
-        {isFirstLogin && (
-          <p className={styles.promptSub}>It only takes a couple of minutes and is a one-time setup.</p>
-        )}
-        {!isFirstLogin && (
-          <div className={styles.promptChecklist}>
-            <p className={styles.promptCheckItem}>👤 Recruiter Profile — Name, Designation, Phone</p>
-            <p className={styles.promptCheckItem}>🏢 Company Profile — Company Name, Industry, Headquarters</p>
-          </div>
-        )}
-        <div className={styles.promptActions}>
-          <button className={styles.promptFill} onClick={onFillNow}>
-            Fill Profile Now →
-          </button>
-          {isFirstLogin && (
-            <button className={styles.promptSkip} onClick={onSkip}>
-              Skip for now
-            </button>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+
+
+
+/* ─── Particle Network Background — same as candidate ─── */
+function useParticles(ref) {
+  useEffect(() => {
+    const canvas = ref.current; if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    let W, H, raf;
+    const resize = () => { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; };
+    resize(); window.addEventListener("resize", resize);
+    const N = 90;
+    const pts = Array.from({length:N}, () => ({
+      x:Math.random(), y:Math.random(),
+      vx:(Math.random()-.5)*.00018, vy:(Math.random()-.5)*.00018,
+      r:.6+Math.random()*1.4, a:.1+Math.random()*.32, ph:Math.random()*Math.PI*2,
+    }));
+    let t = 0;
+    function draw() {
+      ctx.clearRect(0,0,W,H);
+      pts.forEach(p => {
+        p.x+=p.vx; p.y+=p.vy;
+        if(p.x<0)p.x=1; if(p.x>1)p.x=0; if(p.y<0)p.y=1; if(p.y>1)p.y=0;
+        const pulse=.82+.18*Math.sin(t*.016+p.ph);
+        ctx.beginPath(); ctx.arc(p.x*W,p.y*H,p.r*pulse,0,Math.PI*2);
+        ctx.fillStyle=`rgba(255,255,255,${p.a*pulse})`; ctx.fill();
+      });
+      for(let i=0;i<N;i++) for(let j=i+1;j<N;j++){
+        const dx=pts[i].x-pts[j].x, dy=pts[i].y-pts[j].y, d=Math.sqrt(dx*dx+dy*dy);
+        if(d<.08){ctx.beginPath();ctx.moveTo(pts[i].x*W,pts[i].y*H);ctx.lineTo(pts[j].x*W,pts[j].y*H);
+          ctx.strokeStyle=`rgba(255,255,255,${.05*(1-d/.08)})`;ctx.lineWidth=.4;ctx.stroke();}
+      }
+      t++; raf=requestAnimationFrame(draw);
+    }
+    draw();
+    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize",resize); };
+  }, []);
 }
 
 export const RecruiterMain = () => {
   const navigate = useNavigate();
+  const canvasRef = useRef(null);
+  useParticles(canvasRef);
   const [modal,        setModal]        = useState(null);
   const [recruiter,    setRecruiter]    = useState({});
-  const [showPrompt,   setShowPrompt]   = useState(false);
-  const [isFirstLogin, setIsFirstLogin] = useState(false);
+  const [liveAppCount, setLiveAppCount] = useState(0);
+  const [showWizard, setShowWizard] = useState(false);
 
   /* ── helpers ── */
   const getAuth     = () => JSON.parse(localStorage.getItem("recruiter")) || {};
@@ -98,24 +101,24 @@ export const RecruiterMain = () => {
   useEffect(() => {
     const r = getAuth();
     setRecruiter(r);
-    const prompted   = localStorage.getItem(promptKey());
-    const hasProfile = isProfileComplete(r);
-    if (!prompted && !hasProfile) {
-      setIsFirstLogin(true);
-      setShowPrompt(true);
-    }
   }, [modal]);
+
+  /* ── live applicant count ── */
+  useEffect(() => {
+    const myJobIds = new Set(jobs.map(j => String(j.id)));
+    const apps = JSON.parse(localStorage.getItem("hireon_applications")) || [];
+    setLiveAppCount(apps.filter(a => myJobIds.has(String(a.jobId))).length);
+  }, [jobs]);
 
   const setPrompted = () => localStorage.setItem(promptKey(), "1");
 
-  const handlePromptFill = () => { setPrompted(); setShowPrompt(false); setModal("recruiterProfile"); };
-  const handlePromptSkip = () => { setPrompted(); setShowPrompt(false); };
+
 
   /* ── intercept Post a Job ── */
   const handleOpenModal = (action) => {
     if (action === "postJob" && !isProfileComplete()) {
-      setIsFirstLogin(false);
-      setShowPrompt(true);
+      setPrompted();
+      setShowWizard(true);
       return;
     }
     setModal(action);
@@ -137,13 +140,12 @@ export const RecruiterMain = () => {
 
   return (
     <div className={styles.page}>
-      <GridCanvas />
+      <canvas ref={canvasRef} style={{position:"fixed",inset:0,width:"100%",height:"100%",pointerEvents:"none",zIndex:0}}/>
 
-      {showPrompt && (
-        <ProfilePrompt
-          isFirstLogin={isFirstLogin}
-          onFillNow={handlePromptFill}
-          onSkip={handlePromptSkip}
+      {showWizard && (
+        <ProfileWizard
+          onClose={() => setShowWizard(false)}
+          onReadyToPost={() => setModal("postJob")}
         />
       )}
 
@@ -153,41 +155,47 @@ export const RecruiterMain = () => {
         onOpenModal={setModal}
       />
 
-      {/* HERO */}
-      <div className={styles.hero}>
-        <div className={styles.heroBadge}>
-          <span className={styles.dot} />
-          Recruiter Dashboard
+      {/* MAIN — everything inside one centered container, same as candidate */}
+      <div style={{position:"relative",zIndex:1}}>
+      <main className={styles.main}>
+
+        <div className={styles.pageHeader}>
+          <div className={styles.pageBadge}>
+            <span className={styles.pageBadgeDot}/>
+            RECRUITER DASHBOARD
+          </div>
+          <h1 className={styles.pageTitle}>
+            Hire the <em>Best.</em><br />Build Great Teams.
+          </h1>
+          <p className={styles.pageSub}>
+            Every tool below is powered by AI to help you find the right talent, screen smarter, and close roles faster.
+          </p>
         </div>
-        <h1 className={styles.heroTitle}>
-          Hire the Best.<br />
-          <span className={styles.heroItalic}>Build Great Teams.</span>
-        </h1>
-        <p className={styles.heroSub}>
-          Every tool below is powered by AI to help you find the right talent, screen smarter, and close roles faster.
-        </p>
+
         <div className={styles.statsRow}>
           {[
-            { val: String(jobs.length),                                     label: "Active Jobs"      },
-            { val: String(jobs.reduce((a,j) => a + (j.applicants||0), 0)), label: "Total Applicants" },
-            { val: "AI",                                                     label: "Powered"          },
-          ].map(({ val, label }) => (
-            <div key={label} className={styles.statItem}>
-              <span className={styles.statVal}>{val}</span>
-              <span className={styles.statLabel}>{label}</span>
+            { value: String(jobs.length),      label: "Active Jobs"      },
+            { value: String(liveAppCount),      label: "Total Applicants" },
+            { value: "AI",                      label: "Powered"          },
+          ].map(({ value, label }) => (
+            <div key={label} className={styles.statCard}>
+              <div className={styles.statValue}>{value}</div>
+              <div className={styles.statLabel}>{label}</div>
             </div>
           ))}
         </div>
-      </div>
 
-      <ServiceCards jobs={jobs} onOpen={handleOpenModal} />
-      <JobListings  jobs={jobs} />
+        <ServiceCards jobs={jobs} onOpen={handleOpenModal} />
+        <JobListings  jobs={jobs} />
+
+      </main>
 
       {modal === "postJob"          && <PostJob          onClose={() => setModal(null)} onAdd={handleAddJob} />}
       {modal === "companyProfile"   && <CompanyProfile   onClose={() => setModal(null)} />}
       {modal === "recruiterProfile" && <RecruiterProfile onClose={() => setModal(null)} />}
       {modal === "hiringStats"      && <HiringStats      jobs={jobs} onClose={() => setModal(null)} />}
       {modal === "ats"              && <AtsScreening     jobs={jobs} onClose={() => setModal(null)} />}
+    </div>
     </div>
   );
 };

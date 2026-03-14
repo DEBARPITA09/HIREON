@@ -5,6 +5,42 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import styles from "./12_ProfileManagement.module.css";
 
+/* ── Particle Network Background ── */
+function useParticles(ref) {
+  useEffect(() => {
+    const canvas = ref.current; if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    let W, H, raf;
+    const resize = () => { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; };
+    resize(); window.addEventListener("resize", resize);
+    const N = 90;
+    const pts = Array.from({length:N}, () => ({
+      x:Math.random(), y:Math.random(),
+      vx:(Math.random()-.5)*.00018, vy:(Math.random()-.5)*.00018,
+      r:.6+Math.random()*1.4, a:.1+Math.random()*.32, ph:Math.random()*Math.PI*2,
+    }));
+    let t = 0;
+    function draw() {
+      ctx.clearRect(0,0,W,H);
+      pts.forEach(p => {
+        p.x+=p.vx; p.y+=p.vy;
+        if(p.x<0)p.x=1; if(p.x>1)p.x=0; if(p.y<0)p.y=1; if(p.y>1)p.y=0;
+        const pulse=.82+.18*Math.sin(t*.016+p.ph);
+        ctx.beginPath(); ctx.arc(p.x*W,p.y*H,p.r*pulse,0,Math.PI*2);
+        ctx.fillStyle=`rgba(255,255,255,${p.a*pulse})`; ctx.fill();
+      });
+      for(let i=0;i<N;i++) for(let j=i+1;j<N;j++){
+        const dx=pts[i].x-pts[j].x, dy=pts[i].y-pts[j].y, d=Math.sqrt(dx*dx+dy*dy);
+        if(d<.08){ctx.beginPath();ctx.moveTo(pts[i].x*W,pts[i].y*H);ctx.lineTo(pts[j].x*W,pts[j].y*H);
+          ctx.strokeStyle=`rgba(255,255,255,${.05*(1-d/.08)})`;ctx.lineWidth=.4;ctx.stroke();}
+      }
+      t++; raf=requestAnimationFrame(draw);
+    }
+    draw();
+    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize",resize); };
+  }, []);
+}
+
 /* ── Professional illustrated avatar ── */
 const DefaultAvatar = ({ size = 80, initials = "C" }) => {
   const s = size;
@@ -114,6 +150,8 @@ const SKILL_SUGGESTIONS = ["React", "Node.js", "Python", "Java", "SQL", "AWS", "
 export const ProfileManagement = () => {
   const navigate  = useNavigate();
   const fileRef   = useRef(null);
+  const canvasRef = useRef(null);
+  useParticles(canvasRef);
   const [activeSection, setActiveSection] = useState("overview");
   const [photoURL,      setPhotoURL]      = useState(null);
   const [saved,         setSaved]         = useState(false);
@@ -260,8 +298,9 @@ export const ProfileManagement = () => {
   };
 
   if (loading) return (
-    <div style={{ minHeight:"100vh", background:"#080808", display:"flex", alignItems:"center", justifyContent:"center", color:"rgba(255,255,255,0.4)", fontFamily:"DM Sans, sans-serif" }}>
-      Loading profile...
+    <div style={{ minHeight:"100vh", background:"#080808", display:"flex", alignItems:"center", justifyContent:"center", color:"rgba(255,255,255,0.4)", fontFamily:"DM Sans, sans-serif", position:"relative" }}>
+      <canvas ref={canvasRef} style={{position:"fixed",inset:0,width:"100%",height:"100%",pointerEvents:"none",zIndex:0}}/>
+      <span style={{position:"relative",zIndex:1}}>Loading profile...</span>
     </div>
   );
 
@@ -271,6 +310,7 @@ export const ProfileManagement = () => {
 
   return (
     <div className={styles.page}>
+      <canvas ref={canvasRef} style={{position:"fixed",inset:0,width:"100%",height:"100%",pointerEvents:"none",zIndex:0}}/>
 
       {/* ══ TOPBAR ══ */}
       <header className={styles.topbar}>
@@ -342,7 +382,7 @@ export const ProfileManagement = () => {
             </div>
             <div className={styles.progressTrack}>
               <div className={styles.progressFill} style={{ width: `${completionPct}%`,
-                background: completionPct < 40 ? "#fbbf24" : completionPct < 70 ? "#8ab4f8" : "#81e6a0" }}/>
+                background: completionPct < 40 ? "#fbbf24" : completionPct < 70 ? "#c8c8c8" : "#81e6a0" }}/>
             </div>
           </div>
 
@@ -539,7 +579,7 @@ export const ProfileManagement = () => {
               {resumeName ? (
                 <div className={styles.resumeCard}>
                   <div className={styles.resumeCardIcon}>
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8ab4f8" strokeWidth="1.6" strokeLinecap="round">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#c8c8c8" strokeWidth="1.6" strokeLinecap="round">
                       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                       <polyline points="14 2 14 8 20 8"/>
                     </svg>
@@ -569,7 +609,7 @@ export const ProfileManagement = () => {
               )}
 
               <div className={styles.infoBox}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8ab4f8" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c8c8c8" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
                 <span>A strong resume increases your ATS score. Go to <button className={styles.linkBtn} onClick={() => navigate("/Candidate/services/ats-checker")}>ATS Checker</button> to analyse it.</span>
               </div>
             </div>
