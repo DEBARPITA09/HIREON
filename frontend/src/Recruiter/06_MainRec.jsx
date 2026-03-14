@@ -57,6 +57,7 @@ export const RecruiterMain = () => {
   useParticles(canvasRef);
   const [modal,        setModal]        = useState(null);
   const [recruiter,    setRecruiter]    = useState({});
+  const [liveAppCount, setLiveAppCount] = useState(0);
   const [showWizard, setShowWizard] = useState(false);
 
   /* ── helpers ── */
@@ -100,9 +101,14 @@ export const RecruiterMain = () => {
   useEffect(() => {
     const r = getAuth();
     setRecruiter(r);
-    // Profile is always complete after signup (enforced in 03_SignupRec)
-    // Wizard only shows if "Post a Job" is clicked without complete profile
   }, [modal]);
+
+  /* ── live applicant count ── */
+  useEffect(() => {
+    const myJobIds = new Set(jobs.map(j => String(j.id)));
+    const apps = JSON.parse(localStorage.getItem("hireon_applications")) || [];
+    setLiveAppCount(apps.filter(a => myJobIds.has(String(a.jobId))).length);
+  }, [jobs]);
 
   const setPrompted = () => localStorage.setItem(promptKey(), "1");
 
@@ -168,7 +174,7 @@ export const RecruiterMain = () => {
         <div className={styles.statsRow}>
           {[
             { value: String(jobs.length),                                     label: "Active Jobs"      },
-            { value: String(jobs.reduce((a,j) => a + (j.applicants||0), 0)), label: "Total Applicants" },
+            { value: String(liveAppCount), label: "Total Applicants" },
             { value: "AI",                                                     label: "Powered"          },
           ].map(({ value, label }) => (
             <div key={label} className={styles.statCard}>

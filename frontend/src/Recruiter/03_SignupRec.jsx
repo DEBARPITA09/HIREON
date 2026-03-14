@@ -32,22 +32,6 @@ export const SignupRecruiter = () => {
     setError("");
   };
 
-  /* ── Step 1 validation ── */
-  const handleStep1 = (e) => {
-    e.preventDefault();
-    if (input.password !== input.confirm) { setError("Passwords do not match."); return; }
-    if (input.password.length < 6)        { setError("Password must be at least 6 characters."); return; }
-
-    // Check duplicate email
-    const allRec = JSON.parse(localStorage.getItem("hireon_recruiters")) || [];
-    if (allRec.find(r => r.email === input.email.trim())) {
-      setError("This email is already registered. Please sign in.");
-      return;
-    }
-    setError("");
-    setStep(2);
-  };
-
   /* ── Step 2 — save everything ── */
   const handleStep2 = (e) => {
     e.preventDefault();
@@ -103,89 +87,65 @@ export const SignupRecruiter = () => {
 
       <div className={styles.card}>
         <div className={styles.logo}>
-          <span className={styles.logoHire}>HIRE</span>
-          <span className={styles.logoOn}>ON</span>
+          <div className={styles.logoSq}>
+            <svg width="14" height="14" viewBox="0 0 18 18" fill="none">
+              <path d="M3 2V16M15 2V16M3 9H15" stroke="#000" strokeWidth="3" strokeLinecap="round"/>
+            </svg>
+          </div>
+          HIREON
         </div>
 
-        {/* Step indicator */}
-        <div className={styles.stepRow}>
-          <div className={`${styles.stepPill} ${step === 1 ? styles.stepPillActive : styles.stepPillDone}`}>
-            {step > 1 ? "✓" : "1"} Account
-          </div>
-          <div className={styles.stepLine} />
-          <div className={`${styles.stepPill} ${step === 2 ? styles.stepPillActive : step > 2 ? styles.stepPillDone : styles.stepPillIdle}`}>
-            2 Profile
-          </div>
-        </div>
+        <h1 className={styles.heading}>Create your account</h1>
+        <p className={styles.sub}>Join HIREON and start hiring smarter.</p>
 
-        {step === 1 && <>
-          <h1 className={styles.title}>Start <span className={styles.grad}>hiring</span> smarter</h1>
-          <p className={styles.sub}>Create your account to get started.</p>
+        <form onSubmit={handleStep2} className={styles.form}>
 
-          <form onSubmit={handleStep1} className={styles.form}>
-            {STEP1_FIELDS.map(f => (
-              <div key={f.name} className={styles.group}>
-                <label htmlFor={`s1-${f.name}`}>{f.label}</label>
-                <div className={styles.inputWrap}>
-                  <span className={styles.inputIcon}>{f.icon}</span>
-                  <input
-                    id={`s1-${f.name}`}
-                    name={f.name}
-                    type={f.name === "password" ? (showPass ? "text" : "password") : f.type}
-                    value={input[f.name]}
-                    onChange={handleChange}
-                    placeholder={f.placeholder}
-                    required
-                  />
-                  {f.name === "password" && (
-                    <span className={styles.eyeBtn} onClick={() => setShowPass(v => !v)}>
-                      {showPass ? "🙈" : "👁️"}
-                    </span>
-                  )}
-                </div>
+          <p className={styles.formSection}>Account</p>
+          {STEP1_FIELDS.map(f => (
+            <div key={f.name} className={styles.group}>
+              <label htmlFor={`s1-${f.name}`}>{f.label}</label>
+              <div className={styles.inputWrap}>
+                <span className={styles.inputIcon}>{f.icon}</span>
+                <input
+                  id={`s1-${f.name}`}
+                  name={f.name}
+                  type={f.name === "password" || f.name === "confirm" ? (showPass ? "text" : "password") : f.type}
+                  value={input[f.name]}
+                  onChange={handleChange}
+                  placeholder={f.placeholder}
+                  required
+                />
+                {f.name === "password" && (
+                  <span className={styles.eyeBtn} onClick={() => setShowPass(v => !v)}>
+                    {showPass ? "🙈" : "👁️"}
+                  </span>
+                )}
               </div>
-            ))}
-
-            {error && <p className={styles.errorMsg}>{error}</p>}
-            <button type="submit" className={styles.btnPrimary}>Next — Complete Profile →</button>
-          </form>
-        </>}
-
-        {step === 2 && <>
-          <h1 className={styles.title}>Complete your <span className={styles.grad}>profile</span></h1>
-          <p className={styles.sub}>These details help candidates trust your job listings. All fields are required.</p>
-
-          <form onSubmit={handleStep2} className={styles.form}>
-            {STEP2_FIELDS.map(f => (
-              <div key={f.name} className={styles.group}>
-                <label htmlFor={`s2-${f.name}`}>
-                  {f.label} <span className={styles.star}>*</span>
-                </label>
-                <div className={styles.inputWrap}>
-                  <span className={styles.inputIcon}>{f.icon}</span>
-                  <input
-                    id={`s2-${f.name}`}
-                    name={f.name}
-                    type={f.type}
-                    value={input[f.name]}
-                    onChange={handleChange}
-                    placeholder={f.placeholder}
-                    required
-                  />
-                </div>
-              </div>
-            ))}
-
-            {error && <p className={styles.errorMsg}>{error}</p>}
-
-            <div className={styles.btnRow}>
-              <button type="button" className={styles.btnBack} onClick={() => { setStep(1); setError(""); }}>
-                ← Back
-              </button>
-              <button type="submit" className={styles.btnPrimary}>Create Account</button>
             </div>
-          </form>
-        </>}
+          ))}
+
+          <p className={styles.formSection}>Your Details <span className={styles.star}>*</span></p>
+          {STEP2_FIELDS.map(f => (
+            <div key={f.name} className={styles.group}>
+              <label htmlFor={`s2-${f.name}`}>{f.label}</label>
+              <div className={styles.inputWrap}>
+                <span className={styles.inputIcon}>{f.icon}</span>
+                <input
+                  id={`s2-${f.name}`}
+                  name={f.name}
+                  type={f.type}
+                  value={input[f.name]}
+                  onChange={handleChange}
+                  placeholder={f.placeholder}
+                  required
+                />
+              </div>
+            </div>
+          ))}
+
+          {error && <p className={styles.errorMsg}>{error}</p>}
+          <button type="submit" className={styles.btnPrimary}>Create Account</button>
+        </form>
 
         <div className={styles.links}>
           <Link to="/Recruiter/02_LoginRec" className={styles.link}>Already have an account? Sign In</Link>

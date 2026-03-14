@@ -189,11 +189,15 @@ export const CandidatesApplied = () => {
       {/* ── NAVBAR ── */}
       <nav className={styles.navbar}>
         <div className={styles.logo}>
-          <span className={styles.logoHire}>HIRE</span><span className={styles.logoOn}>ON</span>
+          <div className={styles.logoSq}>
+            <svg width="14" height="14" viewBox="0 0 18 18" fill="none">
+              <path d="M3 2V16M15 2V16M3 9H15" stroke="#000" strokeWidth="3" strokeLinecap="round"/>
+            </svg>
+          </div>
+          <span>HIRE<span style={{color:"#fff", opacity:0.55}}>ON</span></span>
         </div>
         <div className={styles.navRight}>
           <button className={styles.backBtn} onClick={() => navigate("/Recruiter/06_MainRec")}>← Dashboard</button>
-          <div className={styles.navAvatar}>{initials(recruiter.name)}</div>
           <span className={styles.navName}>{recruiter.name || "Recruiter"}</span>
           <button className={styles.signOutBtn} onClick={() => navigate("/Recruiter/02_LoginRec")}>Sign out</button>
         </div>
@@ -210,7 +214,11 @@ export const CandidatesApplied = () => {
 
         {/* ══ LEFT SIDEBAR ══ */}
         <aside className={styles.sidebar}>
-          <p className={styles.sidebarHeading}>Your Job Posts</p>
+          <div className={styles.sidebarTop}>
+            <p className={styles.sectionTitle}>YOUR JOB POSTS</p>
+            <p className={styles.sidebarCount}>{jobs.length} active {jobs.length === 1 ? "listing" : "listings"}</p>
+          </div>
+          <div className={styles.jobList}>
           {jobs.length === 0
             ? <p className={styles.sidebarEmpty}>No jobs posted yet.</p>
             : jobs.map(job => {
@@ -234,6 +242,7 @@ export const CandidatesApplied = () => {
                 );
               })
           }
+          </div>
         </aside>
 
         {/* ══ MAIN CONTENT ══ */}

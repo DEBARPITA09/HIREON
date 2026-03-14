@@ -13,6 +13,8 @@ export const RecruiterProfile = ({ onClose }) => {
   const [recruiter, setRecruiter] = useState(empty);
   const [errors, setErrors]       = useState({});
   const [saved, setSaved]         = useState(false);
+  const [photoURL, setPhotoURL]   = useState(null);
+  const fileInputRef = React.useRef();
 
   useEffect(() => {
     const auth = JSON.parse(localStorage.getItem("recruiter")) || {};
@@ -20,7 +22,26 @@ export const RecruiterProfile = ({ onClose }) => {
     const profileKey = email ? `recruiterProfile_${email}` : "recruiterProfile_default";
     const stored = JSON.parse(localStorage.getItem(profileKey)) || {};
     setRecruiter({ ...empty, name: auth.name || "", email: auth.email || "", ...stored });
+    // Load photo
+    const photoKey = email ? `recruiterPhoto_${email}` : "recruiterPhoto_default";
+    const savedPhoto = localStorage.getItem(photoKey);
+    if (savedPhoto) setPhotoURL(savedPhoto);
   }, []);
+
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const dataUrl = ev.target.result;
+      setPhotoURL(dataUrl);
+      const auth = JSON.parse(localStorage.getItem("recruiter")) || {};
+      const email = auth.email || "";
+      const photoKey = email ? `recruiterPhoto_${email}` : "recruiterPhoto_default";
+      localStorage.setItem(photoKey, dataUrl);
+    };
+    reader.readAsDataURL(file);
+  };
 
   const initial = (recruiter.name || "R").charAt(0).toUpperCase();
   const handleChange = (e) => {
@@ -63,10 +84,20 @@ export const RecruiterProfile = ({ onClose }) => {
         </div>
 
         <div className={styles.profileTop}>
-          <div className={styles.profileAvatarLg}>{initial}</div>
+          <div className={styles.profileAvatarWrap} onClick={() => fileInputRef.current?.click()}>
+            {photoURL
+              ? <img src={photoURL} className={styles.profileAvatarImg} alt="profile" />
+              : <div className={styles.profileAvatarLg}>{initial}</div>
+            }
+            <div className={styles.profileAvatarOverlay}>
+              <span style={{fontSize:"11px", color:"#fff", fontWeight:600}}>Change</span>
+            </div>
+          </div>
+          <input ref={fileInputRef} type="file" accept="image/*" style={{display:"none"}} onChange={handlePhotoChange} />
           <div>
             <p className={styles.profileName}>{recruiter.name || "Your Name"}</p>
             <p className={styles.profileSub}>{recruiter.designation || "Recruiter"}{recruiter.email ? ` · ${recruiter.email}` : ""}</p>
+            <p className={styles.profilePhotoHint}>Click avatar to update photo</p>
           </div>
         </div>
 
@@ -125,7 +156,7 @@ export const RecruiterProfile = ({ onClose }) => {
           </div>
           <div className={styles.formGroup}>
             <label className={styles.label}>Bio</label>
-            <textarea className={styles.textarea} name="bio" value={recruiter.bio} onChange={handleChange} placeholder="Tell candidates about yourself and your hiring philosophy..." rows={3} />
+            <textarea className={`${styles.textarea} ${styles.input}`} name="bio" value={recruiter.bio} onChange={handleChange} placeholder="Tell candidates about yourself and your hiring philosophy..." rows={3} />
           </div>
 
           <div className={styles.formActions}>

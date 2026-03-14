@@ -1,9 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=DM+Sans:wght@300;400;500;600&display=swap');
 
 .overlay {
-  position:fixed; inset:0;
-  background:rgba(0,0,0,0.75);
-  backdrop-filter:blur(8px); z-index:200;
+  position:fixed; inset:0; background:rgba(0,0,0,0.8);
+  backdrop-filter:blur(10px); z-index:200;
   display:flex; align-items:center; justify-content:center;
   padding:24px; animation:fadeIn 0.2s ease; overflow-y:auto;
 }
@@ -13,17 +12,17 @@
   background:#0d0d0d;
   border:1px solid rgba(255,255,255,0.08);
   border-radius:16px; padding:2rem;
-  width:100%; max-width:560px;
+  width:100%; max-width:580px;
   animation:slideUp 0.25s ease;
   box-shadow:0 32px 80px rgba(0,0,0,0.7);
   max-height:90vh; overflow-y:auto;
   scrollbar-width:thin; scrollbar-color:rgba(255,255,255,0.06) transparent;
-  font-family:"DM Sans",sans-serif;
+  font-family:'DM Sans',sans-serif;
 }
 @keyframes slideUp { from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:translateY(0);} }
 
 .modalHeader { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.6rem; }
-.modalTitle { font-family:"Playfair Display",serif; font-size:1.4rem; font-weight:900; color:#fff; margin:0; }
+.modalTitle  { font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:900; color:#fff; margin:0; }
 .closeBtn {
   background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
   color:rgba(255,255,255,0.4); width:30px; height:30px;
@@ -32,45 +31,62 @@
 }
 .closeBtn:hover { background:rgba(255,255,255,0.08); color:#fff; }
 
-.requiredNote { font-size:0.75rem; color:rgba(255,255,255,0.25); margin:0 0 1.2rem; }
-.star { color:rgba(239,68,68,0.7); }
-
 .form { display:flex; flex-direction:column; gap:0; }
-.formSection { font-size:0.6rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:rgba(255,255,255,0.25); margin:1.2rem 0 0.8rem; padding-bottom:6px; border-bottom:1px solid rgba(255,255,255,0.06); }
-.formRow  { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:1rem; }
-.formRow3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:1rem; }
+
+.formSection {
+  font-size:0.6rem; font-weight:700; letter-spacing:0.15em;
+  text-transform:uppercase; color:rgba(255,255,255,0.25);
+  margin:1.4rem 0 0.9rem; padding-bottom:7px;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+
+.formRow  { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:1rem; }
+.formRow3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin-bottom:1rem; }
 .formGroup { display:flex; flex-direction:column; gap:6px; margin-bottom:1rem; }
 .label { font-size:0.65rem; font-weight:600; color:rgba(255,255,255,0.5); text-transform:uppercase; letter-spacing:0.1em; }
 
+/* ALL inputs, selects, textareas — same dark theme */
 .input {
-  background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
-  border-radius:8px; padding:11px 13px; color:#fff; font-size:0.85rem;
-  font-family:"DM Sans",sans-serif; outline:none; width:100%;
-  transition:border-color 0.2s;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:8px; padding:11px 13px;
+  color:#fff; font-size:0.85rem;
+  font-family:'DM Sans',sans-serif; outline:none; width:100%;
+  transition:border-color 0.2s, background 0.2s;
+  /* override browser defaults for select/date */
+  -webkit-appearance:none; appearance:none;
+  color-scheme: dark;
 }
-.input:focus { border-color:rgba(255,255,255,0.3); }
+.input:focus { border-color:rgba(255,255,255,0.28); background:rgba(255,255,255,0.07); }
 .input::placeholder { color:rgba(255,255,255,0.2); }
-.textarea { resize:vertical; min-height:80px; }
-.inputError { border-color:rgba(239,68,68,0.4) !important; }
-.errorMsg { font-size:0.72rem; color:rgba(239,68,68,0.8); margin-top:2px; display:block; }
+.input option { background:#0d0d0d; color:#fff; }
 
-.profileTop { display:flex; align-items:center; gap:14px; padding:14px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:10px; margin-bottom:1.4rem; }
-.profileAvatarLg { width:46px; height:46px; border-radius:50%; background:rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:800; color:#fff; flex-shrink:0; }
-.profileName { font-family:"Playfair Display",serif; font-size:15px; font-weight:900; color:#fff; margin:0 0 2px; }
-.profileSub  { font-size:0.72rem; color:rgba(255,255,255,0.3); margin:0; }
+/* Textarea specific */
+.textarea {
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:8px; padding:11px 13px;
+  color:#fff; font-size:0.85rem;
+  font-family:'DM Sans',sans-serif; outline:none; width:100%;
+  resize:vertical; min-height:90px;
+  transition:border-color 0.2s, background 0.2s;
+  color-scheme: dark;
+}
+.textarea:focus { border-color:rgba(255,255,255,0.28); background:rgba(255,255,255,0.07); }
+.textarea::placeholder { color:rgba(255,255,255,0.2); }
 
 .formActions { display:flex; gap:10px; justify-content:flex-end; margin-top:1.6rem; padding-top:1.2rem; border-top:1px solid rgba(255,255,255,0.06); }
 .btnCancel {
   padding:9px 18px; background:rgba(255,255,255,0.04);
   border:1px solid rgba(255,255,255,0.1); border-radius:8px;
   color:rgba(255,255,255,0.5); font-size:0.83rem; font-weight:600;
-  font-family:"DM Sans",sans-serif; cursor:pointer; transition:all 0.2s;
+  font-family:'DM Sans',sans-serif; cursor:pointer; transition:all 0.2s;
 }
 .btnCancel:hover { border-color:rgba(255,255,255,0.2); color:#fff; }
 .btnSubmit {
   padding:9px 22px; background:#fff; border:none; border-radius:8px;
   color:#080808; font-size:0.83rem; font-weight:700;
-  font-family:"DM Sans",sans-serif; cursor:pointer;
-  transition:background 0.2s,transform 0.15s;
+  font-family:'DM Sans',sans-serif; cursor:pointer;
+  transition:background 0.2s, transform 0.15s;
 }
 .btnSubmit:hover { background:rgba(255,255,255,0.88); transform:translateY(-1px); }

@@ -1,26 +1,31 @@
 import React, { useState, useEffect } from "react";
 import styles from "./HiringStats.module.css";
 
-/* must match ALL_CANDIDATES in 07_CandidatesApplied.jsx exactly */
-const ALL_CANDIDATES = [
-  { id: 1, name: "Rahul Sharma", role: "Frontend Dev",    score: 87, resume: "/resumes/resume2.pdf" },
-  { id: 2, name: "Priya Singh",  role: "UI/UX Designer",  score: 92, resume: "/resumes/resume1.pdf" },
-  { id: 3, name: "Arjun Mehta",  role: "Backend Dev",     score: 78, resume: "/resumes/resume3.pdf" },
-  { id: 4, name: "Sneha Reddy",  role: "Data Analyst",    score: 84, resume: "/resumes/resume4.pdf" },
-  { id: 5, name: "Karan Verma",  role: "DevOps Engineer", score: 76, resume: "/resumes/resume5.pdf" },
-];
-
+/* Read real decisions from hireon_applications + hireon_decisions */
 function loadDecisions(jobs) {
+  const apps = JSON.parse(localStorage.getItem("hireon_applications")) || [];
+  const myJobIds = new Set(jobs.map(j => String(j.id)));
+  const myApps = apps.filter(a => myJobIds.has(String(a.jobId)));
+
   const accepted = [], rejected = [];
-  jobs.forEach(job => {
-    try {
-      const d = JSON.parse(localStorage.getItem(`hireon_decisions_${job.id}`)) || {};
-      ALL_CANDIDATES.forEach(c => {
-        const entry = { ...c, company: job.company, jobRole: job.role, jobId: job.id };
-        if (d[String(c.id)] === "Accepted") accepted.push(entry);
-        if (d[String(c.id)] === "Rejected") rejected.push(entry);
-      });
-    } catch {}
+  myApps.forEach(app => {
+    // Check decisions key first (most up-to-date), then app.status
+    const dec = JSON.parse(localStorage.getItem(`hireon_decisions_${app.jobId}`)) || {};
+    const verdict = dec[String(app.id)] || app.status || "";
+    const job = jobs.find(j => String(j.id) === String(app.jobId)) || {};
+    const entry = {
+      id: app.id,
+      name: app.candidateName || "Unknown",
+      role: app.jobRole || job.role || "",
+      company: app.company || job.company || "",
+      score: app.atsScore || 0,
+      email: app.candidateEmail || "",
+      skills: app.candidateSkills || [],
+      appliedAt: app.appliedAt || "",
+      jobId: app.jobId,
+    };
+    if (verdict === "Accepted") accepted.push(entry);
+    else if (verdict === "Rejected") rejected.push(entry);
   });
   return { accepted, rejected };
 }
@@ -149,9 +154,15 @@ export const HiringStats = ({ jobs, onClose }) => {
 
   useEffect(() => {
     setDecided(loadDecisions(jobs));
+    // Refresh when user comes back to this modal after deciding
+    const onStorage = () => setDecided(loadDecisions(jobs));
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
   }, [jobs]);
 
-  const totalApplicants = jobs.reduce((a, j) => a + j.applicants, 0);
+  const myJobIds = new Set(jobs.map(j => String(j.id)));
+  const allRealApps = JSON.parse(localStorage.getItem("hireon_applications")) || [];
+  const totalApplicants = allRealApps.filter(a => myJobIds.has(String(a.jobId))).length;
   const totalAccepted   = decided.accepted.length;
   const totalRejected   = decided.rejected.length;
   const totalPending    = Math.max(0, totalApplicants - totalAccepted - totalRejected);
