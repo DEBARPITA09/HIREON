@@ -5,10 +5,10 @@
 .page { min-height:100vh; background:var(--bg); font-family:'DM Sans',sans-serif; padding-bottom:100px; padding-top:60px; }
 
 /* ── HERO ── */
-.hero { display:flex; flex-direction:column; align-items:center; text-align:center; padding:72px 24px 64px; position:relative; overflow:hidden; border-bottom:1px solid var(--border); }
+.hero { display:flex; flex-direction:column; align-items:center; text-align:center; padding:72px 24px 64px; position:relative; border-bottom:1px solid var(--border); }
 .hero::before { content:''; position:absolute; top:-100px; left:50%; transform:translateX(-50%); width:700px; height:500px; background:radial-gradient(ellipse at center,rgba(255,255,255,0.04) 0%,transparent 70%); pointer-events:none; }
 .heroBadge { display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.04); color:rgba(255,255,255,0.5); border:1px solid rgba(255,255,255,0.1); padding:5px 18px; border-radius:20px; font-size:11px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:24px; }
-.dot { width:6px; height:6px; border-radius:50%; background:#fff; box-shadow:0 0 8px rgba(255,255,255,0.8); animation:pulse 2s infinite; }
+.dot { width:6px; height:6px; border-radius:50%; background:#81e6a0; box-shadow:0 0 8px #81e6a0; animation:pulse 2s infinite; }
 @keyframes pulse { 0%,100%{transform:scale(1);opacity:1;} 50%{transform:scale(1.6);opacity:0.4;} }
 .heroTitle { font-family:'Playfair Display',serif; font-size:clamp(32px,5vw,58px); font-weight:900; color:#fff; letter-spacing:-1.5px; line-height:1.05; margin-bottom:18px; }
 .heroTitle .italic { font-style:italic; color:rgba(255,255,255,0.55); }
@@ -23,7 +23,7 @@
 .missionCard:hover { border-color:rgba(255,255,255,0.15); }
 .missionIconWrap { width:60px; height:60px; flex-shrink:0; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:14px; display:flex; align-items:center; justify-content:center; }
 .missionIconWrap svg { width:26px; height:26px; stroke:rgba(255,255,255,0.7); }
-.missionText h2 { font-family:'Playfair Display',serif; font-size:22px; font-weight:900; color:#fff; letter-spacing:-0.5px; margin-bottom:14px; }
+.missionText h2 { font-family:'Playfair Display',serif; font-size:20px; font-weight:700; color:#fff; letter-spacing:-0.3px; margin-bottom:14px; }
 .missionText p { font-size:14px; color:var(--muted); line-height:1.85; margin-bottom:12px; font-weight:300; }
 .missionText p:last-child { margin-bottom:0; }
 
@@ -33,15 +33,47 @@
 .valueCard:hover { border-color:rgba(255,255,255,0.18); transform:translateY(-4px); }
 .valueIconWrap { width:42px; height:42px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; display:flex; align-items:center; justify-content:center; margin-bottom:16px; }
 .valueIconWrap svg { width:18px; height:18px; stroke:rgba(255,255,255,0.65); }
-.valueCard h3 { font-family:'Playfair Display',serif; font-size:16px; font-weight:700; color:#fff; letter-spacing:-0.3px; margin-bottom:9px; }
+.valueCard h3 { font-family:'Playfair Display',serif; font-size:20px; font-weight:700; color:#fff; letter-spacing:-0.3px; margin-bottom:9px; }
 .valueCard p { font-size:13px; color:var(--muted); line-height:1.75; font-weight:300; }
 
-/* ── STATS ROW ── */
-.statsRow { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
-.statCard { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:28px 24px; text-align:center; transition:border-color 0.25s; }
-.statCard:hover { border-color:rgba(255,255,255,0.18); }
-.statNum { font-family:'Playfair Display',serif; font-size:40px; font-weight:900; color:#fff; letter-spacing:-2px; line-height:1; margin-bottom:6px; }
-.statLabel { font-size:11px; color:var(--muted); letter-spacing:1px; text-transform:uppercase; font-weight:500; }
+/* ── WHAT WE BELIEVE STRIP ── */
+.beliefStrip {
+  display: flex; align-items: stretch;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: rgba(255,255,255,0.014);
+}
+.beliefItem {
+  flex: 1; display: flex; align-items: flex-start; gap: 16px;
+  padding: 32px 36px;
+}
+.beliefIcon {
+  width: 38px; height: 38px; flex-shrink: 0;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 2px;
+}
+.beliefIcon svg { width: 16px; height: 16px; stroke: rgba(255,255,255,0.6); }
+.beliefTitle {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem; font-weight: 700; color: #fff;
+  margin-bottom: 6px; letter-spacing: -0.3px;
+}
+.beliefDesc {
+  font-size: 0.78rem; color: rgba(255,255,255,0.36);
+  line-height: 1.7; font-weight: 300;
+}
+.beliefDivider {
+  width: 1px; background: var(--border);
+  flex-shrink: 0; margin: 20px 0;
+}
+@media (max-width: 768px) {
+  .beliefStrip { flex-direction: column; }
+  .beliefDivider { width: auto; height: 1px; margin: 0 20px; }
+  .beliefItem { padding: 24px 20px; }
+}
 
 /* ── TIMELINE ── */
 .timeline { display:flex; flex-direction:column; }
@@ -52,7 +84,7 @@
 .tlContent { padding-bottom:38px; }
 .tlItem:last-child .tlContent { padding-bottom:0; }
 .tlYear { font-size:10px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.35); margin-bottom:5px; }
-.tlTitle { font-family:'Playfair Display',serif; font-size:16px; font-weight:700; color:#fff; margin-bottom:7px; }
+.tlTitle { font-family:'Playfair Display',serif; font-size:20px; font-weight:700; color:#fff; letter-spacing:-0.3px; margin-bottom:7px; }
 .tlDesc { font-size:13px; color:var(--muted); line-height:1.75; font-weight:300; }
 
-@media (max-width:768px) { .section{padding:0 20px;} .missionCard{flex-direction:column;} .valuesGrid{grid-template-columns:1fr;} .statsRow{grid-template-columns:1fr;} }
+@media (max-width:768px) { .section{padding:0 20px;} .missionCard{flex-direction:column;} .valuesGrid{grid-template-columns:1fr;} }

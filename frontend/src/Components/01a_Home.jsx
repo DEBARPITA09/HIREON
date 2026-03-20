@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./01a_Home.module.css";
 
@@ -52,6 +52,31 @@ function useCursor() {
     return ()=>document.removeEventListener("mousemove",mm);
   },[]);
   return {cr,fr};
+}
+
+
+/* ─── Scroll reveal ─── */
+function useReveal() {
+  useEffect(() => {
+    const els = document.querySelectorAll('[data-reveal]');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'translateY(0)';
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    els.forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(28px)';
+      const d = el.dataset.delay || 0;
+      el.style.transition = 'opacity 0.7s ease ' + d + 'ms, transform 0.7s cubic-bezier(0.16,1,0.3,1) ' + d + 'ms';
+      io.observe(el);
+    });
+    return () => io.disconnect();
+  }, []);
 }
 
 /* ─── Chrome bar ─── */
@@ -543,6 +568,415 @@ function ConveyorCarousel() {
   );
 }
 
+
+/* =====================================================
+   SHARED HELPERS
+===================================================== */
+const Divider = ({ label }) => (
+  <div style={{ display:"flex", alignItems:"center", gap:20, margin:"0 auto 64px", maxWidth:1100, padding:"0 3.5rem" }}>
+    <div style={{ flex:1, height:1, background:"rgba(255,255,255,0.055)" }} />
+    <span style={{ fontSize:"0.58rem", fontWeight:700, color:"rgba(255,255,255,0.18)", letterSpacing:"0.22em", textTransform:"uppercase", whiteSpace:"nowrap" }}>{label}</span>
+    <div style={{ flex:1, height:1, background:"rgba(255,255,255,0.055)" }} />
+  </div>
+);
+
+/* =====================================================
+   SECTION 2 — AI TOOLS SHOWCASE
+   Tab switcher (3 tools) left + live browser mockup right
+===================================================== */
+const AI_TOOLS = [
+  {
+    id:"resume-analysis", icon:"RESUME", title:"Resume Analysis", accent:"#81e6a0",
+    sub:"AI reads your resume and scores it across 12 domains including skills, formatting, experience and more.",
+    tag:"Powered by Groq · llama-3.3-70b",
+    preview:(
+      <div style={{padding:"16px 18px"}}>
+        <div style={{fontSize:".52rem",fontWeight:700,color:"rgba(255,255,255,.22)",letterSpacing:".14em",textTransform:"uppercase",marginBottom:14}}>Analysis Result</div>
+        <div style={{display:"flex",gap:16,alignItems:"center",marginBottom:18}}>
+          <div style={{position:"relative",width:84,height:84,flexShrink:0}}>
+            <svg width="84" height="84" viewBox="0 0 84 84" style={{transform:"rotate(-90deg)"}}>
+              <circle cx="42" cy="42" r="34" fill="none" stroke="rgba(255,255,255,.05)" strokeWidth="8"/>
+              <circle cx="42" cy="42" r="34" fill="none" stroke="#81e6a0" strokeWidth="8" strokeLinecap="round" strokeDasharray="185.9 213.6"/>
+            </svg>
+            <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
+              <div style={{fontFamily:"Playfair Display,serif",fontSize:"1.3rem",fontWeight:900,color:"#fff",lineHeight:1}}>87</div>
+              <div style={{fontSize:".38rem",color:"rgba(255,255,255,.3)",textTransform:"uppercase",marginTop:2}}>Score</div>
+            </div>
+          </div>
+          <div style={{flex:1}}>
+            <div style={{fontSize:".78rem",color:"#81e6a0",fontWeight:700,marginBottom:4}}>Strong Profile!</div>
+            <div style={{fontSize:".62rem",color:"rgba(255,255,255,.35)",lineHeight:1.6}}>Your resume aligns well with Full Stack roles. Minor improvements in Projects section recommended.</div>
+          </div>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:7}}>
+          {[{l:"Strong Areas",items:["React/Next.js","Node.js","System Design"],c:"#81e6a0"},{l:"Improve",items:["Add project links","Quantify impact","Keywords"],c:"#fbbf24"}].map(col=>(
+            <div key={col.l} style={{background:"rgba(255,255,255,.02)",border:"1px solid rgba(255,255,255,.06)",borderRadius:8,padding:"10px 12px"}}>
+              <div style={{fontSize:".5rem",fontWeight:700,color:col.c,letterSpacing:".1em",textTransform:"uppercase",marginBottom:8}}>{col.l}</div>
+              {col.items.map(item=>(
+                <div key={item} style={{display:"flex",alignItems:"center",gap:6,marginBottom:5}}>
+                  <div style={{width:4,height:4,borderRadius:"50%",background:col.c,flexShrink:0}}/>
+                  <span style={{fontSize:".6rem",color:"rgba(255,255,255,.45)"}}>{item}</span>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    ),
+  },
+  {
+    id:"ats-check", icon:"ATS", title:"ATS Checker", accent:"#fbbf24",
+    sub:"Upload your resume and job description. Get an instant keyword match score with actionable fix suggestions.",
+    tag:"PDF upload · Real-time scoring",
+    preview:(
+      <div style={{padding:"16px 18px"}}>
+        <div style={{fontSize:".52rem",fontWeight:700,color:"rgba(255,255,255,.22)",letterSpacing:".14em",textTransform:"uppercase",marginBottom:12}}>ATS Match Report</div>
+        <div style={{background:"rgba(251,191,36,.06)",border:"1px solid rgba(251,191,36,.18)",borderRadius:10,padding:"10px 14px",marginBottom:14,display:"flex",alignItems:"center",gap:12}}>
+          <div style={{fontFamily:"Playfair Display,serif",fontSize:"1.6rem",fontWeight:900,color:"#fbbf24"}}>91</div>
+          <div>
+            <div style={{fontSize:".68rem",fontWeight:600,color:"#fbbf24"}}>Excellent Match</div>
+            <div style={{fontSize:".56rem",color:"rgba(255,255,255,.3)",marginTop:2}}>Top 8% of all applicants</div>
+          </div>
+        </div>
+        {[{l:"Keyword Density",v:94,c:"#81e6a0"},{l:"Job Title Match",v:89,c:"#8ab4f8"},{l:"Skills Coverage",v:91,c:"#fbbf24"},{l:"Format Clarity",v:87,c:"#c8c8c8"}].map(r=>(
+          <div key={r.l} style={{marginBottom:9}}>
+            <div style={{display:"flex",justifyContent:"space-between",marginBottom:3}}>
+              <span style={{fontSize:".6rem",color:"rgba(255,255,255,.38)"}}>{r.l}</span>
+              <span style={{fontSize:".58rem",fontWeight:700,color:r.c}}>{r.v}%</span>
+            </div>
+            <div style={{height:3,background:"rgba(255,255,255,.06)",borderRadius:2,overflow:"hidden"}}>
+              <div style={{height:"100%",width:`${r.v}%`,background:r.c,borderRadius:2}}/>
+            </div>
+          </div>
+        ))}
+      </div>
+    ),
+  },
+  {
+    id:"mock-interview", icon:"MIC", title:"AI Mock Interview", accent:"#8ab4f8",
+    sub:"Practice real interview questions with live AI feedback on your answers, tone, and structure.",
+    tag:"Voice + Text · Adaptive difficulty",
+    preview:(
+      <div style={{padding:"16px 18px"}}>
+        <div style={{fontSize:".52rem",fontWeight:700,color:"rgba(255,255,255,.22)",letterSpacing:".14em",textTransform:"uppercase",marginBottom:12}}>Mock Interview Round 2</div>
+        <div style={{background:"rgba(255,255,255,.03)",border:"1px solid rgba(255,255,255,.07)",borderRadius:10,padding:"12px 14px",marginBottom:12}}>
+          <div style={{fontSize:".6rem",fontWeight:600,color:"#8ab4f8",marginBottom:6}}>Interviewer (AI)</div>
+          <div style={{fontSize:".7rem",color:"rgba(255,255,255,.7)",lineHeight:1.65}}>"Explain how you would design a URL shortener. Walk me through your system design thinking."</div>
+        </div>
+        <div style={{background:"rgba(138,180,248,.05)",border:"1px solid rgba(138,180,248,.15)",borderRadius:10,padding:"12px 14px",marginBottom:14}}>
+          <div style={{fontSize:".6rem",fontWeight:600,color:"rgba(255,255,255,.4)",marginBottom:6}}>Your Answer</div>
+          <div style={{fontSize:".68rem",color:"rgba(255,255,255,.55)",lineHeight:1.65}}>"I would use a hash function for short codes, Redis for caching, and a load balancer with consistent hashing..."</div>
+        </div>
+        <div style={{display:"flex",gap:8}}>
+          {[{l:"Clarity",v:88,c:"#81e6a0"},{l:"Depth",v:82,c:"#8ab4f8"},{l:"Confidence",v:91,c:"#fbbf24"}].map(m=>(
+            <div key={m.l} style={{flex:1,background:"rgba(255,255,255,.03)",border:"1px solid rgba(255,255,255,.07)",borderRadius:8,padding:"8px",textAlign:"center"}}>
+              <div style={{fontFamily:"Playfair Display,serif",fontSize:".88rem",fontWeight:700,color:m.c}}>{m.v}%</div>
+              <div style={{fontSize:".48rem",color:"rgba(255,255,255,.25)",textTransform:"uppercase",letterSpacing:".06em",marginTop:2}}>{m.l}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    ),
+  },
+];
+
+function AIToolsSection() {
+  const [active, setActive] = useState(0);
+  const tool = AI_TOOLS[active];
+  const ChromeBar = ({url}) => (
+    <div style={{background:"#0a0a0a",padding:"8px 12px",borderBottom:"1px solid rgba(255,255,255,.05)",display:"flex",alignItems:"center",gap:6,flexShrink:0}}>
+      <div style={{display:"flex",gap:4}}>
+        {["#ff5f56","#ffbd2e","#27c93f"].map(c=>(<span key={c} style={{width:8,height:8,borderRadius:"50%",background:c,display:"inline-block"}}/>))}
+      </div>
+      <div style={{flex:1,height:14,background:"rgba(255,255,255,.04)",borderRadius:4,display:"flex",alignItems:"center",paddingLeft:8}}>
+        <span style={{fontSize:".52rem",color:"rgba(255,255,255,.18)",fontFamily:"DM Sans,sans-serif"}}>{url}</span>
+      </div>
+    </div>
+  );
+  return (
+    <section style={{ padding:"0 0 120px", position:"relative", zIndex:10 }}>
+      <Divider label="AI-Powered Candidate Tools" />
+      <div style={{ maxWidth:1100, margin:"0 auto", padding:"0 3.5rem" }}>
+        <div data-reveal="1" data-delay="0" style={{ marginBottom:52, maxWidth:560 }}>
+          <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(129,230,160,0.07)", color:"#81e6a0", border:"1px solid rgba(129,230,160,0.18)", padding:"4px 14px", borderRadius:20, fontSize:"0.65rem", fontWeight:600, letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:20 }}>
+            <span style={{ width:6, height:6, borderRadius:"50%", background:"#81e6a0", boxShadow:"0 0 8px #81e6a0", display:"inline-block" }} />
+            For Candidates
+          </div>
+          <h2 style={{ fontFamily:"Playfair Display,serif", fontSize:"clamp(2rem,3.5vw,3.2rem)", fontWeight:900, color:"#fff", lineHeight:1.05, letterSpacing:"-0.03em", margin:"0 0 14px" }}>
+            Every Tool You Need<br/><span style={{ fontStyle:"italic", color:"#c8c8c8" }}>to Get Hired.</span>
+          </h2>
+          <p style={{ fontSize:"0.85rem", color:"rgba(255,255,255,0.38)", lineHeight:1.8, fontWeight:300, margin:0 }}>
+            From resume building to AI mock interviews — HIREON gives candidates a full arsenal to stand out and land offers faster.
+          </p>
+        </div>
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1.4fr", gap:36, alignItems:"flex-start" }}>
+          <div data-reveal="1" data-delay="100" style={{ display:"flex", flexDirection:"column", gap:10 }}>
+            {AI_TOOLS.map((t,i) => (
+              <div key={t.id} onClick={() => setActive(i)}
+                style={{ background:active===i?`${t.accent}09`:"rgba(255,255,255,0.02)", border:`1px solid ${active===i?t.accent+"32":"rgba(255,255,255,0.07)"}`, borderRadius:12, padding:"16px 18px", cursor:"pointer", transition:"all 0.25s", position:"relative", overflow:"hidden" }}>
+                {active===i && <div style={{ position:"absolute", top:0, left:0, bottom:0, width:2, background:`linear-gradient(180deg,${t.accent},transparent)`, borderRadius:"12px 0 0 12px" }} />}
+                <div style={{ display:"flex", alignItems:"flex-start", gap:12 }}>
+                  <div style={{ width:32, height:32, borderRadius:8, background:`${t.accent}15`, border:`1px solid ${t.accent}30`, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
+                    <span style={{ fontSize:".48rem", fontWeight:800, color:t.accent, letterSpacing:".06em" }}>{t.icon}</span>
+                  </div>
+                  <div style={{ flex:1 }}>
+                    <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:4 }}>
+                      <div style={{ fontFamily:"Playfair Display,serif", fontSize:"0.9rem", fontWeight:700, color:active===i?t.accent:"rgba(255,255,255,0.72)" }}>{t.title}</div>
+                      {active===i && <div style={{ width:5, height:5, borderRadius:"50%", background:t.accent, boxShadow:`0 0 7px ${t.accent}` }} />}
+                    </div>
+                    <div style={{ fontSize:"0.72rem", color:"rgba(255,255,255,0.34)", lineHeight:1.6, marginBottom:5 }}>{t.sub}</div>
+                    <div style={{ fontSize:"0.57rem", color:"rgba(255,255,255,0.19)", fontWeight:500 }}>{t.tag}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div data-reveal="1" data-delay="180"
+            style={{ background:"rgba(12,12,12,0.97)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:14, overflow:"hidden", boxShadow:"0 32px 72px rgba(0,0,0,0.88), 0 0 0 1px rgba(255,255,255,0.04)", position:"relative" }}>
+            <div style={{ position:"absolute", top:0, left:0, right:0, height:2, background:`linear-gradient(90deg,transparent,${tool.accent}55,transparent)` }} />
+            <ChromeBar url={`hireon.app/${tool.id}`} />
+            {tool.preview}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* =====================================================
+   SECTION 3 — HOW IT WORKS
+   3 steps: alternating left/right layout with browser mockups
+===================================================== */
+const HOW_STEPS = [
+  {
+    num:"01", role:"Candidate", accent:"#81e6a0",
+    title:"Build. Analyse. Apply.",
+    sub:"Create your ATS-optimised resume, get AI-powered analysis, then let HIREON match you to real roles with 90%+ fit scores.",
+    stat1:{v:"14 days",l:"avg. time to hired"}, stat2:{v:"94%",l:"match accuracy"},
+    preview:(
+      <div style={{ background:"rgba(12,12,12,0.97)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:14, overflow:"hidden", boxShadow:"0 32px 72px rgba(0,0,0,0.85)" }}>
+        <div style={{background:"#0a0a0a",padding:"8px 12px",borderBottom:"1px solid rgba(255,255,255,.05)",display:"flex",alignItems:"center",gap:6}}>
+          <div style={{display:"flex",gap:4}}>{["#ff5f56","#ffbd2e","#27c93f"].map(c=>(<span key={c} style={{width:8,height:8,borderRadius:"50%",background:c,display:"inline-block"}}/>))}</div>
+          <div style={{flex:1,height:14,background:"rgba(255,255,255,.04)",borderRadius:4,display:"flex",alignItems:"center",paddingLeft:8}}><span style={{fontSize:".52rem",color:"rgba(255,255,255,.18)"}}>hireon.app/candidate/dashboard</span></div>
+        </div>
+        <div style={{padding:"16px 18px"}}>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14}}>
+            <div>
+              <div style={{fontFamily:"Playfair Display,serif",fontSize:".9rem",fontWeight:700,color:"#fff"}}>Your Job Feed</div>
+              <div style={{fontSize:".58rem",color:"rgba(255,255,255,.28)",marginTop:2}}>8 new matches today</div>
+            </div>
+            <div style={{background:"rgba(129,230,160,.1)",border:"1px solid rgba(129,230,160,.25)",padding:"3px 10px",borderRadius:100,fontSize:".58rem",fontWeight:600,color:"#81e6a0"}}>Active</div>
+          </div>
+          {[{co:"Google",role:"Frontend Eng.",loc:"Bangalore",pct:94,c:"#81e6a0"},{co:"Amazon",role:"SDE II",loc:"Remote",pct:88,c:"#8ab4f8"},{co:"Razorpay",role:"Full Stack",loc:"Hyderabad",pct:81,c:"#fbbf24"}].map(j=>(
+            <div key={j.role} style={{display:"flex",alignItems:"center",gap:8,padding:"8px 10px",background:"rgba(255,255,255,.02)",border:"1px solid rgba(255,255,255,.05)",borderRadius:8,marginBottom:6}}>
+              <div style={{width:26,height:26,borderRadius:7,background:"rgba(255,255,255,.08)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:".6rem",fontWeight:700,color:"#fff",flexShrink:0}}>{j.co[0]}</div>
+              <div style={{flex:1}}>
+                <div style={{fontSize:".72rem",fontWeight:500,color:"#fff"}}>{j.role}</div>
+                <div style={{fontSize:".56rem",color:"rgba(255,255,255,.28)"}}>{j.co} · {j.loc}</div>
+              </div>
+              <span style={{padding:"2px 8px",borderRadius:100,fontSize:".55rem",fontWeight:600,color:j.c,border:`1px solid ${j.c}50`,background:`${j.c}14`}}>{j.pct}%</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    ),
+  },
+  {
+    num:"02", role:"Recruiter", accent:"#8ab4f8",
+    title:"Post. Screen. Hire.",
+    sub:"Post a job in minutes. HIREON's AI screens every applicant, ranks them by fit score, and surfaces only the best — so you skip the noise.",
+    stat1:{v:"3x",l:"faster hiring cycle"}, stat2:{v:"200+",l:"applicants screened/day"},
+    preview:(
+      <div style={{ background:"rgba(12,12,12,0.97)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:14, overflow:"hidden", boxShadow:"0 32px 72px rgba(0,0,0,0.85)" }}>
+        <div style={{background:"#0a0a0a",padding:"8px 12px",borderBottom:"1px solid rgba(255,255,255,.05)",display:"flex",alignItems:"center",gap:6}}>
+          <div style={{display:"flex",gap:4}}>{["#ff5f56","#ffbd2e","#27c93f"].map(c=>(<span key={c} style={{width:8,height:8,borderRadius:"50%",background:c,display:"inline-block"}}/>))}</div>
+          <div style={{flex:1,height:14,background:"rgba(255,255,255,.04)",borderRadius:4,display:"flex",alignItems:"center",paddingLeft:8}}><span style={{fontSize:".52rem",color:"rgba(255,255,255,.18)"}}>hireon.app/recruiter/applicants</span></div>
+        </div>
+        <div style={{padding:"16px 18px"}}>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14}}>
+            <div>
+              <div style={{fontFamily:"Playfair Display,serif",fontSize:".9rem",fontWeight:700,color:"#fff"}}>AI-Screened Applicants</div>
+              <div style={{fontSize:".58rem",color:"rgba(255,255,255,.28)",marginTop:2}}>Frontend Engineer · Google</div>
+            </div>
+            <div style={{fontSize:".58rem",color:"rgba(138,180,248,.7)",fontWeight:600}}>247 total</div>
+          </div>
+          {[{name:"Arjun Rawat",score:94,badge:"Top Pick",bc:"#81e6a0",exp:"3 yrs · React, Node, AWS"},{name:"Priya Sharma",score:88,badge:"Strong",bc:"#8ab4f8",exp:"2 yrs · React, TypeScript"},{name:"Ravi Kumar",score:81,badge:"Good Fit",bc:"#fbbf24",exp:"4 yrs · Vue, Python, SQL"}].map(a=>(
+            <div key={a.name} style={{display:"flex",alignItems:"center",gap:10,padding:"9px 10px",background:"rgba(255,255,255,.02)",border:"1px solid rgba(255,255,255,.05)",borderRadius:8,marginBottom:6}}>
+              <div style={{width:30,height:30,borderRadius:"50%",background:"rgba(255,255,255,.08)",border:"1.5px solid rgba(255,255,255,.14)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:".7rem",fontWeight:700,color:"#fff",flexShrink:0}}>{a.name[0]}</div>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontSize:".72rem",fontWeight:600,color:"#fff"}}>{a.name}</div>
+                <div style={{fontSize:".56rem",color:"rgba(255,255,255,.28)",marginTop:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{a.exp}</div>
+              </div>
+              <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:3,flexShrink:0}}>
+                <span style={{fontFamily:"Playfair Display,serif",fontSize:".78rem",fontWeight:900,color:a.bc}}>{a.score}%</span>
+                <span style={{padding:"1px 7px",borderRadius:100,fontSize:".48rem",fontWeight:600,color:a.bc,border:`1px solid ${a.bc}40`,background:`${a.bc}10`}}>{a.badge}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    ),
+  },
+  {
+    num:"03", role:"Both", accent:"#fbbf24",
+    title:"Real-Time. Both Sides.",
+    sub:"Candidates track every application live. Recruiters update statuses instantly. Everyone stays in sync — no emails, no black holes.",
+    stat1:{v:"100%",l:"real-time sync"}, stat2:{v:"0",l:"application black holes"},
+    preview:(
+      <div style={{ background:"rgba(12,12,12,0.97)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:14, overflow:"hidden", boxShadow:"0 32px 72px rgba(0,0,0,0.85)" }}>
+        <div style={{background:"#0a0a0a",padding:"8px 12px",borderBottom:"1px solid rgba(255,255,255,.05)",display:"flex",alignItems:"center",gap:6}}>
+          <div style={{display:"flex",gap:4}}>{["#ff5f56","#ffbd2e","#27c93f"].map(c=>(<span key={c} style={{width:8,height:8,borderRadius:"50%",background:c,display:"inline-block"}}/>))}</div>
+          <div style={{flex:1,height:14,background:"rgba(255,255,255,.04)",borderRadius:4,display:"flex",alignItems:"center",paddingLeft:8}}><span style={{fontSize:".52rem",color:"rgba(255,255,255,.18)"}}>hireon.app/applications</span></div>
+        </div>
+        <div style={{padding:"16px 18px"}}>
+          <div style={{fontFamily:"Playfair Display,serif",fontSize:".9rem",fontWeight:700,color:"#fff",marginBottom:14}}>Application Tracker</div>
+          {[
+            {co:"Google",  role:"Frontend Engineer", status:"Interview Scheduled", sc:"#8ab4f8", date:"Jan 22"},
+            {co:"Amazon",  role:"SDE II Platform",   status:"Under Review",        sc:"#fbbf24", date:"Jan 19"},
+            {co:"Razorpay",role:"Full Stack Dev",     status:"Offer Received",      sc:"#81e6a0", date:"Jan 24"},
+            {co:"Microsoft",role:"Backend Engineer", status:"Applied",             sc:"#c8c8c8", date:"Jan 18"},
+          ].map(a=>(
+            <div key={a.role} style={{display:"flex",alignItems:"center",gap:10,padding:"8px 10px",background:"rgba(255,255,255,.02)",border:"1px solid rgba(255,255,255,.05)",borderRadius:8,marginBottom:6}}>
+              <div style={{width:26,height:26,borderRadius:7,background:"rgba(255,255,255,.07)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:".62rem",fontWeight:700,color:"#fff",flexShrink:0}}>{a.co[0]}</div>
+              <div style={{flex:1}}>
+                <div style={{fontSize:".7rem",fontWeight:500,color:"#fff"}}>{a.role}</div>
+                <div style={{fontSize:".56rem",color:"rgba(255,255,255,.28)",marginTop:1}}>{a.co} · {a.date}</div>
+              </div>
+              <span style={{padding:"2px 9px",borderRadius:100,fontSize:".52rem",fontWeight:600,color:a.sc,border:`1px solid ${a.sc}40`,background:`${a.sc}10`,whiteSpace:"nowrap"}}>{a.status}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    ),
+  },
+];
+
+function HowItWorksSection() {
+  return (
+    <section style={{ padding:"0 0 120px", position:"relative", zIndex:10 }}>
+      <Divider label="How HIREON Works" />
+      <div style={{ maxWidth:1100, margin:"0 auto", padding:"0 3.5rem" }}>
+        <div data-reveal="1" data-delay="0" style={{ marginBottom:64, textAlign:"center" }}>
+          <h2 style={{ fontFamily:"Playfair Display,serif", fontSize:"clamp(2rem,3.5vw,3.2rem)", fontWeight:900, color:"#fff", lineHeight:1.05, letterSpacing:"-0.03em", margin:"0 0 14px" }}>
+            Simple Steps,<br/><span style={{ fontStyle:"italic", color:"#c8c8c8" }}>Extraordinary Results.</span>
+          </h2>
+          <p style={{ fontSize:"0.85rem", color:"rgba(255,255,255,0.38)", lineHeight:1.8, fontWeight:300, maxWidth:460, margin:"0 auto" }}>
+            Whether you are hiring or being hired, HIREON makes the process fast, transparent, and intelligent.
+          </p>
+        </div>
+        <div style={{ display:"flex", flexDirection:"column", gap:80 }}>
+          {HOW_STEPS.map((step, idx) => (
+            <div key={step.num} data-reveal="1" data-delay={String(idx*80)}
+              style={{ display:"grid", gridTemplateColumns:idx%2===0?"1fr 1.2fr":"1.2fr 1fr", gap:56, alignItems:"center" }}>
+              <div style={{ order:idx%2===0?0:1 }}>
+                <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:20 }}>
+                  <div style={{ fontFamily:"Playfair Display,serif", fontSize:"3rem", fontWeight:900, color:"rgba(255,255,255,0.055)", lineHeight:1 }}>{step.num}</div>
+                  <div style={{ height:1, flex:1, background:"rgba(255,255,255,0.055)" }} />
+                  <span style={{ fontSize:"0.6rem", fontWeight:700, color:step.accent, letterSpacing:"0.12em", textTransform:"uppercase", border:`1px solid ${step.accent}30`, padding:"3px 10px", borderRadius:20, background:`${step.accent}08` }}>{step.role}</span>
+                </div>
+                <h3 style={{ fontFamily:"Playfair Display,serif", fontSize:"clamp(1.6rem,2.5vw,2.2rem)", fontWeight:900, color:"#fff", lineHeight:1.1, letterSpacing:"-0.02em", margin:"0 0 14px" }}>{step.title}</h3>
+                <p style={{ fontSize:"0.85rem", color:"rgba(255,255,255,0.42)", lineHeight:1.8, fontWeight:300, margin:"0 0 28px" }}>{step.sub}</p>
+                <div style={{ display:"flex", gap:24 }}>
+                  {[step.stat1, step.stat2].map(s => (
+                    <div key={s.l} style={{ borderLeft:`2px solid ${step.accent}45`, paddingLeft:14 }}>
+                      <div style={{ fontFamily:"Playfair Display,serif", fontSize:"1.4rem", fontWeight:900, color:step.accent, lineHeight:1 }}>{s.v}</div>
+                      <div style={{ fontSize:"0.66rem", color:"rgba(255,255,255,0.3)", marginTop:4, lineHeight:1.4 }}>{s.l}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div style={{ order:idx%2===0?1:0, position:"relative" }}>
+                <div style={{ position:"absolute", inset:-48, background:`radial-gradient(ellipse at center, ${step.accent}07 0%, transparent 70%)`, pointerEvents:"none" }} />
+                {step.preview}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* =====================================================
+   SECTION 4 — STATS + TESTIMONIALS + FINAL CTA
+===================================================== */
+const TESTIMONIALS = [
+  {
+    name:"Arjun Rawat", role:"Frontend Engineer", company:"Google", color:"#81e6a0",
+    text:"HIREON matched me to Google in under 2 weeks. The AI resume analysis told me exactly which keywords to add. Got 94% match and landed the offer.",
+  },
+  {
+    name:"Priya Sharma", role:"SDE II", company:"Amazon", color:"#8ab4f8",
+    text:"The ATS checker showed my resume was getting filtered before any human saw it. Fixed 3 things, applied again and got a call the very next day.",
+  },
+  {
+    name:"Rohan Mehta", role:"Tech Recruiter", company:"Razorpay", color:"#fbbf24",
+    text:"We posted a job at 9am and by lunch had 40 AI-screened candidates ranked by fit. Used to take us 3 days of manual review. HIREON is genuinely different.",
+  },
+];
+
+function SocialProofSection({ nav }) {
+  return (
+    <section style={{ padding:"0 0 120px", position:"relative", zIndex:10 }}>
+      <Divider label="What People Are Saying" />
+      {/* Testimonials */}
+      <div style={{ maxWidth:1100, margin:"0 auto 96px", padding:"0 3.5rem" }}>
+        <div data-reveal="1" data-delay="0" style={{ textAlign:"center", marginBottom:48 }}>
+          <h2 style={{ fontFamily:"Playfair Display,serif", fontSize:"clamp(2rem,3.5vw,3rem)", fontWeight:900, color:"#fff", lineHeight:1.05, letterSpacing:"-0.03em", margin:"0 0 14px" }}>
+            Real People,<br/><span style={{ fontStyle:"italic", color:"#c8c8c8" }}>Real Results.</span>
+          </h2>
+        </div>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:16 }}>
+          {TESTIMONIALS.map((t,i) => (
+            <div key={t.name} data-reveal="1" data-delay={String(i*80)}
+              style={{ background:"rgba(255,255,255,0.025)", border:"1px solid rgba(255,255,255,0.07)", borderRadius:14, padding:"22px", position:"relative", overflow:"hidden" }}>
+              <div style={{ position:"absolute", top:0, left:0, right:0, height:2, background:`linear-gradient(90deg,transparent,${t.color}50,transparent)` }} />
+              <div style={{ fontFamily:"Playfair Display,serif", fontSize:"3rem", color:"rgba(255,255,255,0.05)", lineHeight:1, marginBottom:12 }}>"</div>
+              <p style={{ fontSize:"0.8rem", color:"rgba(255,255,255,0.52)", lineHeight:1.75, fontWeight:300, margin:"0 0 20px" }}>{t.text}</p>
+              <div style={{ display:"flex", alignItems:"center", gap:10, paddingTop:16, borderTop:"1px solid rgba(255,255,255,0.06)" }}>
+                <div style={{ width:34, height:34, borderRadius:"50%", background:`${t.color}15`, border:`1.5px solid ${t.color}38`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"0.82rem", fontWeight:700, color:t.color, flexShrink:0 }}>{t.name[0]}</div>
+                <div>
+                  <div style={{ fontFamily:"Playfair Display,serif", fontSize:"0.82rem", fontWeight:700, color:"#fff" }}>{t.name}</div>
+                  <div style={{ fontSize:"0.62rem", color:"rgba(255,255,255,0.32)", marginTop:2 }}>{t.role} · <span style={{ color:t.color }}>{t.company}</span></div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      {/* Final CTA block */}
+      <div data-reveal="1" data-delay="0" style={{ maxWidth:1100, margin:"0 auto", padding:"0 3.5rem" }}>
+        <div style={{ background:"rgba(255,255,255,0.022)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:20, padding:"64px 48px", textAlign:"center", position:"relative", overflow:"hidden" }}>
+          <div style={{ position:"absolute", top:"-30%", left:"5%", width:"40%", height:"80%", background:"radial-gradient(ellipse, rgba(129,230,160,0.05) 0%, transparent 70%)", pointerEvents:"none" }} />
+          <div style={{ position:"absolute", top:"-30%", right:"5%", width:"40%", height:"80%", background:"radial-gradient(ellipse, rgba(138,180,248,0.05) 0%, transparent 70%)", pointerEvents:"none" }} />
+          <h2 style={{ fontFamily:"Playfair Display,serif", fontSize:"clamp(2rem,4vw,3.6rem)", fontWeight:900, color:"#fff", lineHeight:1.05, letterSpacing:"-0.03em", marginBottom:14, position:"relative" }}>
+            Ready to Hire Smarter?<br/><span style={{ fontStyle:"italic", color:"#c8c8c8" }}>Get Hired Faster.</span>
+          </h2>
+          <p style={{ fontSize:"0.88rem", color:"rgba(255,255,255,0.36)", lineHeight:1.8, maxWidth:480, margin:"0 auto 36px", fontWeight:300, position:"relative" }}>
+            Join thousands of candidates and recruiters already using HIREON to transform hiring from both sides of the table.
+          </p>
+          <div style={{ display:"flex", gap:12, justifyContent:"center", position:"relative" }}>
+            <div
+              onClick={() => nav("/Candidate/02_LoginCand")}
+              style={{ padding:"12px 32px", background:"#fff", border:"1px solid #fff", borderRadius:9, color:"#080808", fontSize:"0.82rem", fontWeight:700, cursor:"pointer", fontFamily:"DM Sans,sans-serif", letterSpacing:"0.04em", transition:"all 0.2s" }}
+              onMouseEnter={e => { e.currentTarget.style.boxShadow="0 8px 28px rgba(255,255,255,0.15)"; e.currentTarget.style.transform="translateY(-1px)"; }}
+              onMouseLeave={e => { e.currentTarget.style.boxShadow="none"; e.currentTarget.style.transform="translateY(0)"; }}>
+              I am a Candidate
+            </div>
+            <div
+              onClick={() => nav("/Recruiter/02_LoginRec")}
+              style={{ padding:"12px 32px", background:"transparent", border:"1px solid rgba(255,255,255,0.18)", borderRadius:9, color:"rgba(255,255,255,0.72)", fontSize:"0.82rem", fontWeight:500, cursor:"pointer", fontFamily:"DM Sans,sans-serif", letterSpacing:"0.04em", transition:"all 0.2s" }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor="rgba(255,255,255,0.38)"; e.currentTarget.style.color="#fff"; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor="rgba(255,255,255,0.18)"; e.currentTarget.style.color="rgba(255,255,255,0.72)"; }}>
+              I am a Recruiter
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export const Home = () => {
   const canvasRef = useRef(null);
   useBackground(canvasRef);
@@ -601,6 +1035,16 @@ export const Home = () => {
         </div>
 
       </section>
+
+      {/* SECTION 2 */}
+      <AIToolsSection />
+
+      {/* SECTION 3 */}
+      <HowItWorksSection />
+
+      {/* SECTION 4 */}
+      <SocialProofSection nav={navigate} />
+
     </div>
   );
 };

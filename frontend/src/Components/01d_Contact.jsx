@@ -1,7 +1,50 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styles from "./01d_Contact.module.css";
 
+
+/* ─── Floating Particle Background ─── */
+function useParticles(ref) {
+  useEffect(() => {
+    const canvas = ref.current; if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    let W, H, raf;
+    const resize = () => { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; };
+    resize(); window.addEventListener("resize", resize);
+    const N = 90;
+    const pts = Array.from({ length: N }, () => ({
+      x: Math.random(), y: Math.random(),
+      vx: (Math.random() - 0.5) * 0.00018, vy: (Math.random() - 0.5) * 0.00018,
+      r: 0.6 + Math.random() * 1.6, a: 0.1 + Math.random() * 0.32, ph: Math.random() * Math.PI * 2,
+    }));
+    let t = 0;
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      pts.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0) p.x = 1; if (p.x > 1) p.x = 0;
+        if (p.y < 0) p.y = 1; if (p.y > 1) p.y = 0;
+        const pulse = 0.82 + 0.18 * Math.sin(t * 0.016 + p.ph);
+        ctx.beginPath(); ctx.arc(p.x * W, p.y * H, p.r * pulse, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${p.a * pulse})`; ctx.fill();
+      });
+      for (let i = 0; i < N; i++) for (let j = i + 1; j < N; j++) {
+        const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < 0.08) {
+          ctx.beginPath(); ctx.moveTo(pts[i].x * W, pts[i].y * H); ctx.lineTo(pts[j].x * W, pts[j].y * H);
+          ctx.strokeStyle = `rgba(255,255,255,${0.05 * (1 - d / 0.08)})`; ctx.lineWidth = 0.4; ctx.stroke();
+        }
+      }
+      t++; raf = requestAnimationFrame(draw);
+    }
+    draw();
+    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", resize); };
+  }, []);
+}
+
 export const Contact = () => {
+  const canvasRef = useRef(null);
+  useParticles(canvasRef);
   const [form, setForm] = useState({ name:"", email:"", subject:"", message:"" });
   const [sent, setSent] = useState(false);
   const [errors, setErrors] = useState({});
@@ -26,6 +69,7 @@ export const Contact = () => {
 
   return (
     <div className={styles.page}>
+      <canvas ref={canvasRef} style={{ position:"fixed", inset:0, width:"100%", height:"100%", pointerEvents:"none", zIndex:0 }} />
       <div className={styles.hero}>
         <div className={styles.heroBadge}><span className={styles.dot}/> Contact Us</div>
         <h1 className={styles.heroTitle}>We'd Love to <span className={styles.italic}>Hear From You</span></h1>

@@ -1,8 +1,53 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import styles from "./01c_About.module.css";
 
-export const About = () => (
+
+/* ─── Floating Particle Background ─── */
+function useParticles(ref) {
+  useEffect(() => {
+    const canvas = ref.current; if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    let W, H, raf;
+    const resize = () => { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; };
+    resize(); window.addEventListener("resize", resize);
+    const N = 90;
+    const pts = Array.from({ length: N }, () => ({
+      x: Math.random(), y: Math.random(),
+      vx: (Math.random() - 0.5) * 0.00018, vy: (Math.random() - 0.5) * 0.00018,
+      r: 0.6 + Math.random() * 1.6, a: 0.1 + Math.random() * 0.32, ph: Math.random() * Math.PI * 2,
+    }));
+    let t = 0;
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      pts.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0) p.x = 1; if (p.x > 1) p.x = 0;
+        if (p.y < 0) p.y = 1; if (p.y > 1) p.y = 0;
+        const pulse = 0.82 + 0.18 * Math.sin(t * 0.016 + p.ph);
+        ctx.beginPath(); ctx.arc(p.x * W, p.y * H, p.r * pulse, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${p.a * pulse})`; ctx.fill();
+      });
+      for (let i = 0; i < N; i++) for (let j = i + 1; j < N; j++) {
+        const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < 0.08) {
+          ctx.beginPath(); ctx.moveTo(pts[i].x * W, pts[i].y * H); ctx.lineTo(pts[j].x * W, pts[j].y * H);
+          ctx.strokeStyle = `rgba(255,255,255,${0.05 * (1 - d / 0.08)})`; ctx.lineWidth = 0.4; ctx.stroke();
+        }
+      }
+      t++; raf = requestAnimationFrame(draw);
+    }
+    draw();
+    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", resize); };
+  }, []);
+}
+
+export const About = () => {
+  const canvasRef = useRef(null);
+  useParticles(canvasRef);
+  return (
   <div className={styles.page}>
+      <canvas ref={canvasRef} style={{ position:"fixed", inset:0, width:"100%", height:"100%", pointerEvents:"none", zIndex:0 }} />
 
     {/* HERO */}
     <div className={styles.hero}>
@@ -17,15 +62,43 @@ export const About = () => (
       </p>
     </div>
 
-    {/* STATS */}
-    <div className={styles.section}>
-      <div className={styles.statsRow}>
-        {[{n:"3.2L+",l:"Candidates Placed"},{n:"94%",l:"Match Accuracy"},{n:"14 Days",l:"Average Time to Hire"}].map(s=>(
-          <div key={s.l} className={styles.statCard}>
-            <div className={styles.statNum}>{s.n}</div>
-            <div className={styles.statLabel}>{s.l}</div>
-          </div>
-        ))}
+    {/* WHAT WE BELIEVE */}
+    <div className={styles.beliefStrip}>
+      <div className={styles.beliefItem}>
+        <div className={styles.beliefIcon}>
+          <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <div className={styles.beliefText}>
+          <div className={styles.beliefTitle}>AI at the Core</div>
+          <div className={styles.beliefDesc}>Every match, every score, every suggestion is driven by intelligence — not guesswork.</div>
+        </div>
+      </div>
+      <div className={styles.beliefDivider}/>
+      <div className={styles.beliefItem}>
+        <div className={styles.beliefIcon}>
+          <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+        </div>
+        <div className={styles.beliefText}>
+          <div className={styles.beliefTitle}>Built for India</div>
+          <div className={styles.beliefDesc}>Designed from the ground up for India's scale, diversity, and the aspirations of millions of job seekers.</div>
+        </div>
+      </div>
+      <div className={styles.beliefDivider}/>
+      <div className={styles.beliefItem}>
+        <div className={styles.beliefIcon}>
+          <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+          </svg>
+        </div>
+        <div className={styles.beliefText}>
+          <div className={styles.beliefTitle}>Zero Friction</div>
+          <div className={styles.beliefDesc}>No black holes. No long waits. Candidates hear back and recruiters move fast — both sides win.</div>
+        </div>
       </div>
     </div>
 
@@ -90,4 +163,5 @@ export const About = () => (
     </div>
 
   </div>
-);
+  );
+};
