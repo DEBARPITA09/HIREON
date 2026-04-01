@@ -6,15 +6,6 @@
 
 ---
 
-## Live Demo
-
-1. clone the repository
-2. open in vs code
-3. open 2 terminals
-4. Termainal1:  cd backend → npm install → node server.js
-5. Terminal2: cd frontend → npm install → npm run dev
----
-
 ## What is HIREON?
 
 HIREON is a full-stack AI-powered hiring platform with two sides — **Candidate** and **Recruiter** — that are fully connected in real time.
