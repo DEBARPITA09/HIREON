@@ -1,0 +1,320 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  --bg:      #080808;
+  --border:  rgba(255,255,255,0.07);
+  --muted:   #555;
+  --accent:  #c8c8c8;
+  --white:   #ffffff;
+  --card-bg: rgba(12,12,12,0.97);
+}
+
+.page {
+  min-height: 100vh;
+  background: #080808;
+  font-family: 'DM Sans', sans-serif;
+  overflow-x: hidden;
+  padding-top: 60px;
+  position: relative;
+  cursor: none;
+}
+
+.bgCanvas {
+  position: fixed; inset: 0;
+  width: 100%; height: 100%;
+  z-index: 2; pointer-events: none;
+}
+
+/* ── CURSOR ── */
+.cursor {
+  position: fixed; width: 8px; height: 8px;
+  background: #fff; border-radius: 50%;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%,-50%);
+}
+.cursorFollower {
+  position: fixed; width: 32px; height: 32px;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 50%; pointer-events: none;
+  z-index: 9998; transform: translate(-50%,-50%);
+  transition: all 0.13s ease;
+}
+
+/* ── HERO ── */
+.hero {
+  position: relative; z-index: 10;
+  height: calc(100vh - 60px);
+  display: grid;
+  grid-template-columns: 42% 58%;
+  overflow: visible;
+}
+
+/* ── LEFT ── */
+.heroLeft {
+  display: flex; flex-direction: column;
+  justify-content: center;
+  padding: 2rem 2rem 2rem 3.5rem;
+  position: relative; z-index: 10;
+  animation: slideIn 0.8s cubic-bezier(0.16,1,0.3,1) both;
+  overflow: visible;
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.heroH {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.4rem, 4.2vw, 4.2rem);
+  font-weight: 900;
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+  margin-bottom: 1rem;
+  color: var(--white);
+}
+.italic { font-style: italic; color: var(--accent); }
+.outline {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.heroP {
+  font-size: 0.85rem; color: var(--muted);
+  line-height: 1.75; max-width: 400px;
+  margin-bottom: 1.4rem; font-weight: 300;
+}
+
+/* ── PORTAL CARDS ── */
+.portalRow { display: flex; gap: 10px; margin-bottom: 1.2rem; }
+
+.portalCandidate {
+  flex: 1;
+  padding: 10px 18px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  letter-spacing: 0.01em;
+}
+.portalCandidate:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.32);
+  transform: translateY(-1px);
+}
+
+.portalRecruiter {
+  flex: 1;
+  padding: 10px 18px;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid #ffffff;
+  color: #080808;
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  letter-spacing: 0.01em;
+}
+.portalRecruiter:hover {
+  background: #e8e8e8;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(255,255,255,0.12);
+}
+
+/* ── BULLETS ── */
+.bullets { display: flex; flex-direction: column; gap: 10px; }
+.bl { display: flex; align-items: flex-start; gap: 10px; font-size: 0.82rem; color: var(--muted); line-height: 1.55; font-weight: 300; }
+.blDot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.4); flex-shrink: 0; margin-top: 7px; }
+.bl strong { color: rgba(255,255,255,0.75); font-weight: 500; }
+
+/* ── RIGHT PANEL ── */
+.heroRight {
+  position: relative; z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  height: 100%;
+  /* isolate as its own stacking/paint layer */
+  isolation: isolate;
+  contain: layout style;
+}
+
+/* ══════════════════════════════════════════
+   CONVEYOR + ORBIT  — tight ring around cards
+══════════════════════════════════════════ */
+.conveyorWrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/*
+  Ring = 680px fixed → radius 340px.
+  Cards = 460px wide, stack height ~400px → diagonal ~611px.
+  Ring just hugs the cards perfectly.
+*/
+.orbitRing {
+  position: absolute;
+  width: 680px;
+  height: 680px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px dashed rgba(255,255,255,0.13);
+  pointer-events: none;
+  z-index: 2;
+  backface-visibility: hidden;
+}
+
+.orbitIcon {
+  position: absolute;
+  width: 42px; height: 42px;
+  border-radius: 11px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.7);
+}
+
+.userChip {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background: rgba(10,10,10,0.95);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 100px;
+  padding: 5px 12px 5px 5px;
+  display: flex; align-items: center; gap: 8px;
+  white-space: nowrap;
+  z-index: 30;
+  animation: floatY 4s ease-in-out infinite;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+}
+@keyframes floatY {
+  0%,100% { transform: translate(-50%,-50%) translateY(0); }
+  50%      { transform: translate(-50%,-50%) translateY(-7px); }
+}
+.userAvatar {
+  width: 26px; height: 26px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.72rem; font-weight: 700; flex-shrink: 0;
+}
+.userName { font-size: 0.64rem; font-weight: 600; color: #fff; }
+.userSub  { font-size: 0.54rem; color: rgba(255,255,255,0.38); margin-top: 1px; }
+
+/* ── CARD STACK ── */
+.cardStack {
+  position: relative;
+  width: 460px;
+  height: 460px;
+  z-index: 20;
+}
+
+.conveyorCard {
+  position: absolute;
+  width: 460px;
+  top: 50%;
+  left: 50%;
+  background: var(--card-bg);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 32px 72px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.04);
+  /* ONLY transition transform + opacity — no filter, no box-shadow */
+  /* filter causes full-page repaint every frame = jank */
+  transition:
+    transform 0.72s cubic-bezier(0.4,0,0.2,1),
+    opacity   0.72s ease;
+  /* force GPU layer — prevents layout from being affected */
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+.slotHidden {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  transform: translate(-50%, calc(-50% - 400px)) scale(0.6) !important;
+}
+
+.slotBack {
+  transform: translate(-50%, calc(-50% - 180px))
+             scale(0.77)
+             perspective(600px) rotateX(12deg) rotateY(-8deg);
+  opacity: 0.18;
+  z-index: 5;
+  pointer-events: none;
+}
+.slotMid {
+  transform: translate(-50%, calc(-50% - 80px))
+             scale(0.88)
+             perspective(600px) rotateX(7deg) rotateY(-4deg);
+  opacity: 0.48;
+  z-index: 10;
+  pointer-events: none;
+}
+.slotFront {
+  transform: translate(-50%, -50%)
+             scale(1.0)
+             perspective(600px) rotateX(2deg) rotateY(-1deg);
+  opacity: 1;
+  z-index: 20;
+  pointer-events: auto;
+  box-shadow: 0 44px 90px rgba(0,0,0,0.95), 0 0 0 1px rgba(255,255,255,0.07);
+}
+.slotExit {
+  transform: translate(-50%, calc(-50% - 340px))
+             scale(0.70)
+             perspective(600px) rotateX(16deg) rotateY(-10deg);
+  opacity: 0;
+  z-index: 25;
+  pointer-events: none;
+}
+
+/* ── TOP-RIGHT CHIP ── */
+.conveyorChip {
+  position: absolute;
+  top: 6%; right: 4%;
+  background: rgba(10,10,10,0.97);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 8px 14px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.7);
+  display: flex; align-items: center; gap: 10px;
+  white-space: nowrap; z-index: 200;
+  animation: floatTop 4s ease-in-out infinite;
+}
+@keyframes floatTop {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+.conveyorChipDot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; transition: background 0.4s, box-shadow 0.4s; }
+.chipTitle { font-size: 0.68rem; font-weight: 500; color: #fff; font-family: 'DM Sans', sans-serif; }
+.chipSub   { font-size: 0.57rem; color: rgba(255,255,255,0.35); margin-top: 1px; }
+
+/* ── MOBILE ── */
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; }
+  .heroLeft { padding: 3rem 1.5rem 2rem; }
+  .heroRight { height: 520px; }
+  .conveyorWrap { height: 500px; }
+  .cardStack { width: 300px; height: 300px; }
+  .conveyorCard { width: 300px; }
+  .portalRow { flex-direction: column; }
+  .orbitRing { width: 92%; }
+  .slotBack  { transform: translate(-50%, calc(-50% - 110px)) scale(0.78) perspective(900px) rotateX(6deg); }
+  .slotMid   { transform: translate(-50%, calc(-50% - 48px))  scale(0.89) perspective(900px) rotateX(4deg); }
+  .slotFront { transform: translate(-50%, calc(-50% + 20px))  scale(1.0)  perspective(900px) rotateX(2deg); }
+  .slotExit  { transform: translate(-50%, calc(-50% - 220px)) scale(0.72); }
+}

@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+.topBar {
+  position:sticky; top:0; z-index:200;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 2.5rem; height:58px;
+  background:rgba(8,8,8,0.94);
+  backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
+  border-bottom:1px solid rgba(255,255,255,0.07);
+  font-family:'DM Sans',sans-serif;
+}
+.topLogo { font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:900; letter-spacing:0.05em; display:flex; align-items:center; gap:0.55rem; color:#fff; text-decoration:none; }
+.logoSq  { width:30px; height:30px; border-radius:7px; background:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.logoHire { color:#fff; }
+.logoOn   { color:rgba(255,255,255,0.5); }
+
+.topRight { display:flex; align-items:center; gap:8px; }
+
+/* Avatar pill */
+.avatarWrap { position:relative; }
+.avatarBtn  {
+  display:flex; align-items:center; gap:7px;
+  padding:4px 10px 4px 4px;
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:100px; background:rgba(255,255,255,0.03);
+  cursor:pointer; font-family:'DM Sans',sans-serif;
+  transition:all 0.18s;
+}
+.avatarBtn:hover { background:rgba(255,255,255,0.07); border-color:rgba(255,255,255,0.2); }
+.avatar {
+  width:28px; height:28px; border-radius:50%;
+  overflow:hidden; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  border:1px solid rgba(255,255,255,0.12);
+  background:rgba(255,255,255,0.1); font-size:11px; font-weight:700; color:#fff;
+}
+.avatarName { font-size:0.76rem; font-weight:500; color:#fff; max-width:110px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.chevron    { font-size:9px; color:rgba(255,255,255,0.3); margin-left:2px; }
+
+/* Dropdown */
+.dropdown {
+  position:absolute; top:calc(100% + 8px); right:0;
+  width:240px; background:#0d0d0d;
+  border:1px solid rgba(255,255,255,0.08); border-radius:14px;
+  overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.8);
+  animation:dropIn 0.16s ease; z-index:999;
+}
+@keyframes dropIn { from{opacity:0;transform:translateY(-6px);} to{opacity:1;transform:translateY(0);} }
+
+/* Profile card at top of dropdown */
+.dropHead { display:flex; align-items:center; gap:12px; padding:16px 16px 14px; border-bottom:1px solid rgba(255,255,255,0.06); }
+.dropAvatarLg {
+  width:42px; height:42px; border-radius:50%; flex-shrink:0;
+  overflow:hidden;
+  background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.12);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Playfair Display',serif; font-size:14px; font-weight:900; color:#fff;
+}
+.dropHeadInfo { min-width:0; flex:1; }
+.dropName   { font-family:'Playfair Display',serif; font-size:0.87rem; font-weight:900; color:#fff; margin:0 0 1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.dropDesig  { font-size:0.68rem; color:rgba(255,255,255,0.45); margin:0 0 2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.dropMeta   { font-size:0.65rem; color:rgba(255,255,255,0.25); margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.dropDivider { height:1px; background:rgba(255,255,255,0.06); }
+
+.dropItem {
+  display:block; width:100%; padding:11px 16px;
+  background:none; border:none; color:rgba(255,255,255,0.55);
+  font-size:0.83rem; font-weight:500; font-family:'DM Sans',sans-serif;
+  text-align:left; cursor:pointer; transition:color 0.15s,background 0.15s;
+}
+.dropItem:hover { color:#fff; background:rgba(255,255,255,0.04); }
+.dropItemLogout { color:rgba(248,113,113,0.7); }
+.dropItemLogout:hover { color:#f87171; background:rgba(248,113,113,0.05); }
+
+.signOutBtn {
+  background:transparent; border:1px solid rgba(255,255,255,0.07);
+  border-radius:7px; padding:6px 16px; color:rgba(255,255,255,0.35);
+  font-family:'DM Sans',sans-serif; font-size:0.72rem; font-weight:500;
+  cursor:pointer; transition:all 0.2s; letter-spacing:0.03em;
+}
+.signOutBtn:hover { border-color:rgba(255,255,255,0.25); color:#fff; }

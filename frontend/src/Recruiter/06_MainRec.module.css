@@ -1,0 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  --bg:         #080808;
+  --bg-surface: rgba(255,255,255,0.03);
+  --border:     rgba(255,255,255,0.07);
+  --border-md:  rgba(255,255,255,0.12);
+  --white:      #ffffff;
+  --muted:      rgba(255,255,255,0.35);
+  --muted-md:   rgba(255,255,255,0.55);
+  --accent:     #c8c8c8;
+  --green:      #81e6a0;
+}
+
+.page { min-height:100vh; background:var(--bg); font-family:'DM Sans',sans-serif; color:var(--white); overflow-x:hidden; }
+
+/* TOPBAR — exact same as candidate */
+.topbar { position:sticky; top:0; z-index:100; height:58px; padding:0 2.5rem; display:flex; align-items:center; justify-content:space-between; background:rgba(8,8,8,0.94); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border-bottom:1px solid var(--border); }
+.topbarLogo { font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:900; letter-spacing:0.05em; color:var(--white); text-decoration:none; display:flex; align-items:center; gap:0.55rem; }
+.topbarLogoSq { width:30px; height:30px; border-radius:7px; background:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.topbarRight { display:flex; align-items:center; gap:8px; }
+.topbarAction { display:flex; align-items:center; gap:7px; padding:7px 16px; background:var(--bg-surface); border:1px solid var(--border); border-radius:8px; color:var(--muted-md); font-family:'DM Sans',sans-serif; font-size:0.76rem; font-weight:500; letter-spacing:0.02em; cursor:pointer; transition:all 0.18s; }
+.topbarAction:hover { border-color:var(--border-md); color:var(--white); background:rgba(255,255,255,0.06); }
+.topbarDivider { width:1px; height:22px; background:var(--border); margin:0 4px; }
+.userChip { display:flex; align-items:center; gap:7px; padding:4px 10px 4px 4px; border:1px solid var(--border-md); border-radius:100px; background:var(--bg-surface); cursor:pointer; transition:background 0.18s,border-color 0.18s; }
+.userChip:hover { background:rgba(255,255,255,0.07); border-color:rgba(255,255,255,0.2); }
+.userAvatarWrap { width:28px; height:28px; border-radius:50%; overflow:hidden; flex-shrink:0; display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,0.12); }
+.userName { font-size:0.76rem; font-weight:500; color:var(--white); max-width:120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.signOutBtn { background:transparent; border:1px solid var(--border); border-radius:7px; padding:6px 16px; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:0.72rem; font-weight:500; cursor:pointer; transition:all 0.2s; letter-spacing:0.03em; }
+.signOutBtn:hover { border-color:rgba(255,255,255,0.25); color:var(--white); }
+
+/* MAIN */
+.main { max-width:1200px; margin:0 auto; padding:2.8rem 2.5rem 5rem; position:relative; z-index:1; }
+
+/* PAGE HEADER */
+.pageHeader { margin-bottom:2.2rem; }
+.pageBadge { display:inline-flex; align-items:center; gap:7px; padding:5px 14px; border:1px solid var(--border-md); border-radius:100px; font-size:0.6rem; font-weight:600; color:var(--muted-md); letter-spacing:0.14em; margin-bottom:1.2rem; }
+.pageBadgeDot { width:6px; height:6px; border-radius:50%; background:var(--green); box-shadow:0 0 7px var(--green); flex-shrink:0; animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{transform:scale(1);opacity:1;} 50%{transform:scale(1.5);opacity:0.5;} }
+.pageTitle { font-family:'Playfair Display',serif; font-size:clamp(2.2rem,3.8vw,3.4rem); font-weight:900; line-height:1.06; color:var(--white); margin-bottom:0.7rem; }
+.pageTitle em { font-style:italic; color:var(--accent); }
+.pageSub { font-size:0.87rem; color:var(--muted); font-weight:300; line-height:1.65; max-width:480px; }
+
+/* STATS */
+.statsRow { display:flex; gap:12px; margin-bottom:2.8rem; }
+.statCard { padding:18px 30px; background:var(--bg-surface); border:1px solid var(--border); border-radius:12px; transition:border-color 0.2s; min-width:130px; }
+.statCard:hover { border-color:var(--border-md); }
+.statValue { font-family:'Playfair Display',serif; font-size:2rem; font-weight:900; color:var(--white); line-height:1; margin-bottom:5px; }
+.statLabel { font-size:0.6rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.12em; }
+
+/* SECTION */
+.section { margin-bottom:3rem; }
+.sectionTitle { font-family:'DM Sans',sans-serif; font-size:0.62rem; font-weight:700; color:var(--muted); letter-spacing:0.22em; margin-bottom:1.4rem; display:flex; align-items:center; gap:14px; text-transform:uppercase; }
+.sectionTitle::after { content:''; flex:1; height:1px; background:var(--border); }
+
+/* SERVICE CARDS — exact same as candidate .cardsGrid */
+.cardsGrid { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+.card { position:relative; background:var(--bg-surface); border:1px solid var(--border); border-radius:16px; padding:26px 24px 22px; cursor:pointer; transition:border-color 0.2s,transform 0.2s,background 0.2s; display:flex; flex-direction:column; gap:10px; animation:fadeUp 0.5s ease both; }
+.card:hover { border-color:rgba(255,255,255,0.15); background:rgba(255,255,255,0.035); transform:translateY(-2px); }
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px);} to{opacity:1;transform:translateY(0);} }
+.cardArrowWrap { position:absolute; top:22px; right:22px; }
+.cardArrow { color:rgba(255,255,255,0.18); transition:color 0.2s,transform 0.2s; display:block; }
+.card:hover .cardArrow { color:rgba(255,255,255,0.55); transform:translate(2px,-2px); }
+.cardTitle { font-family:'Playfair Display',serif; font-size:1.22rem; font-weight:900; color:var(--white); line-height:1.2; padding-right:24px; margin-top:2px; text-transform:uppercase; letter-spacing:0.02em; }
+.cardDesc { font-size:0.81rem; color:var(--muted); line-height:1.65; font-weight:300; flex:1; }
+.cardTag { display:inline-block; padding:3px 10px; border-radius:100px; font-size:0.58rem; font-weight:700; letter-spacing:0.1em; border:1px solid; width:fit-content; margin-top:6px; }
+
+/* Prompt overlay */
+.promptOverlay { position:fixed; inset:0; z-index:999; background:rgba(0,0,0,0.7); backdrop-filter:blur(8px); display:flex; align-items:center; justify-content:center; padding:20px; }
+.promptBox { width:100%; max-width:480px; background:#0d0d0d; border:1px solid var(--border-md); border-radius:20px; padding:40px 36px; text-align:center; box-shadow:0 32px 80px rgba(0,0,0,0.7); animation:promptIn 0.22s ease; }
+@keyframes promptIn { from{opacity:0;transform:scale(0.94) translateY(-10px);} to{opacity:1;transform:scale(1) translateY(0);} }
+.promptIcon  { font-size:48px; margin-bottom:14px; display:block; }
+.promptTitle { font-family:'Playfair Display',serif; font-size:24px; font-weight:900; color:var(--white); margin:0 0 14px; }
+.promptMsg   { font-size:14px; color:var(--muted); line-height:1.7; margin:0 0 10px; font-weight:300; }
+.promptSub   { font-size:12px; color:rgba(255,255,255,0.2); margin:0 0 28px; }
+.promptActions { display:flex; flex-direction:column; gap:10px; }
+.promptFill  { padding:14px; background:#fff; border:none; border-radius:12px; color:#080808; font-size:15px; font-weight:700; font-family:'DM Sans',sans-serif; cursor:pointer; transition:background 0.2s,transform 0.15s; }
+.promptFill:hover  { background:rgba(255,255,255,0.88); transform:translateY(-1px); }
+.promptSkip  { padding:12px; background:none; border:1px solid var(--border); border-radius:12px; color:var(--muted); font-size:13px; font-family:'DM Sans',sans-serif; cursor:pointer; transition:color 0.2s; }
+.promptSkip:hover { color:var(--white); }
+.promptChecklist { margin:14px 0 0; text-align:left; background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; padding:12px 16px; width:100%; }
+.promptCheckItem { font-size:13px; color:rgba(255,255,255,0.3); margin:5px 0; font-weight:300; }
+
+@media (max-width:1024px) { .cardsGrid { grid-template-columns:repeat(2,1fr); } }
+@media (max-width:640px) {
+  .topbar { padding:0 1.2rem; }
+  .main { padding:1.8rem 1.2rem 3rem; }
+  .cardsGrid { grid-template-columns:1fr; }
+  .statsRow { flex-wrap:wrap; }
+  .statCard { min-width:0; flex:1; }
+}

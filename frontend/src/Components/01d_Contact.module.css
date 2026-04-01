@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:root { --bg:#080808; --border:rgba(255,255,255,0.07); --muted:rgba(255,255,255,0.35); --surface:rgba(255,255,255,0.03); }
+
+.page { min-height:100vh; background:var(--bg); font-family:'DM Sans',sans-serif; padding-bottom:100px; padding-top:60px; }
+
+.hero { display:flex; flex-direction:column; align-items:center; text-align:center; padding:72px 40px 64px; position:relative; border-bottom:1px solid var(--border); }
+.hero::before { content:''; position:absolute; top:-100px; left:50%; transform:translateX(-50%); width:700px; height:500px; background:radial-gradient(ellipse at center,rgba(255,255,255,0.04) 0%,transparent 70%); pointer-events:none; }
+.heroBadge { display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.04); color:rgba(255,255,255,0.5); border:1px solid rgba(255,255,255,0.1); padding:5px 18px; border-radius:20px; font-size:11px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:24px; }
+.dot { width:6px; height:6px; border-radius:50%; background:#81e6a0; box-shadow:0 0 8px #81e6a0; animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{transform:scale(1);opacity:1;} 50%{transform:scale(1.6);opacity:0.4;} }
+.heroTitle { font-family:'Playfair Display',serif; font-size:clamp(36px,5vw,72px); font-weight:900; color:#fff; letter-spacing:-2px; line-height:1.04; margin-bottom:18px; white-space:nowrap; }
+.heroTitle .italic { font-style:italic; color:rgba(255,255,255,0.55); }
+.heroSub { max-width:480px; color:var(--muted); font-size:15px; line-height:1.85; font-weight:300; }
+
+.layout { display:flex; gap:28px; max-width:1000px; margin:56px auto 0; padding:0 40px; align-items:flex-start; }
+
+/* INFO COL */
+.infoCol { width:275px; flex-shrink:0; display:flex; flex-direction:column; gap:10px; }
+.infoHeading { font-family:'Playfair Display',serif; font-size:16px; font-weight:700; color:#fff; margin-bottom:4px; }
+.infoCard { display:flex; align-items:center; gap:13px; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:13px 15px; transition:border-color 0.2s,transform 0.2s; }
+.infoCard:hover { border-color:rgba(255,255,255,0.18); transform:translateX(3px); }
+.infoIcon { width:36px; height:36px; flex-shrink:0; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:9px; display:flex; align-items:center; justify-content:center; }
+.infoIcon svg { width:15px; height:15px; stroke:rgba(255,255,255,0.6); }
+.infoLabel { font-size:10px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,0.25); margin-bottom:2px; }
+.infoValue { font-size:13px; font-weight:500; color:#fff; }
+.infoNote { background:var(--surface); border:1px solid var(--border); border-radius:11px; padding:13px 15px; }
+.infoNote p { font-size:12px; color:var(--muted); line-height:1.7; font-weight:300; }
+
+.faqBox { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px; }
+.faqTitle { font-size:10px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.28); margin-bottom:12px; }
+.faqItem { display:flex; align-items:center; gap:9px; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.04); cursor:pointer; transition:color 0.2s; }
+.faqItem:last-child { border-bottom:none; padding-bottom:0; }
+.faqItem:hover p { color:#fff; }
+.faqDot { width:4px; height:4px; border-radius:50%; background:rgba(255,255,255,0.35); flex-shrink:0; }
+.faqItem p { font-size:12.5px; color:var(--muted); transition:color 0.2s; font-weight:300; }
+
+/* FORM */
+.formWrap { flex:1; background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:32px; }
+.formTitle { font-family:'Playfair Display',serif; font-size:20px; font-weight:900; color:#fff; letter-spacing:-0.5px; margin-bottom:24px; }
+.form { display:flex; flex-direction:column; }
+.row { display:flex; gap:14px; }
+.row .group { flex:1; }
+.group { display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
+.group label { font-size:10px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,0.28); }
+.group input, .group textarea { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:9px; padding:11px 14px; font-family:'DM Sans',sans-serif; font-size:14px; color:#fff; outline:none; transition:border-color 0.2s,background 0.2s; resize:vertical; }
+.group input:focus, .group textarea:focus { border-color:rgba(255,255,255,0.4); background:rgba(255,255,255,0.06); }
+.group input::placeholder, .group textarea::placeholder { color:rgba(255,255,255,0.2); }
+.inputError { border-color:rgba(255,80,80,0.5) !important; }
+.errorMsg { font-size:11px; color:#ff6b6b; margin-top:-2px; }
+
+.btnPrimary { background:#fff; color:#080808; border:none; padding:13px 28px; border-radius:9px; font-family:'DM Sans',sans-serif; font-weight:600; font-size:13px; letter-spacing:0.05em; cursor:pointer; width:100%; transition:all 0.2s; }
+.btnPrimary:hover { background:rgba(255,255,255,0.88); transform:translateY(-2px); box-shadow:0 8px 24px rgba(255,255,255,0.12); }
+
+.successBox { text-align:center; padding:52px 20px; display:flex; flex-direction:column; align-items:center; gap:12px; }
+.successCheck { width:56px; height:56px; border-radius:50%; background:rgba(255,255,255,0.06); border:1.5px solid rgba(255,255,255,0.25); display:flex; align-items:center; justify-content:center; margin-bottom:4px; }
+.successCheck svg { width:22px; height:22px; stroke:#fff; }
+.successBox h3 { font-family:'Playfair Display',serif; font-size:22px; font-weight:900; color:#fff; }
+.successBox p { font-size:14px; color:var(--muted); max-width:280px; line-height:1.7; font-weight:300; }
+.successBox .btnPrimary { width:auto; padding:11px 28px; margin-top:4px; }
+
+@media (max-width:768px) { .layout{flex-direction:column;padding:0 20px;} .infoCol{width:100%;} .row{flex-direction:column;gap:0;} }
