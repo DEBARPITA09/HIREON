@@ -12,7 +12,7 @@
 2. open in vs code
 3. open 2 terminals
 4. Termainal1:  cd backend → npm install → node server.js
-5. Terminal2: cd frontend → npm install → npm run dev"
+5. Terminal2: cd frontend → npm install → npm run dev
 ---
 
 ## What is HIREON?
